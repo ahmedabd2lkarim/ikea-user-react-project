@@ -1,0 +1,22 @@
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-radius: 8px 0 8px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 50px;
+    z-index: 100;
+}
+
+.prd-heroImg {
+    width: 45vw;
+    cursor: move;
+    transition: transform 0.2s ease-out;
+}
+
+.main-prdImg {
+    position: relative;
+    overflow: hidden;
+}
