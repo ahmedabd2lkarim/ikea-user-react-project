@@ -1,32 +1,21 @@
-import Button from "@mui/joy/Button";
+import { Button } from "../../common/mui/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PrdImgsCrsl from "./../../Components/PrdImgsCrsl/PrdImgsCrsl";
 import React, { useState, useRef, useEffect } from "react";
 import { GrDeliver } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import "./ProductDetails.css";
-import { FaLocationDot } from "react-icons/fa6";
-import { FaArrowRight } from "react-icons/fa";
-import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import Model from "../../Components/Model/Model";
+import { FaLocationDot, FaArrowRight } from "react-icons/fa6";
+import { ThreeSixtyIcon, PhotoLibraryIcon } from "../../common/mui-icons/index";
+
+import Model from "./../../Components/Model/Model";
 import PrdInfoSection from "../../Components/PrdInfoSection/PrdInfoSection";
+import ProductImageZoomInOut from "../../Components/productImageZoomInOut/productImageZoomInOut";
 const imgsUrl = ["1", "2", "3", "4", "5"];
 
-// function scrollfunction(btn) {
-//   btn.current.style.display = "block";
-//   console.log(btn.current);
-//   // if (1 == 1) {
-//   // } else {
-//   //   btn.current.style.display = "none";
-//   // }
-// }
-
 const ProductDetails = () => {
-  const modelRef = useRef();
-  const openOffCanvas = () => {
-    modelRef.current?.handleShow();
-  };
+  const [hoveredImageUrl, setHoveredImageUrl] = useState("img1.avif"); // Default to first image
+
   const [showBtn, setShowBtn] = useState(false);
   const btnRef = useRef(null);
   useEffect(() => {
@@ -42,15 +31,30 @@ const ProductDetails = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const allImgsRef = useRef();
+  const openModel = (ref) => {
+    ref.current?.handleShow();
+  };
+  const content = (
+    <>
+      <div className="container-fluid d-flex flex-wrap justify-content-center gap-5 ">
+        {imgsUrl.map((_, index) => {
+          return (
+            <img
+              style={{ width: "30vw" }}
+              className="img-fluid "
+              key={index}
+              src={"img" + (index + 1) + ".avif"}
+              alt=""
+            />
+          );
+        })}
+      </div>
+    </>
+  );
 
   return (
     <>
-      <Model
-        placement={"end"}
-        title={"Measurements"}
-        ref={modelRef}
-        modelContent={"hello every body"}
-      />
       <div className="freeDeliver hide hoverLink">
         <GrDeliver />
         <Link>Free delivery</Link>
@@ -68,27 +72,28 @@ const ProductDetails = () => {
         )}
         <PrdImgsCrsl imgsUrl={imgsUrl} />
         {/* Carousel on large screens*/}
-        <div className="d-flex container-fluid row-gap-5 mt-5 justify-content-center px-4 flex-wrap">
+        <div className="d-flex container-fluid row-gap-5 mt-5 justify-content-around px-4 flex-wrap">
           <div className="hide prd-imgs mt-2 flex-column">
             {imgsUrl.map((img, index) => {
               return (
                 <img
+                  className={index == 0 ? "borderInit" : "borderHover"}
                   style={{ width: "6vw", marginBottom: "12px" }}
                   key={index}
-                  src={"img" + (index + 1) + ".avif"}
+                  src={`img${index + 1}.avif`}
+                  onMouseEnter={() =>
+                    setHoveredImageUrl(`img${index + 1}.avif`)
+                  }
+                  alt={`Product view ${index + 1}`}
                 />
               );
             })}
           </div>
-          <div className="hide prd-imgs  flex-column mt-3">
-            <img
-              className="img-fluid"
-              style={{ width: "54vw" }}
-              src={"img1.avif"}
-              alt=""
-            />
+          <div className="hide prd-imgs flex-column mt-3">
+            <ProductImageZoomInOut imageSrc={hoveredImageUrl} />
             <div className="btnsOnimgs">
               <Button
+                onClick={() => openModel(allImgsRef)}
                 sx={{ fontSize: 12, marginRight: "8px" }}
                 className=" rounded-pill Btn3d px-3 py-1"
               >
@@ -98,6 +103,7 @@ const ProductDetails = () => {
                 />
                 All media
               </Button>
+              <Model content={content} title={"All media"} ref={allImgsRef} />
               <Button
                 sx={{ fontSize: 12 }}
                 className=" rounded-pill Btn3d px-3 py-1"
@@ -110,12 +116,8 @@ const ProductDetails = () => {
               </Button>
             </div>
           </div>
-          {/* </div> */}
-          {/* <div style={{ width: "30vw" }}> */}
-          {/* <div > */}
-          <PrdInfoSection/>
-          {/* </div> */}
-          {/* </div> */}
+          <PrdInfoSection />
+
           <div style={{ width: "94%" }}>
             <p
               className="full-width-mobile text-secondary"
@@ -148,12 +150,6 @@ const ProductDetails = () => {
                 <h4 className="fw-bold my-3 sections-info">Product details</h4>
                 <FaArrowRight style={{ fontSize: "20px" }} />
                 <hr style={{ width: "100%" }} />
-                {/* </div>
-
-              <div
-                className="d-flex justify-content-between align-items-center flex-wrap"
-                style={{ width: "50%" }}
-              > */}
                 <h4 className="fw-bold my-3 sections-info">Measurements</h4>
                 <FaArrowRight style={{ fontSize: "20px" }} />
                 <hr className="mb-5" style={{ width: "100%" }} />
@@ -174,7 +170,9 @@ const ProductDetails = () => {
                       on the splashback shelf. Move the hooks and shelves as you
                       please and create your own market booth display full of
                       warmth and character.
-                      <p className="mt-1">Designer Andreas Fredriksson</p>
+                      <span className="mt-1 d-block">
+                        Designer Andreas Fredriksson
+                      </span>
                     </p>
                   </div>
                 </div>

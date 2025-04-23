@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import { Carousel } from "react-bootstrap";
-import IconButton from "@mui/material/IconButton";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { IconButton } from "../../common/mui/index";
+import {
+  FavoriteBorderIcon,
+  ThreeSixtyIcon,
+} from "../../common/mui-icons/index";
 import Button from "@mui/joy/Button";
-import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 
 export default function PrdImgsCrsl({ imgsUrl }) {
   const slideCount = imgsUrl.length;

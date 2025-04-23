@@ -1,11 +1,65 @@
-import React from "react";
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import { HiOutlineBuildingStorefront } from "react-icons/hi2";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import IconButton from "@mui/material/IconButton";
-
+import { Link } from "react-router-dom";
+import {
+  IoMdInformationCircleOutline,
+  HiOutlineBuildingStorefront,
+  GrDeliver,
+  FaAngleDown,
+} from "../../common/react-icons/index";
+import { Button } from "../../common/mui/index";
+import {
+  FavoriteBorderIcon,
+  NavigateNextIcon,
+} from "../../common/mui-icons/index";
+import { IconButton } from "../../common/mui/index";
+import OffCanvas from "../OffCanvas/OffCanvas";
+import { useRef, useState } from "react";
+import { Collapse } from "react-bootstrap";
 export default function PrdInfoSection() {
+  const measureRef = useRef();
+  const storeRef = useRef();
+  const storeInfoRef = useRef();
+  const [open, setOpen] = useState(false);
+  const openOffCanvas = (ref) => {
+    ref.current?.handleShow();
+  };
+  //  const collapseIcon = useRef(null);
+  const [collapseValue, setCollapse] = useState(false);
+  const collapseFun = () => {
+    setCollapse(!collapseValue);
+    console.log(collapseValue);
+  };
+  const content = (
+    <div className="d-flex flex-column">
+      <span>Width</span>
+      <span>height</span>
+      <span>Weight</span>
+      <img src="img1.avif" alt="" />
+
+      <hr />
+      {}
+      <div
+        onClick={() => setOpen(!open)}
+        aria-controls="example-collapse-text"
+        aria-expanded={open}
+      >
+        <div
+          onClick={() => collapseFun()}
+          className="d-flex justify-content-between align-items-center"
+        >
+          <p className="fw-bold sections-info">Packaging</p>
+          <FaAngleDown style={collapseValue ? { rotate: "y 180deg" } : ""} />
+        </div>
+        <Collapse in={open}>
+          <div id="example-collapse-text">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt esse
+            placeat, perspiciatis nostrum officiis minus aspernatur iste
+            distinctio assumenda voluptatibus? Voluptate ipsa itaque, doloremque
+            quae temporibus quam doloribus. Nihil, ipsa!
+          </div>
+        </Collapse>
+      </div>
+    </div>
+  );
   return (
     <div className="prd-description">
       <div className="d-flex justify-content-between">
@@ -14,9 +68,13 @@ export default function PrdInfoSection() {
           <b className="d-block">ÄSPINGE</b>
           <p className="text-secondary">
             Kitchenette, black/ash,
-            <Link className="hoverLink" onClick={openOffCanvas}>
+            <Link
+              className="hoverLink"
+              onClick={() => openOffCanvas(measureRef)}
+            >
               120x60x202 cm
             </Link>
+            <OffCanvas ref={measureRef} title="Measurments" content={content} />
           </p>
           <p className="text-decoration-line-through fw-bold m-0">EGP29,995</p>
           <b className="text-danger fs-2">
@@ -42,14 +100,16 @@ export default function PrdInfoSection() {
         </p>
       </div>
       <br />
-      {/* <div className=""> */}
       <div className="d-flex justify-content-between my-2">
         <b>How to get it</b>
-        <Link className="hoverLink">Change store</Link>
+        <Link className="hoverLink" onClick={() => openOffCanvas(storeRef)}>
+          Change store
+        </Link>
+        <OffCanvas ref={storeRef} content={"hello every body"} />
       </div>
       <div className="card p-3">
-        <div className="d-flex flex-column ">
-          <div className="d-flex align-items-center">
+        <div className="d-flex flex-column mb-3">
+          <div className="d-flex align-items-center ">
             <GrDeliver
               style={{ width: "24px" }}
               fontSize={"40px"}
@@ -57,7 +117,7 @@ export default function PrdInfoSection() {
             />
             <p className="m-0 fw-bold">Delivery</p>
           </div>
-          <p
+          <div
             style={{
               fontSize: "14px",
               paddingLeft: "40px",
@@ -74,10 +134,13 @@ export default function PrdInfoSection() {
               }}
             ></div>
             Available
-          </p>
+          </div>
         </div>
         <hr className="m-0" />
-        <div className="d-flex justify-content-between align-items-center">
+        <div
+          className="d-flex justify-content-between align-items-center pointer"
+          onClick={() => openOffCanvas(storeInfoRef)}
+        >
           <div className="d-flex flex-column ">
             <div className="d-flex align-items-center">
               <HiOutlineBuildingStorefront
@@ -87,7 +150,7 @@ export default function PrdInfoSection() {
               />
               <p className="m-0 fw-bold">IKEA Cairo Festival City</p>
             </div>
-            <p
+            <div
               style={{
                 fontSize: "14px",
                 paddingLeft: "40px",
@@ -103,10 +166,11 @@ export default function PrdInfoSection() {
                 }}
               ></div>
               Store - In stock
-            </p>
+            </div>
           </div>
           <NavigateNextIcon />
         </div>
+        <OffCanvas ref={storeInfoRef} content={"hello store info"} />
       </div>
       <Button className="rounded-pill w-100 py-3 my-4">Add to bag</Button>
       <div className="border mb-3 ">
@@ -115,7 +179,6 @@ export default function PrdInfoSection() {
           this product today
         </p>
       </div>
-      {/* </div> */}
     </div>
   );
 }

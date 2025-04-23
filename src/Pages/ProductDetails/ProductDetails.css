@@ -1,9 +1,20 @@
 .hide {
     display: none;
 }
+.pointer{
+    cursor: pointer;
+}
 
 .hideBtn {
     opacity: 0;
+}
+.borderInit{
+    border: 1px solid #E0E0E0;
+}
+
+
+.borderHover:hover,.borderInit:hover{
+    border: 1px solid black;
 }
 
 .crsl-product {
@@ -14,7 +25,7 @@
     position: fixed;
     top: 8%;
     left: 44%;
-    z-index: 2000;
+    z-index: 2;
 }
 
 .favIcon:hover {
