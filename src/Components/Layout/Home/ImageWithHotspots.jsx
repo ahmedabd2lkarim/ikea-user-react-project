@@ -3,7 +3,7 @@ import { Box, Tooltip, IconButton, Divider, Typography, CircularProgress } from 
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-const ImageWithHotspots = ({ image, height = '100%', hotspots = [] }) => {
+const ImageWithHotspots = ({ image, hotspots = [] }) => {
   const [productData, setProductData] = useState({});
   const [loading, setLoading] = useState({});
 
@@ -24,7 +24,7 @@ const ImageWithHotspots = ({ image, height = '100%', hotspots = [] }) => {
   };
 
   return (
-    <Box sx={{ position: 'relative', height, width: '100%' }}>
+    <Box sx={{ position: 'relative', height:'100%', width: '100%' }}>
       <Box
         component="img"
         src={image}
