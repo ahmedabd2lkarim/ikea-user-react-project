@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+import { Box, Typography, Card, CardMedia, CardContent, IconButton, Tooltip} from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }) => {
@@ -24,7 +16,7 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
           key={index}
           product={product}
           cardWidth={cardWidth}
-          deals={deal} 
+          deals={deal}
         />
       ));
     } else if (products) {
@@ -47,7 +39,7 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
         </Typography>
       )}
 
-      {categories && Object.keys(categories).length > 1  && (
+      {categories && Object.keys(categories).length > 1 && (
         <Box sx={{ position: "relative", mb: 3 }}>
           <Box sx={{ display: "flex", gap: 3, mb: 1 }}>
             {Object.keys(categories).map((category) => (
@@ -71,12 +63,9 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
           </Box>
           <Box
             sx={{
-              height: "1px",
-              width: "100%",
-              bgcolor: "lightgray",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
+              height: "1px", width: "100%",
+              bgcolor: "lightgray", position: "absolute",
+              bottom: 0, left: 0,
             }}
           />
         </Box>
@@ -86,22 +75,18 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
         sx={{
           display: "flex",
           overflowX: "auto",
-          gap: 2,
-          pb: 2,
+          gap: 2, pb: 2,
           "&::-webkit-scrollbar": {
-            height: 4,
-            width: 10,
+            height: 4, width: 10,
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "gray",
-            borderRadius: 4,
+            backgroundColor: "gray", borderRadius: 4,
           },
           "&::-webkit-scrollbar-thumb:hover": {
             backgroundColor: "black",
           },
           "&:hover::-webkit-scrollbar": {
-            height: 5,
-            width: 10,
+            height: 5, width: 10,
           },
         }}
       >
@@ -118,12 +103,9 @@ const HoverCard = ({ product, cardWidth, deals }) => {
     <Card
       elevation={0}
       sx={{
-        minWidth: cardWidth,
-        maxWidth: cardWidth,
-        flex: "0 0 auto",
-        position: "relative",
-        cursor: "pointer",
-        overflow: "hidden",
+        minWidth: cardWidth, maxWidth: cardWidth,
+        flex: "0 0 auto", position: "relative",
+        cursor: "pointer", overflow: "hidden",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -140,15 +122,9 @@ const HoverCard = ({ product, cardWidth, deals }) => {
           {deals}
         </Typography>}
         <Typography
-          variant="subtitle2"
-          fontWeight="bold"
-          sx={{
-            height: 38,
-            overflow: "hidden",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            mb: 0.5,
+          variant="subtitle2" fontWeight="bold" sx={{
+            height: 38, overflow: "hidden", display: "-webkit-box",
+            WebkitLineClamp: 2, WebkitBoxOrient: "vertical", mb: 0.5,
           }}
         >
           {product.name}
@@ -159,24 +135,18 @@ const HoverCard = ({ product, cardWidth, deals }) => {
         <Box>
           {product.price.discounted ? (
             <>
-              <Typography
-                variant="body2"
-                color="black"
-                sx={{
-                  textDecoration: "line-through",
-                  fontSize: "1rem",
-                }}
+              <Typography variant="body2" color="black" sx={{ textDecoration: "line-through", fontSize: "1rem",}}
               >
-                 <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography>{" "}
-                {(product.price?.currentPrice + Math.floor(15 * 50) + 10).toFixed(2)}
-              </Typography>
+                <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography>{" "}
+                {((product.price?.currentPrice + Math.floor(15 * 50) + 10) * 0.8).toFixed(2)}
+                </Typography>
               <Typography color="error" fontWeight="bold" fontSize="1.2rem">
                 <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
               </Typography>
             </>
           ) : (
             <Typography color="black" fontWeight="bold" fontSize="1.2rem">
-               <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
+              <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
             </Typography>
           )}
         </Box>
@@ -186,9 +156,7 @@ const HoverCard = ({ product, cardWidth, deals }) => {
             <IconButton
               size="small"
               sx={{
-                bgcolor: "#004F93",
-                borderRadius: "50%",
-                p: "0.3rem",
+                bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem",
               }}
             >
               <span className="pip-btn__inner">

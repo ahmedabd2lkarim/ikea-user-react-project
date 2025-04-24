@@ -8,6 +8,7 @@ import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
 import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
+import Category from "./Pages/Category/Category";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
        {
         path: "/profile",
          element: <Profile/>, 
+       },
+       {
+        path: "/category",
+         element: <Category/>, 
        },
 
     ]
