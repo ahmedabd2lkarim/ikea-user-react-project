@@ -1,25 +1,29 @@
 .hide {
     display: none;
 }
-.pointer{
+
+.pointer {
     cursor: pointer;
 }
 
 .hideBtn {
     opacity: 0;
 }
-.borderInit{
+
+.borderInit {
     border: 1px solid #E0E0E0;
 }
 
 
-.borderHover:hover,.borderInit:hover{
+.borderHover:hover,
+.borderInit:hover {
     border: 1px solid black;
 }
 
 .crsl-product {
     position: relative;
 }
+
 /* fav icon for large screens */
 .favIcon {
     position: fixed;
@@ -37,12 +41,12 @@
     position: fixed;
     bottom: 66px;
     left: 28px;
-    background-color: rgba(0, 0, 0, 0.7) !important ;
+    background-color: rgba(0, 0, 0, 0.7) !important;
 
 }
 
 .Btn3d:hover {
-        background-color: rgba(0, 0, 0, .9) !important ;
+    background-color: rgba(0, 0, 0, .9) !important;
 }
 
 .hoverLink {
@@ -85,14 +89,17 @@
 }
 
 
-.btnsOnimgs{
-    position: relative;
-    left: 40%;
+.btnsOnimgs {
+    position: absolute;
+    top: 98%;
+    left: 50%;
 }
 
 @media screen and (min-width:901px) {
     .prd-imgs {
         display: flex;
+        position: relative;
+       
     }
 
     .prd-description {
@@ -105,12 +112,13 @@
     .freeDeliver {
         display: flex;
     }
-    
+
     .crsl-product {
         display: flex;
         justify-content: center;
     }
-    .prd-description .favIcon{
+
+    .prd-description .favIcon {
         display: none;
     }
 
@@ -125,17 +133,18 @@
         opacity: 1;
         transition: 0.5s;
     }
-        .favIcon {
-            position: absolute !important;
-            top: 2%;
-            left: 92%;
-            z-index: 2;
-        }
-    
-        .favIcon:hover {
-            opacity: .8;
-            color: black;
-        }
+
+    .favIcon {
+        position: absolute !important;
+        top: 2%;
+        left: 92%;
+        z-index: 2;
+    }
+
+    .favIcon:hover {
+        opacity: .8;
+        color: black;
+    }
 }
 
 
@@ -150,4 +159,41 @@
 .crsl-product .carousel-indicators {
     bottom: -50px;
     gap: 2px;
+}
+
+
+.img-container {
+    position: relative; 
+    margin-top: -28px;
+
+}
+
+.img-container:hover .btn-arrow {
+    opacity: .7;
+}
+
+.btn-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    /* transform: translateY(-50%); */
+    background-color: black !important;
+    color: white !important;
+    border-radius: 50% !important;
+    transition: opacity .2s linear;
+
+
+    
+}
+
+.img-container .btn-arrow:hover {
+    opacity: 1;
+}
+
+.btn-arrow-left {
+    left: 2%;
+}
+
+.btn-arrow-right {
+    left: 86%;
 }

@@ -1,21 +1,43 @@
 import { Button } from "../../common/mui/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PrdImgsCrsl from "./../../Components/PrdImgsCrsl/PrdImgsCrsl";
+import { IconButton } from "@mui/joy";
 import React, { useState, useRef, useEffect } from "react";
 import { GrDeliver } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import "./ProductDetails.css";
 import { FaLocationDot, FaArrowRight } from "react-icons/fa6";
 import { ThreeSixtyIcon, PhotoLibraryIcon } from "../../common/mui-icons/index";
-
 import Model from "./../../Components/Model/Model";
 import PrdInfoSection from "../../Components/PrdInfoSection/PrdInfoSection";
 import ProductImageZoomInOut from "../../Components/productImageZoomInOut/productImageZoomInOut";
-const imgsUrl = ["1", "2", "3", "4", "5"];
+const imgsUrl = [
+  "img1.avif",
+  "img2.avif",
+  "img3.avif",
+  "img4.avif",
+  "img5.avif",
+];
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 const ProductDetails = () => {
-  const [hoveredImageUrl, setHoveredImageUrl] = useState("img1.avif"); // Default to first image
+  const prdInfoSectionRef = useRef();
 
+  const [imageUrl, setImageUrl] = useState(imgsUrl[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const handleArrowRight = () => {
+    if (currentIndex >= imgsUrl.length - 1) return;
+    const nextIndex = currentIndex + 1;
+    setCurrentIndex(nextIndex);
+    setImageUrl(imgsUrl[nextIndex]);
+  };
+  const handleArrowLeft = () => {
+    if (currentIndex <= 0) return;
+    const prevIndex = currentIndex - 1;
+    setCurrentIndex(prevIndex);
+    setImageUrl(imgsUrl[prevIndex]);
+  };
   const [showBtn, setShowBtn] = useState(false);
   const btnRef = useRef(null);
   useEffect(() => {
@@ -31,6 +53,7 @@ const ProductDetails = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const productDetailsRef = useRef();
   const allImgsRef = useRef();
   const openModel = (ref) => {
     ref.current?.handleShow();
@@ -38,14 +61,15 @@ const ProductDetails = () => {
   const content = (
     <>
       <div className="container-fluid d-flex flex-wrap justify-content-center gap-5 ">
-        {imgsUrl.map((_, index) => {
+        {imgsUrl.map((img, index) => {
           return (
             <img
               style={{ width: "30vw" }}
               className="img-fluid "
               key={index}
-              src={"img" + (index + 1) + ".avif"}
+              src={img}
               alt=""
+              draggable={false}
             />
           );
         })}
@@ -73,24 +97,42 @@ const ProductDetails = () => {
         <PrdImgsCrsl imgsUrl={imgsUrl} />
         {/* Carousel on large screens*/}
         <div className="d-flex container-fluid row-gap-5 mt-5 justify-content-around px-4 flex-wrap">
-          <div className="hide prd-imgs mt-2 flex-column">
+          <div className="hide prd-imgs mt-3 flex-column">
             {imgsUrl.map((img, index) => {
               return (
                 <img
                   className={index == 0 ? "borderInit" : "borderHover"}
                   style={{ width: "6vw", marginBottom: "12px" }}
                   key={index}
-                  src={`img${index + 1}.avif`}
-                  onMouseEnter={() =>
-                    setHoveredImageUrl(`img${index + 1}.avif`)
-                  }
+                  src={img}
+                  onMouseEnter={() => setImageUrl(img)}
+                  draggable={false}
                   alt={`Product view ${index + 1}`}
                 />
               );
             })}
           </div>
-          <div className="hide prd-imgs flex-column mt-3">
-            <ProductImageZoomInOut imageSrc={hoveredImageUrl} />
+          <div className="hide prd-imgs flex-column mt-2">
+            <div className="img-container">
+              {currentIndex > 0 && (
+                <IconButton
+                  onClick={handleArrowLeft}
+                  className="btn-arrow-left btn-arrow hideBtn"
+                >
+                  <KeyboardArrowLeftIcon />
+                </IconButton>
+              )}
+
+              {currentIndex < imgsUrl.length - 1 && (
+                <IconButton
+                  className="btn-arrow-right btn-arrow hideBtn"
+                  onClick={handleArrowRight}
+                >
+                  <KeyboardArrowRightIcon />
+                </IconButton>
+              )}
+              <ProductImageZoomInOut imageSrc={imageUrl} />
+            </div>
             <div className="btnsOnimgs">
               <Button
                 onClick={() => openModel(allImgsRef)}
@@ -116,7 +158,7 @@ const ProductDetails = () => {
               </Button>
             </div>
           </div>
-          <PrdInfoSection />
+          <PrdInfoSection ref={prdInfoSectionRef} />
 
           <div style={{ width: "94%" }}>
             <p
@@ -145,14 +187,30 @@ const ProductDetails = () => {
               <Link className=" hoverLink" href="#">
                 Locate product in store
               </Link>
-              <div className="d-flex justify-content-between align-items-center flex-wrap my-4 info-sections full-width-mobile">
-                <hr style={{ width: "100%" }} />
-                <h4 className="fw-bold my-3 sections-info">Product details</h4>
-                <FaArrowRight style={{ fontSize: "20px" }} />
-                <hr style={{ width: "100%" }} />
-                <h4 className="fw-bold my-3 sections-info">Measurements</h4>
-                <FaArrowRight style={{ fontSize: "20px" }} />
-                <hr className="mb-5" style={{ width: "100%" }} />
+              <div>
+                <Model
+                  content={"hellp"}
+                  title={"All Product details"}
+                  ref={productDetailsRef}
+                />
+
+                <div
+                  className="d-flex justify-content-between align-items-center flex-wrap sections-info info-sections full-width-mobile"
+                  onClick={() => openModel(productDetailsRef)}
+                >
+                  <hr style={{ width: "100%" }} />
+                  <h4 className="fw-bold my-3 ">Product details</h4>
+                  <FaArrowRight style={{ fontSize: "24px" }} />
+                  <hr style={{ width: "100%" }} />
+                </div>
+                <div
+                  onClick={() => prdInfoSectionRef.current?.openMeasureCanvas()}
+                  className="d-flex sections-info justify-content-between align-items-center flex-wrap  info-sections full-width-mobile"
+                >
+                  <h4 className="fw-bold my-3 ">Measurements</h4>
+                  <FaArrowRight style={{ fontSize: "24px" }} />
+                  <hr className="mb-5" style={{ width: "100%" }} />
+                </div>
                 <div>
                   <h4 className="fw-bold my-3">Related products</h4>
                 </div>

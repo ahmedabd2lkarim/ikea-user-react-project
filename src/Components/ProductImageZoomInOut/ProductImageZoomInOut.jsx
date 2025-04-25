@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Button } from "../../common/mui/index";
 import "./ProductImageZoomInOut.css";
-
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { IconButton } from "@mui/joy";
 const MIN_SCALE = 1;
-const MAX_SCALE = 3;
+const MAX_SCALE = 2;
 
 export default function ProductImageZoomInOut({ imageSrc }) {
   const [scale, setScale] = useState(1);
@@ -14,11 +16,12 @@ export default function ProductImageZoomInOut({ imageSrc }) {
   const prevPositionRef = useRef({ x: 0, y: 0 });
 
   const handleZoomIn = useCallback(() => {
-    setScale((scale) => Math.min(scale + 0.1, MAX_SCALE));
+    setScale((scale) => Math.min(scale + 1, MAX_SCALE));
   }, []);
 
   const handleZoomOut = useCallback(() => {
-    setScale((scale) => Math.max(scale - 0.1, MIN_SCALE));
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
   }, []);
 
   const handleReset = useCallback(() => {
@@ -85,30 +88,53 @@ export default function ProductImageZoomInOut({ imageSrc }) {
   }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
   return (
-    <div className="main-prdImg">
+    <div className="main-prdImg ">
       <div className="btn-container">
-        <Button
+        <IconButton
           onClick={handleZoomIn}
           disabled={scale >= MAX_SCALE}
           aria-label="Zoom in"
+          sx={{
+            backgroundColor: "#f5f5f5",
+            color: "#444",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          }}
         >
-          +
-        </Button>
-        <Button
+          <ZoomInIcon />
+        </IconButton>
+        <IconButton
           onClick={handleZoomOut}
           disabled={scale <= MIN_SCALE}
           aria-label="Zoom out"
+          sx={{
+            backgroundColor: "#f5f5f5",
+            color: "#444",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          }}
         >
-          -
-        </Button>
-        <Button
+          <ZoomOutIcon />
+        </IconButton>
+        <IconButton
           onClick={handleReset}
           aria-label="Reset zoom and position"
           className="reset-btn"
+          sx={{
+            backgroundColor: "#f5f5f5",
+            color: "#444",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          }}
         >
-          Reset
-        </Button>
+          <RestartAltIcon />
+        </IconButton>
       </div>
+      
+
       <img
         ref={imageRef}
         className="img-fluid prd-heroImg"
@@ -121,6 +147,7 @@ export default function ProductImageZoomInOut({ imageSrc }) {
         draggable={false}
         onLoad={handleImageLoad}
       />
+      
       {isLoading && <div className="loading-spinner">Loading...</div>}
     </div>
   );

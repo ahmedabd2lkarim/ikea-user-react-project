@@ -30,11 +30,7 @@ export default function PrdImgsCrsl({ imgsUrl }) {
             <FavoriteBorderIcon />
           </IconButton>
           <div>
-            <img
-              className="img-fluid prd-img"
-              alt="900x500"
-              src={`img${img}.avif`}
-            />
+            <img className="img-fluid prd-img" alt="900x500" src={img} />
             {index === 0 && (
               <Button
                 sx={{ fontSize: 12 }}

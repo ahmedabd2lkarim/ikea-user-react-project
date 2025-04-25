@@ -12,9 +12,9 @@ import {
 } from "../../common/mui-icons/index";
 import { IconButton } from "../../common/mui/index";
 import OffCanvas from "../OffCanvas/OffCanvas";
-import { useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Collapse } from "react-bootstrap";
-export default function PrdInfoSection() {
+const PrdInfoSection = forwardRef((props,ref) => {
   const measureRef = useRef();
   const storeRef = useRef();
   const storeInfoRef = useRef();
@@ -22,7 +22,10 @@ export default function PrdInfoSection() {
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
   };
-  //  const collapseIcon = useRef(null);
+ 
+  useImperativeHandle(ref, () => ({
+    openMeasureCanvas: () => openOffCanvas(measureRef),
+  }));
   const [collapseValue, setCollapse] = useState(false);
   const collapseFun = () => {
     setCollapse(!collapseValue);
@@ -181,4 +184,6 @@ export default function PrdInfoSection() {
       </div>
     </div>
   );
-}
+});
+
+export default PrdInfoSection;
