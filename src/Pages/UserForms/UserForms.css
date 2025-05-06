@@ -1,0 +1,106 @@
+.login-form-page{
+    display: flex;
+    
+    .Content-login-Page{
+            padding-left:70px;
+            padding-right: 70px;
+            h2{
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+        }
+    }
+    
+    form .label , a{
+        font-size: 13px;
+        color: rgb(79, 78, 78);
+    }
+    form a {
+        text-decoration: underline;
+        margin-top: 23px !important;
+        margin-bottom: 13px;
+        
+    }
+    
+    form input{
+        border: 1px solid gray;
+                border-radius: 4px;
+                box-shadow: none;
+               
+    }
+    
+    input:focus {
+        border: 1.4px solid rgb(38, 70, 131);; 
+        outline: none;
+    }
+    
+    /* Here for Sign with */
+    
+    .SignWith {
+        text-align: center;
+        overflow: hidden;
+    }
+    
+    .SignWith span {
+        font-size: 14px;
+        color: rgb(79, 78, 78);
+    }
+    
+    .SignWith::before {
+        content: "";
+        display: inline-block;
+        height: 0.5em;
+        vertical-align: bottom;
+        width: 100%;
+        margin-right: 10px;
+        margin-left: -100%;
+        border-top: 1px solid #c1c1c1;
+    }
+    
+    .SignWith::after {
+        content: "";
+        display: inline-block;
+        height: 0.5em;
+        vertical-align: bottom;
+        width: 100%;
+        margin-right: -100%;
+        margin-left: 10px;
+        border-top: 1px solid #c1c1c1;
+    }
+    
+    @media screen and (max-width:900px) {
+        
+        .login-form-page{
+            padding: 15px;
+            flex-direction: column;
+            
+        }
+        .login-form-page .Content-login-Page{
+            padding-left: 0px;
+            padding-right: 0px;
+            order: -1;       
+        }    
+        .login-form-page .Content-login-Page h2{
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .login-form-page .Content-login-Page .loginIntro{
+            font-size: 16px;
+           margin-bottom: 16px;
+        }
+    
+        .login-form-page form {
+            width: 100%;
+        }
+        .login-form-page form h4 {
+            display: none;
+        }
+        .login-form-page form .formButton {
+            padding: 18px;
+            font-size: 18px;
+        }
+       
+        
+    }
