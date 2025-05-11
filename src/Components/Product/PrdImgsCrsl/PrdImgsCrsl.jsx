@@ -1,21 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import { Carousel } from "react-bootstrap";
-import { IconButton } from "../../common/mui/index";
+import { IconButton } from "../../../common/mui/index";
 import {
   FavoriteBorderIcon,
   ThreeSixtyIcon,
-} from "../../common/mui-icons/index";
+} from "../../../common/mui-icons/index";
 import Button from "@mui/joy/Button";
 
 export default function PrdImgsCrsl({ imgsUrl }) {
   const slideCount = imgsUrl.length;
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
+
+  // Reset index when images change (variant selection)
+  useEffect(() => {
+    setIndex(0);
+  }, [imgsUrl]);
 
   const handleSelect = (selectedIndex) => {
     setIndex(selectedIndex);
   };
-
   const handlers = useSwipeable({
     onSwipedLeft: () => setIndex((prev) => (prev + 1) % slideCount),
     onSwipedRight: () =>

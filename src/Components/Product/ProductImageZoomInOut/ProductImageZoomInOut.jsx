@@ -133,7 +133,6 @@ export default function ProductImageZoomInOut({ imageSrc }) {
           <RestartAltIcon />
         </IconButton>
       </div>
-      
 
       <img
         ref={imageRef}
@@ -147,7 +146,7 @@ export default function ProductImageZoomInOut({ imageSrc }) {
         draggable={false}
         onLoad={handleImageLoad}
       />
-      
+
       {isLoading && <div className="loading-spinner">Loading...</div>}
     </div>
   );

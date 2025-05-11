@@ -1,10 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import Modal from "react-bootstrap/Modal";
+import styles from "./Model.module.css";
 
 const Model = forwardRef(({ content, title, ...props }, ref) => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
-    setShow(false)
+    setShow(false);
   };
   const handleShow = () => setShow(true);
   useImperativeHandle(ref, () => ({
@@ -18,6 +19,8 @@ const Model = forwardRef(({ content, title, ...props }, ref) => {
       centered
       size="xl"
       onHide={handleClose}
+      dialogClassName={styles.modalCustom}
+      contentClassName={styles.modalContent}
       {...props}
     >
       <Modal.Header closeButton>
@@ -29,7 +32,7 @@ const Model = forwardRef(({ content, title, ...props }, ref) => {
           {title}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>{content}</Modal.Body>
+      <Modal.Body className={styles.modalContent}>{content}</Modal.Body>
     </Modal>
   );
 });

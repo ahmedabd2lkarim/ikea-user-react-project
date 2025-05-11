@@ -1,26 +1,31 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-
-const OffCanvas = forwardRef(({content,title, ...props }, ref) => {
+import useViewport from "../../hooks/useViewport";
+import styles from "./OffCanvas.module.css";
+const OffCanvas = forwardRef(({ content, title, ...props }, ref) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   useImperativeHandle(ref, () => ({
     handleShow,
+    handleClose,
   }));
+  const width = useViewport();
   return (
     <>
       <Offcanvas
-        className="rounded-start"
+        className={`rounded-start ${styles.offCanvas} ${
+          width < 600 ? styles.offCanvasSmall : ""
+        }`}
         show={show}
         onHide={handleClose}
-        placement="end"
+        placement={width < 600 ? "bottom" : "end"}
         {...props}
       >
-        <Offcanvas.Header closeButton>
+        <Offcanvas.Header className="pe-4 pt-4" closeButton>
           <h4>{title}</h4>
         </Offcanvas.Header>
-        <Offcanvas.Body>{content}</Offcanvas.Body>
+        <Offcanvas.Body style={{ padding: "0" }}>{content}</Offcanvas.Body>
       </Offcanvas>
     </>
   );

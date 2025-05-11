@@ -1,45 +1,90 @@
 import { Button } from "../../common/mui/index";
 import "bootstrap/dist/css/bootstrap.min.css";
-import PrdImgsCrsl from "./../../Components/PrdImgsCrsl/PrdImgsCrsl";
 import { IconButton } from "@mui/joy";
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { GrDeliver } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./ProductDetails.css";
 import { FaLocationDot, FaArrowRight } from "react-icons/fa6";
 import { ThreeSixtyIcon, PhotoLibraryIcon } from "../../common/mui-icons/index";
-import Model from "./../../Components/Model/Model";
-import PrdInfoSection from "../../Components/PrdInfoSection/PrdInfoSection";
-import ProductImageZoomInOut from "../../Components/productImageZoomInOut/productImageZoomInOut";
-const imgsUrl = [
-  "img1.avif",
-  "img2.avif",
-  "img3.avif",
-  "img4.avif",
-  "img5.avif",
-];
+import Model from "../../Components/Model/Model";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-
+import AddToBag from "../../Components/Product/AddToBag/AddToBag";
+import OffCanvas from "./../../Components/OffCanvas/OffCanvas";
+import PrdImgsCrsl from "./../../Components/Product/PrdImgsCrsl/PrdImgsCrsl";
+import ProductImageZoomInOut from "./../../Components/Product/ProductImageZoomInOut/ProductImageZoomInOut";
+import PrdInfoSection from "./../../Components/Product/PrdInfoSection/PrdInfoSection";
+import Recommendedproducts from "../../Components/Product/Recommendedproducts/RecommendedProducts";
+import Loading from "../../Components/Loading/Loading";
+function addDotEvery3Chars(str) {
+  const num = str.replace(/\D/g, "");
+  return num.match(/.{1,3}/g).join(".");
+}
 const ProductDetails = () => {
-  const prdInfoSectionRef = useRef();
-
-  const [imageUrl, setImageUrl] = useState(imgsUrl[0]);
+  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showBtn, setShowBtn] = useState(false);
+  const btnRef = useRef(null);
+  const addToBag = useRef(products[0]);
+  const prdInfoSectionRef = useRef();
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [currentProduct, setCurrentProduct] = useState(null);
+
+  useEffect(() => {
+    const fetchProductAndRelated = async () => {
+      try {
+        setIsLoading(true);
+        const productRes = await fetch(`http://localhost:3000/products/${id}`);
+        const productData = await productRes.json();
+        setProduct(productData);
+        setCurrentProduct(productData);
+        if (productData.images && productData.images.length > 0) {
+          setImageUrl(productData.images[0]);
+        }
+
+        const relatedRes = await fetch("http://localhost:3000/products");
+        const relatedData = await relatedRes.json();
+        const filteredRelated = relatedData
+          .filter((p) => p.id !== id)
+          .slice(0, 5);
+        setRelatedProducts(filteredRelated);
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching product:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProductAndRelated();
+  }, [id]);
+
+  useEffect(() => {
+    if (currentProduct) {
+      setImageUrl(currentProduct.images[currentIndex]);
+    }
+  }, [currentProduct, currentIndex]);
+
   const handleArrowRight = () => {
-    if (currentIndex >= imgsUrl.length - 1) return;
+    if (currentIndex >= currentProduct?.images.length - 1) return;
     const nextIndex = currentIndex + 1;
     setCurrentIndex(nextIndex);
-    setImageUrl(imgsUrl[nextIndex]);
+    setImageUrl(currentProduct?.images[nextIndex]);
   };
+
   const handleArrowLeft = () => {
     if (currentIndex <= 0) return;
     const prevIndex = currentIndex - 1;
     setCurrentIndex(prevIndex);
-    setImageUrl(imgsUrl[prevIndex]);
+    setImageUrl(currentProduct?.images[prevIndex]);
   };
-  const [showBtn, setShowBtn] = useState(false);
-  const btnRef = useRef(null);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY >= 1450 && window.screenX <= 900) {
@@ -61,14 +106,14 @@ const ProductDetails = () => {
   const content = (
     <>
       <div className="container-fluid d-flex flex-wrap justify-content-center gap-5 ">
-        {imgsUrl.map((img, index) => {
+        {currentProduct?.images.map((img, index) => {
           return (
             <img
               style={{ width: "30vw" }}
               className="img-fluid "
               key={index}
               src={img}
-              alt=""
+              alt={currentProduct.imageAlt.en}
               draggable={false}
             />
           );
@@ -76,7 +121,33 @@ const ProductDetails = () => {
       </div>
     </>
   );
+  const handleVariantSelect = (variant) => {
+    if (!variant) {
+      setCurrentProduct(product);
+      setImageUrl(product.images[0]);
+      setCurrentIndex(0);
+    } else {
+      setCurrentProduct({
+        ...product,
+        id: variant.id,
+        name: variant.name || product.name,
+        images: variant.images,
+        imageAlt: variant.imageAlt,
+        price: variant.price || product.price,
+        measurement: variant.measurement || product.measurement,
+      });
+      setImageUrl(variant.images[0]);
+      setCurrentIndex(0);
+    }
+  };
 
+  const handleImageHover = (previewImageUrl) => {
+    setImageUrl(previewImageUrl);
+  };
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error: {error}</div>;
+  if (!product) return <div>No product found</div>;
   return (
     <>
       <div className="freeDeliver hide hoverLink">
@@ -89,16 +160,37 @@ const ProductDetails = () => {
           <Button
             ref={btnRef}
             style={{ position: "fixed", bottom: "0", zIndex: 100 }}
+            onClick={() => openModel(addToBag)}
             className="rounded-pill  hideBtn my-4 btn-floated   text-light py-2"
           >
             Add to bag
           </Button>
         )}
-        <PrdImgsCrsl imgsUrl={imgsUrl} />
+        <OffCanvas
+          content={
+            <AddToBag
+              currentProduct={currentProduct}
+              relatedProducts={products}
+            />
+          }
+          title={
+            <div
+              style={{ padding: "6px 16px" }}
+              className="d-flex align-items-center gap-2"
+            >
+              <IoMdCheckmarkCircleOutline className="text-success fw-normal fs-4" />
+              <span style={{ fontSize: "14px", fontWeight: 300 }}>
+                Added to cart
+              </span>
+            </div>
+          }
+          ref={addToBag}
+        />
+        <PrdImgsCrsl imgsUrl={currentProduct?.images || []} />
         {/* Carousel on large screens*/}
-        <div className="d-flex container-fluid row-gap-5 mt-5 justify-content-around px-4 flex-wrap">
+        <div className=" crsl-product-lg container-fluid row-gap-5 mt-5 justify-content-around px-4 flex-wrap">
           <div className="hide prd-imgs mt-3 flex-column">
-            {imgsUrl.map((img, index) => {
+            {currentProduct?.images.map((img, index) => {
               return (
                 <img
                   className={index == 0 ? "borderInit" : "borderHover"}
@@ -123,7 +215,7 @@ const ProductDetails = () => {
                 </IconButton>
               )}
 
-              {currentIndex < imgsUrl.length - 1 && (
+              {currentIndex < currentProduct?.images.length - 1 && (
                 <IconButton
                   className="btn-arrow-right btn-arrow hideBtn"
                   onClick={handleArrowRight}
@@ -158,7 +250,13 @@ const ProductDetails = () => {
               </Button>
             </div>
           </div>
-          <PrdInfoSection ref={prdInfoSectionRef} />
+          <PrdInfoSection
+            ref={prdInfoSectionRef}
+            product={product}
+            currentProduct={currentProduct}
+            onVariantSelect={handleVariantSelect}
+            onImageHover={handleImageHover}
+          />
 
           <div style={{ width: "94%" }}>
             <p
@@ -167,18 +265,15 @@ const ProductDetails = () => {
                 fontSize: "20px",
               }}
             >
-              ÄSPINGE kitchenette doesn’t compromise on quality, function or
-              personal expression. Clever storage solutions and a blend of
-              materials make this small-size unit into a big show of who you
-              are.
+              {currentProduct.short_description.en}
             </p>
             <div style={{ width: "100%", fontSize: "12px" }}>
               <p className="m-0">Article number</p>
               <span
-                style={{ fontSize: "12px" }}
-                className=" text-light p-1 px-2 me-4 fw-bold bg-black"
+                style={{ fontSize: "14px" }}
+                className=" text-light p-1 px-3 me-4 fw-bold bg-black"
               >
-                105.002.81
+                {addDotEvery3Chars(currentProduct.id)}
               </span>
               <FaLocationDot
                 className="mb-4 me-1"
@@ -188,7 +283,7 @@ const ProductDetails = () => {
                 Locate product in store
               </Link>
               <div>
-                <Model
+                <OffCanvas
                   content={"hellp"}
                   title={"All Product details"}
                   ref={productDetailsRef}
@@ -213,6 +308,7 @@ const ProductDetails = () => {
                 </div>
                 <div>
                   <h4 className="fw-bold my-3">Related products</h4>
+                  <Recommendedproducts products={relatedProducts} />
                 </div>
                 <div>
                   <p className="text-secondary fw-bold">Designer thoughts</p>
