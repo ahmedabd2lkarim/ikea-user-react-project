@@ -1,7 +1,7 @@
 import React from "react";
-import Teaser from "../../components/layout/Home/Teaser";
-import ProductScroller from "../../components/layout/Home/ProductScroller";
-import PromoScroller from "../../components/layout/Home/PromoScroller";
+import Teaser from "../../Components/Home/Teaser";
+import ProductScroller from "../../Components/Home/ProductScroller";
+import PromoScroller from "../../Components/Home/PromoScroller";
 import { useTranslation } from "react-i18next";
 
 import { CircularProgress, Box, Button, Typography, Grid } from "@mui/material";
@@ -15,7 +15,7 @@ function Home() {
     ar: 'https://www.ikea.com/images/3d/f0/3df0ecc1b136cb2385a6652af84a5a9d.png?f=sg', 
   };
   const { products, loading } = useFetchProducts();
-  const { teaserData: homeCategory, loading: loadingHomeTeaser } = useFetchTeaser("Home");
+  const { teaserData: homeCategory, loading: loadingHomeTeaser } = useFetchTeaser("home");
 
   const firstTeaser = homeCategory?.teasers?.[0];
   const secondTeaser = homeCategory?.teasers?.[1];
@@ -46,9 +46,13 @@ function Home() {
 
   return (
     <Grid px={{ xs: 1, sm: 2, md: 5 }}>
+
       <Typography variant="h4" fontWeight="bold" py={5}>
         {t("welcome")}
       </Typography>
+
+
+
       {loadingHomeTeaser ? (
         <Box display="flex" justifyContent="center" my={5}>
           <CircularProgress />
@@ -63,6 +67,8 @@ function Home() {
           height={firstTeaser.height}
           language={language}
         />
+
+
 
       ) : null}
       {loading ? (
@@ -90,6 +96,8 @@ function Home() {
           <ProductScroller categories={cp} />
         </>
       )}
+
+
       
       {loadingHomeTeaser ? (
         <Box display="flex" justifyContent="center" my={5}>
@@ -107,18 +115,25 @@ function Home() {
 
         />
 
+
+
       ) : null}
       <Typography variant="h5" fontSize={27} fontWeight="bold" pt={10} pb={4}>
         {t("nowInIKEA")}
       </Typography>
+
+
       <PromoScroller />
+
       {loading ? (
         <Box display="flex" justifyContent="center" my={5}>
           <CircularProgress />
         </Box>
       ) : (
-        <>       <ProductScroller title={t("recommended")} products={products.slice(0, 10)} cardWidth={250} />
+        <> <ProductScroller title={t("recommended")} products={products.slice(0, 10)} cardWidth={250} />
         </>)}
+
+
       <Button onClick={() => i18n.changeLanguage('en')}>English</Button>
       <Button onClick={() => i18n.changeLanguage('ar')}>العربية</Button>
 
