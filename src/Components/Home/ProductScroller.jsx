@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, Card, CardMedia, CardContent, IconButton, Tooltip} from "@mui/material";
+import { Box, Typography, Card, CardMedia, CardContent, IconButton, Tooltip } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }) => {
@@ -99,6 +99,61 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
 const HoverCard = ({ product, cardWidth, deals }) => {
   const [hovered, setHovered] = useState(false);
 
+  const handleAddToCart = async () => {
+    const token = localStorage.getItem("token");
+  
+    const cartItem = {
+      prdID: product._id,
+      quantity: 1,
+    };
+  
+    if (token) {
+      try {
+        const response = await fetch("http://localhost:5000/api/cart/newOrder", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            orderItems: [cartItem],
+            shippingFee: 20,
+          }),
+        });
+  
+        if (!response.ok) {
+          const error = await response.json();
+          alert(`Failed to add to cart: ${error.message}`);
+          return;
+        }
+  
+        const data = await response.json();
+        alert("Item added to cart (server)");
+        console.log("Order created:", data);
+  
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        alert("Error adding item to cart.");
+      }
+  
+    } else {
+      const guestCart = JSON.parse(localStorage.getItem("guest_cart")) || [];
+  
+      const existingIndex = guestCart.findIndex(item => item._id === product._id);
+  
+      if (existingIndex !== -1) {
+        guestCart[existingIndex].quantity += 1;
+      } else {
+        guestCart.push({ ...product, quantity: 1 });
+      }
+  
+      localStorage.setItem("guest_cart", JSON.stringify(guestCart));
+      alert("Item added to guest cart");
+    }
+  };
+  
+
+
   return (
     <Card
       elevation={0}
@@ -135,11 +190,11 @@ const HoverCard = ({ product, cardWidth, deals }) => {
         <Box>
           {product.price.discounted ? (
             <>
-              <Typography variant="body2" color="black" sx={{ textDecoration: "line-through", fontSize: "1rem",}}
+              <Typography variant="body2" color="black" sx={{ textDecoration: "line-through", fontSize: "1rem", }}
               >
                 <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography>{" "}
                 {((product.price?.currentPrice + Math.floor(15 * 50) + 10) * 0.8).toFixed(2)}
-                </Typography>
+              </Typography>
               <Typography color="error" fontWeight="bold" fontSize="1.2rem">
                 <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
               </Typography>
@@ -152,12 +207,11 @@ const HoverCard = ({ product, cardWidth, deals }) => {
         </Box>
 
         <Box sx={{ gap: 1 }}>
-          <Tooltip title="Add to Cart">
+          <Tooltip>
             <IconButton
               size="small"
-              sx={{
-                bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem",
-              }}
+              sx={{ bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem", ":hover":{bgcolor:"rgb(11, 23, 65)"}}}
+              onClick={handleAddToCart}
             >
               <span className="pip-btn__inner">
                 <svg
@@ -183,8 +237,8 @@ const HoverCard = ({ product, cardWidth, deals }) => {
               </span>
             </IconButton>
           </Tooltip>
-          <Tooltip title="Add to Favorites">
-            <IconButton size="small" sx={{ bgcolor: "white" }}>
+          <Tooltip >
+            <IconButton size="small" sx={{ bgcolor: "white"}}>
               <FavoriteBorderIcon fontSize="small" />
             </IconButton>
           </Tooltip>
