@@ -1,15 +1,9 @@
 import { NavLink } from "react-router-dom"
 import './Navbar.css'
-import {useSelector, useDispatch } from 'react-redux';
-import { toggleLanguage } from '../../Store/Slices/languageSlice';
 
 const Navbar = () => {
     const NavbarStyle = ({ isActive }) => (isActive ? "text-danger" : "")
-    const dispatch = useDispatch();
-    const language = useSelector((state) => state.settingLanguage.language); // Access the language state
-    const handleToggleLanguage = () => {
-        dispatch(toggleLanguage()); // Dispatch the toggleLanguage action
-      };
+    
     return (
     <>
     <nav className="container-div">
@@ -38,12 +32,6 @@ const Navbar = () => {
                  <li>
                     <NavLink to="/profile" className={NavbarStyle}>Profile</NavLink>
                 </li> 
-                <li>
-
-            <button onClick={handleToggleLanguage}>
-        {language === 'en' ? 'Switch to Arabic' : 'التبديل إلى الإنجليزية'}
-      </button>
-                </li>
 
             </ul>
 

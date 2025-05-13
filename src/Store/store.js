@@ -1,6 +1,7 @@
 import { configureStore} from "@reduxjs/toolkit";
 import userSlice from "./Slices/userSlice";
-import languageSlice from "./Slices/languageSlice";
+import chatSlice from "./Slices/chatSlice";
+import productSlice from "./Slices/productChatSlice";
 
 // import settingSlice from "./slices/settingSlice"
 
@@ -9,7 +10,9 @@ import languageSlice from "./Slices/languageSlice";
 const store = configureStore({
     reducer: {
         user :userSlice.reducer,
-        settingLanguage: languageSlice.reducer,
+        chat:chatSlice.reducer,
+        products:productSlice.reducer
+        // settingLanguage: languageSlice.reducer,
     }
 })
 

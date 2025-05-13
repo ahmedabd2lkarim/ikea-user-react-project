@@ -10,6 +10,7 @@ import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
 import Category from "./Pages/Category/Category";
 import store from "./Store/store";
+import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
        {
         path: "/profile",
          element: <Profile/>, 
+       },
+       {
+        path: "/profile/details",
+         element: <ProfileDetails/>, 
        },
        {
         path: "/category",

@@ -4,24 +4,47 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // console.log(baseURL)
 const token = localStorage.getItem('token');
 // Fetch users
-const fetchData = async () => {
-    const res = await fetch("http://localhost:3000/users");
+export const fetchProfile = createAsyncThunk('fetchUserProfile/UserProfile', async () => {
+    if (!token) {
+        throw new Error('No token found');
+    }
+    const res = await fetch("http://localhost:5000/api/auth/profile", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    if (!res.ok) {
+        throw new Error('Failed to fetch user data');
+    }
     const data = await res.json();
     return data;
-};
-export const fetchUsers = createAsyncThunk('fetchData/Users', fetchData);
-
-
+});
 
 // Edit user
-export const editUserInDB = createAsyncThunk('users/editUser', async ({ id, updatedUser }) => {
-    const res = await fetch(`http://localhost:3000/users/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+export const editUserProfile = createAsyncThunk('users/editUser', async ({ updatedUser }) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        throw new Error('No token found');
+    }
+
+    const res = await fetch(`http://localhost:5000/api/auth/profile`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify(updatedUser),
     });
+
+    if (!res.ok) {
+        throw new Error('Failed to update user');
+    }
+
     const data = await res.json();
-    return { id, updatedUser: data };
+    return { updatedUser: data };
 });
 
 // Delete user
@@ -67,7 +90,7 @@ export const registerUser = createAsyncThunk('users/register', async (newUser) =
 const userSlice = createSlice({
     name: 'userslice',
     initialState: {
-        items: [],
+        items: {},
         isloading: true,
         user: null, // To store logged-in user
         error: null, // To store login/register errors
@@ -75,37 +98,30 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUsers.fulfilled, (state, action) => {
+            .addCase(fetchProfile.fulfilled, (state, action) => {
                 state.items = action.payload;
                 state.isloading = false;
             })
-            .addCase(fetchUsers.pending, (state) => {
+            .addCase(fetchProfile.pending, (state) => {
                 state.isloading = true;
-            })
-            .addCase(editUserInDB.fulfilled, (state, action) => {
-                const { id, updatedUser } = action.payload;
-                const index = state.items.findIndex(user => user.id === id);
-                if (index !== -1) {
-                    state.items[index] = { ...state.items[index], ...updatedUser };
-                }
             })
             .addCase(deleteUserFromDB.fulfilled, (state, action) => {
                 const id = action.payload;
                 state.items = state.items.filter(user => user.id !== id);
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                state.user = action.payload; // Store logged-in user data
-                state.error = null; // Clear any previous errors
+                state.user = action.payload; 
+                state.error = null;
             })
             .addCase(loginUser.rejected, (state, action) => {
-                state.error = action.error.message; // Store login error
+                state.error = action.error.message; 
             })
             .addCase(registerUser.fulfilled, (state, action) => {
-                state.items.push(action.payload); // Add new user to the list
-                state.error = null; // Clear any previous errors
+                state.items.push(action.payload);
+                state.error = null; 
             })
             .addCase(registerUser.rejected, (state, action) => {
-                state.error = action.error.message; // Store registration error
+                state.error = action.error.message; 
             });
     },
 });
