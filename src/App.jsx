@@ -8,6 +8,8 @@ import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
 import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
+import store from "./Store/store";
+import { Provider } from "react-redux";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -48,7 +50,9 @@ const router = createBrowserRouter([
 function App() {
 
   return (
+    <Provider store={store}>
       <RouterProvider router={router} />
+    </Provider>
   );
 }
 
