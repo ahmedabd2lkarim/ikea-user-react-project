@@ -72,7 +72,9 @@
       "Forget_password?":"Forget your password?",
       "login":"Log in",
       "New_IKEA?":"New at IKEA?",
-      "Create_account":"Create account"
+      "Create_account":"Create account",
+      "SubmitErrorMsg":"The email address or password you entered is incorrect or the account does not exist in IKEA Egypt",
+      "loggedin_Successfyly":"You are now logged in!"
     },
     "Register":{
       "Create_account_Form":"Create an IKEA account",
@@ -103,7 +105,9 @@
       "privacy_policy_ErrorMsg":"You must have read and accepted the privacy policy",
       "Accept_privacy_policy":"I have read and understood the",
       "privacy_policy":"privacy policy",
-      "Create_account":"Create account"
+      "Create_account":"Create account",
+      "SubmitErrorMsg":"An account matching this email already exist.",
+      "Account_created_successfully":"Account created successfully!"
     }
     
 

@@ -12,9 +12,11 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from "../../Store/Slices/userSlice";
 // import "./UserForms.css";
+import { toast } from 'react-toastify';
 import "../../Pages/UserForms/UserForms.css";
 import { useTranslation } from "react-i18next";
 import ErrorMsg from "./ErrorMsg";
+import { useState } from "react";
 const LoginForm = () => {
   const { t } = useTranslation();
   const {
@@ -24,12 +26,13 @@ const LoginForm = () => {
   } = useForm();
 
   const isTouchedOrDirty = (name) => touchedFields[name] || dirtyFields[name];
-  const isTouchedAndDirty = (name) => touchedFields[name] && dirtyFields[name];
+  // const isTouchedAndDirty = (name) => touchedFields[name] && dirtyFields[name];
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
- const SubmitErrorMsg="The email address or password you entered is incorrect or the account does not exist in IKEA Egypt"
-const onSubmit = async (data,e) => {
+  const [loginFailed, setloginFailed] = useState(false);
+  const SubmitErrorMsg= t("Login.SubmitErrorMsg");
+//  const SubmitErrorMsg="The email address or password you entered is incorrect or the account does not exist in IKEA Egypt"
+ const onSubmit = async (data,e) => {
   e.preventDefault();
   const loginData = {
             email: data.Email,
@@ -40,9 +43,13 @@ const onSubmit = async (data,e) => {
      const res = await dispatch(loginUser(loginData)).unwrap();
       localStorage.setItem('token', res.token);
       localStorage.setItem('user',res.role);
+      toast.success(t("Login.loggedin_Successfyly"), {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       navigate('/');
   } catch {
-      alert('Login failed');
+    setloginFailed(true);
   }
 };
   const Label = "Email address or phone number";
@@ -76,10 +83,11 @@ const onSubmit = async (data,e) => {
                 {t("Login.LoginIKEA")}
               </h4>
             </Grid>
-            {/* <div>
+            {loginFailed && (
+            <div>
               <ErrorMsg Msg={SubmitErrorMsg}/>
-            </div> */}
-            
+            </div>
+            )}
             {/* Here for userName */}
             <InputLabel className="label" htmlFor="username">
             {t("Login.Email")}
@@ -92,7 +100,7 @@ const onSubmit = async (data,e) => {
                   borderColor: isTouchedOrDirty("Email")
                     ? errors.Email
                       ? "red"
-                      : "green"
+                      : "black"
                     : "inherit",
                 }}
                 id="username"
@@ -109,14 +117,14 @@ const onSubmit = async (data,e) => {
                 })}
               />
               {isTouchedOrDirty("Email") && errors.Email && (
-                <div  style={{ display: "flex", color: "#ff1744" }}>
+                <div  style={{ marginTop:"3px", display: "flex", color: "#ff1744" }}>
                   <InfoIcon fontSize="12px" />
                   <Typography fontSize="12px">
                     {errors.Email.message}
                   </Typography>
                 </div>
               )}
-              {isTouchedAndDirty("Email") && !errors.Email && (
+              {/* {isTouchedAndDirty("Email") && !errors.Email && (
                 <div
                   style={{
                     display: "flex",
@@ -129,7 +137,7 @@ const onSubmit = async (data,e) => {
                   {t("Login.accept")}
                   </Typography>
                 </div>
-              )}
+              )} */}
             </FormControl>
 
             {/* Here for password */}
@@ -142,7 +150,7 @@ const onSubmit = async (data,e) => {
                   borderColor: isTouchedOrDirty("Password")
                     ? errors.Password
                       ? "red"
-                      : "green"
+                      : "black"
                     : "inherit",
                 }}
                 id="password"
@@ -156,14 +164,14 @@ const onSubmit = async (data,e) => {
               />
 
               {isTouchedOrDirty("Password") && errors.Password && (
-                <div style={{ display: "flex", color: "#ff1744" }}>
+                <div style={{ marginTop:"3px",display: "flex", color: "#ff1744" }}>
                   <InfoIcon fontSize="12px" />
                   <Typography fontSize="12px">
                     {errors.Password.message}
                   </Typography>
                 </div>
               )}
-              {isTouchedAndDirty("Password") && !errors.Password && (
+              {/* {isTouchedAndDirty("Password") && !errors.Password && (
                 <div
                   style={{
                     display: "flex",
@@ -177,7 +185,7 @@ const onSubmit = async (data,e) => {
                   {t("Login.PasswordAccept")}
                   </Typography>
                 </div>
-              )}
+              )} */}
             </FormControl>
             <a> {t("Login.Forget_password?")}</a>
             <div>

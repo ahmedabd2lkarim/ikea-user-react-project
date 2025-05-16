@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from "../../Store/Slices/userSlice";
 import { useTranslation } from "react-i18next";
+import ErrorMsg from "./ErrorMsg";
+import { toast } from 'react-toastify';
 const RegisterForm = () => {
   const { t } = useTranslation();
   const {
@@ -29,7 +31,9 @@ const RegisterForm = () => {
   const isTouchedAndDirty = (name) => touchedFields[name] && dirtyFields[name];
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+  const [registerFailed, setregisterFailed] = useState(false);
+
+  const SubmitErrorMsg= t("Register.SubmitErrorMsg");
   const onSubmit = async (data,e) => {
     e.preventDefault();
     const newUser = {
@@ -37,16 +41,20 @@ const RegisterForm = () => {
           email: data.Email,
           password: data.Password,
           mobileNumber:"No phone added",
-          homeAddress:"No addresses added"
+          homeAddress:"No addresses added",
+          gender:null
         }
   
     try {
-       const res = await dispatch(registerUser(newUser)).unwrap();
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('user',res.role);
-        navigate('/');
-    } catch {
-        alert('Register failed');
+        await dispatch(registerUser(newUser)).unwrap();
+        toast.success(t("Register.Account_created_successfully"), {
+                position: 'top-right',
+                autoClose: 3000,
+              });
+        navigate('/login');
+      } catch {
+        setregisterFailed(true);
+      
     }
   };
 
@@ -118,7 +126,11 @@ const validationStatus = getPasswordValidationStatus();
               </h4>
               {/* <h4 style={{fontSize: "14px",fontWeight: 650,marginBottom: "30px"}}>And it’s free to join!</h4>  */}
             </Grid>
-
+            {registerFailed && (
+            <div>
+              <ErrorMsg Msg={SubmitErrorMsg}/>
+            </div>
+            )}
             <InputLabel className="label">{t("Register.First_name")}</InputLabel>
             <FormControl fullWidth style={{ marginBottom: "20px" }}>
               <input
@@ -137,7 +149,7 @@ const validationStatus = getPasswordValidationStatus();
                 })}
               />
               {isTouchedOrDirty("firstName") && errors.firstName && (
-                <Typography color="#ff1744" fontSize="12px">
+                <Typography color="#ff1744" fontSize="12px" marginTop={"3px"}>
                   <InfoIcon fontSize="12px" />
                   {errors.firstName.message}
                 </Typography>
@@ -147,7 +159,8 @@ const validationStatus = getPasswordValidationStatus();
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  color:"green"
+                  color:"green",
+                  marginTop:"3px"
                   }}
                 >
                   <CheckCircleIcon fontSize="6px" />
@@ -176,7 +189,7 @@ const validationStatus = getPasswordValidationStatus();
                 })}
               />
               {isTouchedOrDirty("lastName") && errors.lastName && (
-                <Typography color="#ff1744" fontSize="12px">
+                <Typography color="#ff1744" fontSize="12px" marginTop={"3px"}>
                   <InfoIcon fontSize="12px" />
                   {errors.lastName.message}
                 </Typography>
@@ -186,7 +199,8 @@ const validationStatus = getPasswordValidationStatus();
                style={{
                  display: "flex",
                  alignItems: "center",
-                 color:"green"
+                 color:"green",
+                 marginTop:"3px"
                  }}
                >
                  <CheckCircleIcon fontSize="6px" />
@@ -223,14 +237,14 @@ const validationStatus = getPasswordValidationStatus();
               />
               {isTouchedOrDirty("Email") &&  errors.Email &&(
                 
-                <Typography color="#ff1744" fontSize="12px">
+                <Typography color="#ff1744" fontSize="12px" marginTop={"3px"}>
                   <InfoIcon fontSize="12px" />
                   {errors.Email.message}
                 </Typography>
               )}
               {isTouchedAndDirty("Email") &&  !errors.Email  &&(
                 <div
-                  style={{color:"green",display: "flex",alignItems: "center"}}
+                  style={{color:"green",display: "flex",alignItems: "center" , marginTop:"3px"}}
                 >
                   <CheckCircleIcon fontSize="6px" />
                   <Typography fontSize="12px" color="green" marginLeft="2px">
@@ -275,7 +289,7 @@ const validationStatus = getPasswordValidationStatus();
               />
               {isTouchedOrDirty("Password") &&  errors.Password &&(
                 
-                <Typography color="#ff1744" fontSize="12px">
+                <Typography color="#ff1744" fontSize="12px" marginTop={"3px"}>
                   <InfoIcon fontSize="12px" />
                   {errors.Password.message}
                 </Typography>
@@ -283,7 +297,7 @@ const validationStatus = getPasswordValidationStatus();
               {isTouchedAndDirty("Password") &&  !errors.Password  &&(
                 <div
                   color="green"
-                  style={{color:"green",display: "flex",alignItems: "center"}}
+                  style={{color:"green",display: "flex",alignItems: "center" , marginTop:"3px"}}
                 >
                   <CheckCircleIcon fontSize="6px" />
                   <Typography fontSize="12px" marginLeft="2px">

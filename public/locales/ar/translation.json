@@ -71,7 +71,10 @@
       "Forget_password?":"هل نسيت كلمة المرور؟",
       "login":"تسجيل دخول",
       "New_IKEA?":"هل أنت جديد في IKEA؟",
-      "Create_account":"إنشاء حساب"
+      "Create_account":"إنشاء حساب",
+      "SubmitErrorMsg":"عنوان البريد الإلكتروني أو كلمة المرور التي أدخلتها غير صحيحة أو الحساب غير موجود في ايكيا مصر",
+      "loggedin_Successfyly":"لقد قمت بتسجيل الدخول الآن!"
+    
     },
     "Register":{
       "Create_account_Form":"إنشاء حساب لدى ايكيا",
@@ -102,7 +105,9 @@
       "privacy_policy_ErrorMsg":"يجب أن تكون قد قرأت ووافقت على سياسة الخصوصية",
       "Accept_privacy_policy":"لقد قرأت",
       "privacy_policy":" سياسة الخصوصية وفهمتها جيداً.",
-      "Create_account":"إنشاء حساب"
+      "Create_account":"إنشاء حساب",
+      "SubmitErrorMsg":"يوجد حساب مطابق لهذا البريد الإلكتروني بالفعل.",
+      "Account_created_successfully":"تم إنشاء الحساب بنجاح!"
     }
   }
   

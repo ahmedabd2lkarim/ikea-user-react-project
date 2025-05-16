@@ -141,3 +141,21 @@ font-size: .8rem;
     color: white;
     border: 1px solid #000000;
 }  
+
+/* Delete Page */
+.delete-profile h1{
+  font-size: 1.5rem;
+  letter-spacing: -.0042em;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.delete-profile .delete-info{
+  font-size: .8rem;
+  letter-spacing: -.0042em;
+  line-height: 1.571;
+  color: #4d4d4d;
+}
+.delete-profile .delete-info li{
+  margin-bottom: 3px;
+}

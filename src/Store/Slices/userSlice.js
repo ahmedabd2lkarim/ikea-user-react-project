@@ -75,7 +75,7 @@ export const registerUser = createAsyncThunk('users/register', async (newUser) =
     const res = await fetch(`http://localhost:5000/api/auth/register`, {
         method: 'POST',
         headers: { 
-            'Authorization': `Bearer ${token}`,
+            // 'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
          },
         body: JSON.stringify(newUser),
@@ -117,9 +117,9 @@ const userSlice = createSlice({
                 state.error = action.error.message; 
             })
             .addCase(registerUser.fulfilled, (state, action) => {
-                state.items.push(action.payload);
-                state.error = null; 
-            })
+                state.user = action.payload; 
+                state.error = null;
+              })
             .addCase(registerUser.rejected, (state, action) => {
                 state.error = action.error.message; 
             });

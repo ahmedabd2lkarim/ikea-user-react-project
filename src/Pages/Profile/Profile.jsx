@@ -6,7 +6,7 @@ import './Profile.css';
 import LockSVG from "./LockSVG";
 import PenSVG from "./penSVG";
 import Garbish from "./Garbish";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -25,9 +25,20 @@ const Profile = () => {
   console.log(userName)
   const dispatch = useDispatch();
   
+
+  
     useEffect(() => {
         dispatch(fetchProfile());
-    }, [dispatch]); 
+    }, [dispatch]);
+
+
+
+    const navigate = useNavigate(); 
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate('/login');
+    };
     // console.log(t("greetingProfileUserName", { name: "Test" }));
   return (
     <div>
@@ -88,6 +99,7 @@ const Profile = () => {
       </Grid>
     </li>
     <li>
+    <NavLink to="/profile/delete-account" style={{ textDecoration: 'none', color: 'inherit' }}> 
       <Grid marginTop={2} container spacing={5}>
       <Grid  size={{ xs: 1, md: 1 }} style={{ display: 'flex', alignItems: 'center' }}>
       <Garbish/>
@@ -98,13 +110,27 @@ const Profile = () => {
       </Grid>
       <Grid  size={{ xs: 2, md: 2 }} style={{ display: 'flex',alignItems: 'center' ,justifyContent: 'flex-end' }}> <KeyboardArrowRightIcon/> </Grid>
       </Grid>
+    </NavLink>
     </li>
     <li>
 
     <div style={{ fontSize:"1rem",marginTop:"30px",display:"flex",alignItems:"center"}}>
     <LogoutIcon />
-
-    <a style={{marginTop:"5px" , marginLeft:"20px",marginRight:"20px" , textDecoration:"underline"}} >{t("profile.Logout")}</a>
+    <button
+  onClick={handleLogout}
+  style={{
+    marginTop: "5px",
+    marginLeft: "20px",
+    marginRight: "20px",
+    background: "none",
+    border: "none",
+    textDecoration: "underline",
+    cursor: "pointer"
+  }}
+>
+  {t("profile.Logout")}
+</button>
+    {/* <a onClick={handleLogout} style={{marginTop:"5px" , marginLeft:"20px",marginRight:"20px" , textDecoration:"underline"}} >{t("profile.Logout")}</a> */}
     </div>
     </li>
   </ul>

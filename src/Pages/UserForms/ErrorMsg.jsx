@@ -10,9 +10,9 @@ const ErrorMsg = ({Msg}) => {
             </Grid>
             <Grid  size={{ xs: 9, md: 9 }}>
                <Typography style={{fontSize:"11px" , color:"rgb(100, 100, 100)", maxWidth:"100%", whiteSpace: "normal",overflowWrap: "break-word"}}>
-               The email address or password you entered is incorrect or the account does not exist in IKEA Egypt
+
+                {Msg}
                </Typography>
-                {/* {Msg} */}
             </Grid>
         </Grid>
     </div>
