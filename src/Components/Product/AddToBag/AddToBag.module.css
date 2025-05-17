@@ -1,0 +1,37 @@
+.addedCardPrd {
+    display: flex;
+    justify-content: space-between;
+    padding-inline: 20px;
+}
+
+.addedCardPrd img,
+.compeleteOrderProduct img {
+    width: 100px;
+    height: 100px;
+}
+
+
+.compeleteOrderProductInfo,
+.compeleteOrderProduct img {
+
+    cursor: pointer;
+}
+
+.added-card-product-info,
+.compeleteOrderProductInfo {
+    width: 60%;
+
+}
+
+
+.compeleteOrderProduct:hover p>b {
+    text-decoration: underline;
+}
+
+.compeleteOrderProduct {
+    height: 180px;
+    display: flex;
+    /* align-items: center; */
+    column-gap: 20px;
+    padding-inline: 20px;
+}
