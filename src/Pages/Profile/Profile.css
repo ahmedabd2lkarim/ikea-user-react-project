@@ -1,0 +1,161 @@
+.Content-Profile-Page{
+    padding-left:40px;
+    padding-right: 30px;
+    /* padding-right: 70px; */
+    h2{
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+}
+/* .profilePage{
+  padding-left: 10px;
+  
+} */
+.Profile-img-info{
+margin-top: 0;    
+height: 180px;
+background-color: #6f5c52;
+color: white;
+padding: 2rem 1.625rem 2rem 2rem;
+margin-bottom: 200px;
+}
+.Profile-img-info h1{
+  font-size: 1.2rem;
+}
+.Right-Profile-side{
+padding-left: 20px;
+margin-top: -20px; 
+}
+.Right-Profile-side ul {
+    list-style: none;
+    /* padding-left: 16px; */
+    margin: 0;
+    padding: 0;
+}
+.Right-Profile-side ul li {
+    padding-left: 16px;
+    margin-left: 0%;
+    border-top: solid .3px #b8b7b6;
+    height: 85px;
+}
+
+.Right-Profile-side ul li .li-details{
+ margin: 0 ;
+/* font-size:" 7px;"; */
+color: #636363;
+}
+li:hover .li-title,
+  li:hover .li-details {
+    text-decoration: underline;
+}
+
+@media screen and (max-width:900px) {
+  .Content-Profile-Page h2{
+    text-align: center;
+    font-size: 2rem;
+  }
+  .Content-Profile-Page{
+    padding-left: 30px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    
+  }
+  .Profile-img-info{
+    margin-bottom: 20px;
+    
+  }
+  .Profile-img-info h1{
+    font-size: 32px;
+  }
+
+}
+.Profile-img-info p{
+font-size: .8rem;
+}
+
+/* Profile detailes style Section */
+.Profile-Details{
+    padding: 20px 30px ;
+    /* padding-left: 30px; */
+    /* padding-right: 30px; */
+}
+.Profile-details-info{
+    color: #737373;
+    margin-top: 5px;
+    margin-bottom: 1px;
+}
+.profile-edit-btn{
+    display: flex;
+    justify-content: center;
+   width: 100%;
+    border: none;
+    padding: 4px;
+    border-radius: 60px;
+    font-size: 12px;
+    margin-top: 20px;
+    background: "white";
+    border: 1px solid #000000;
+    
+}
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .modal-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+.modal-edit-btn{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: none;
+    padding: 4px;
+    border-radius: 60px;
+    font-size: 12px;
+    margin-top: 20px;
+    background: "black";
+    color: white;
+    border: 1px solid #000000;
+}  
+
+/* Delete Page */
+.delete-profile h1{
+  font-size: 1.5rem;
+  letter-spacing: -.0042em;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.delete-profile .delete-info{
+  font-size: .8rem;
+  letter-spacing: -.0042em;
+  line-height: 1.571;
+  color: #4d4d4d;
+}
+.delete-profile .delete-info li{
+  margin-bottom: 3px;
+}
