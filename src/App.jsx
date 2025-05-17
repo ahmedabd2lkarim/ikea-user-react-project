@@ -9,6 +9,13 @@ import Cart from "./Pages/Cart/Cart";
 import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
 
+
+import store from "./Store/store";
+import { Provider } from "react-redux";
+
+import Category from "./Pages/Category/Category";
+
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +47,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
+
         element: <Profile />,
       },
     ],
@@ -48,6 +56,25 @@ const router = createBrowserRouter([
 
 function App() {
   return <RouterProvider router={router} />;
+
+         element: <Profile/>, 
+       },
+       {
+        path: "/category",
+         element: <Category/>, 
+       },
+
+    ]
+  }])
+
+function App() {
+
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
+
 }
 
 export default App;
