@@ -1,16 +1,17 @@
 {
-    "welcome": "Welcome to IKEA Egypt",
-    "offerTitle": "Enjoy 15% Off On All Kitchens",
-    "offerText": "Shop & Enjoy Savings 15% Off On All Kitchens, Limited Offer For Kitchens Only",
-    "seeMore": "see more",
-    "discoverNew": "Discover our new products",
-    "nowInIKEA": "Now in IKEA Egypt",
-    "recommended": "Recommended for you",
-    "categories": {
-      "kitchen": "Kitchens Offer",
-      "lowerPrices": "New Lower Prices",
-      "bestSellers": "Best Sellers",
-      "familyOffer": "IKEA FAMILY OFFER"
-    }
-  }
+  "welcome": "Welcome to IKEA Egypt",
+  "offerTitle": "Enjoy 15% Off On All Kitchens",
+  "offerText": "Shop & Enjoy Savings 15% Off On All Kitchens, Limited Offer For Kitchens Only",
+  "seeMore": "see more",
+  "discoverNew": "Discover our new products",
+  "nowInIKEA": "Now in IKEA Egypt",
+  "recommended": "Recommended for you",
+  "categories": {
+    "kitchen": "Storage Offer",
+    "lowerPrices": "New Lower Prices",
+    "bestSellers": "Best Sellers",
+    "familyOffer": "IKEA FAMILY OFFER"
+  },
   
+  "moreTips": "More tips and ideas"
+}

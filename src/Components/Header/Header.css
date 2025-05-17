@@ -1,0 +1,28 @@
+.react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar {
+    height: 3px;
+    transition: height 0.3s;
+    background: transparent;
+  }
+  
+  .react-horizontal-scrolling-menu--scroll-container:hover::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+/* Hide buttons by default */
+.slider-button {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show buttons only when hovering over the slider container */
+.slider-container:hover .slider-button {
+  visibility: visible;
+  opacity: 1;
+}

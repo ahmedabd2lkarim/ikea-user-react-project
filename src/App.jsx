@@ -11,41 +11,44 @@ import Profile from "./Pages/Profile/Profile";
 import Category from "./Pages/Category/Category";
 const router = createBrowserRouter([
   {
+
     path: "/",
     element: <Layout />,
     children: [
+  
       {
-        index:true ,
+        index: true,
         element: <Home />,
       },
+
       {
         path: "/login",
         element: <LoginForm />,
       },
       {
-       path: "/signup",
-        element: <RegisterForm  />, 
+        path: "/signup",
+        element: <RegisterForm />,
       },
       {
         path: "/productDetails",
-         element:< ProductDetails />, 
+        element: < ProductDetails />,
       },
       {
         path: "/cart",
-         element: <Cart/>, 
-       },
-       {
+        element: <Cart />,
+      },
+      {
         path: "/favorite",
-         element: <Favourite/>, 
-       },
-       {
+        element: <Favourite />,
+      },
+      {
         path: "/profile",
-         element: <Profile/>, 
-       },
-       {
-        path: "/category",
-         element: <Category/>, 
-       },
+        element: <Profile />,
+      },
+      {
+        path: "/category/:id",
+        element: <Category />,
+      },
 
     ]
   }])
@@ -53,7 +56,7 @@ const router = createBrowserRouter([
 function App() {
 
   return (
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   );
 }
 
