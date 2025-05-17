@@ -18,13 +18,16 @@ import Category from "./Pages/Category/Category";
 
 const router = createBrowserRouter([
   {
+
     path: "/",
     element: <Layout />,
     children: [
+  
       {
         index: true,
         element: <Home />,
       },
+
       {
         path: "/login",
         element: <LoginForm />,
@@ -34,8 +37,10 @@ const router = createBrowserRouter([
         element: <RegisterForm />,
       },
       {
+
         path: "/productDetails/:id",
         element: <ProductDetails />,
+
       },
       {
         path: "/cart",
@@ -47,34 +52,26 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-
         element: <Profile />,
+      },
+      {
+        path: "/category/:id",
+        element: <Category />,
+      },
+
       },
     ],
   },
 ]);
 
-function App() {
-  return <RouterProvider router={router} />;
 
-         element: <Profile/>, 
-       },
-       {
-        path: "/category",
-         element: <Category/>, 
-       },
-
-    ]
-  }])
 
 function App() {
-
   return (
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
   );
-
 }
 
 export default App;

@@ -1,0 +1,36 @@
+/* .react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar {
+    height: 4px;
+  } */
+  
+  /* .react-horizontal-scrolling-menu--scroll-container:hover::-webkit-scrollbar {
+    height: 10px;
+  } */
+  
+  /* .react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 6px;
+  } */
+  
+  /* .category-button {
+    transition: background 0.3s ease;
+  } */
+  
+  /* .category-button:hover {
+    background-color: #f5f5f5;
+  } */
+
+/* .scroll-container:active {
+  cursor: grabbing; 
+} */
+
+.react-horizontal-scrolling-menu--scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 15px 0;
+    scroll-behavior: smooth;
+}
+
+/* Show buttons only when hovering over the slider container */
+.slider-container:hover .slider-button {
+  display: flex; /* Show the buttons on hover */
+}
