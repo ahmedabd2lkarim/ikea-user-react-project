@@ -8,7 +8,7 @@
   "nowInIKEA": "Now in IKEA Egypt",
   "recommended": "Recommended for you",
   "categories": {
-    "kitchen": "Kitchens Offer",
+    "kitchen": "Storage Offer",
     "lowerPrices": "New Lower Prices",
     "bestSellers": "Best Sellers",
     "familyOffer": "IKEA FAMILY OFFER"
@@ -139,7 +139,10 @@
       "error":"Error changing password"
     }
     
-
+,
+    "moreTips": "More tips and ideas"
     
   }
   
+  
+

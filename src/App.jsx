@@ -8,6 +8,11 @@ import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
 import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
+
+
+import store from "./Store/store";
+import { Provider } from "react-redux";
+
 import Category from "./Pages/Category/Category";
 import store from "./Store/store";
 import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
@@ -15,36 +20,43 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
 import ChangePassword from "./Components/ProfilePages/ChangePassword";
+
+
 const router = createBrowserRouter([
   {
+
     path: "/",
     element: <Layout />,
     children: [
+  
       {
-        index:true ,
+        index: true,
         element: <Home />,
       },
+
       {
         path: "/login",
         element: <LoginForm />,
       },
       {
-       path: "/signup",
-        element: <RegisterForm  />, 
+        path: "/signup",
+        element: <RegisterForm />,
       },
       {
-        path: "/productDetails",
-         element:< ProductDetails />, 
+
+        path: "/productDetails/:id",
+        element: <ProductDetails />,
+
       },
       {
         path: "/cart",
-         element: <Cart/>, 
-       },
-       {
+        element: <Cart />,
+      },
+      {
         path: "/favorite",
-         element: <Favourite/>, 
-       },
-       {
+        element: <Favourite />,
+      },
+      {
         path: "/profile",
          element: <Profile/>, 
        },
@@ -66,12 +78,17 @@ const router = createBrowserRouter([
         path: "/category",
          element: <Category/>, 
        },
+      {
+        path: "/category/:id",
+        element: <Category />,
+      },
 
     ]
   }])
 
-function App() {
 
+
+function App() {
   return (
     <Provider store={store}>
     <RouterProvider router={router} />
@@ -80,4 +97,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

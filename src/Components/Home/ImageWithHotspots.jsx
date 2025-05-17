@@ -3,12 +3,16 @@ import { Box, Tooltip, IconButton, Divider, Typography, CircularProgress } from 
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-const ImageWithHotspots = ({ image, hotspots = [] }) => {
+import { useNavigate } from "react-router-dom";
+
+const ImageWithHotspots = ({ image, hotspots = [], language = 'en', assignedProductIds = [] }) => {
   const [productData, setProductData] = useState({});
   const [loading, setLoading] = useState({});
+  const navigate = useNavigate();
 
-  const handleHotspotHover = async (hotspot) => {
-    const productId = hotspot.productId;
+
+
+  const handleHotspotHover = async (productId) => {
     if (!productId || productData[productId]) return;
 
     setLoading((prev) => ({ ...prev, [productId]: true }));
@@ -22,62 +26,67 @@ const ImageWithHotspots = ({ image, hotspots = [] }) => {
       setLoading((prev) => ({ ...prev, [productId]: false }));
     }
   };
+  const handleHotspotClick = (productId) => {
+    if (productId) {
+      navigate(`/productDetails/${productId}`);
+    }
+  };
 
   return (
-    <Box sx={{ position: 'relative', height:'100%', width: '100%' }}>
+    <Box sx={{ position: 'relative', height: '100%', width: '100%' }}>
       <Box
         component="img"
         src={image}
         alt="Image with Hotspots"
-        sx={{
-          height: '100%',
-          width: '100%',
-          objectFit: 'cover',
-        }}
+        sx={{ height: '100%', width: '100%', objectFit: 'cover' }}
       />
-
       {hotspots.map((hotspot, index) => {
-        const productId = hotspot.productId;
+        const productId = assignedProductIds[index];
         const product = productData[productId];
 
         return (
           <Tooltip
-            slotProps={{
-              tooltip: {
-                sx: {
-                  bgcolor: 'white',
-                }
-              }
-
-            }}
             key={index}
             placement={hotspot.placement || 'top'}
+            slotProps={{ tooltip: { sx: { bgcolor: 'white' } } }}
             title={
               loading[productId] ? (
                 <CircularProgress size={20} />
               ) : product ? (
                 <Box display="flex" alignItems="center">
-                  <Box bgcolor={'white'} border={'none'} color={'black'} p={2}>
+                  <Box bgcolor="white" color="black" p={2}>
                     <Typography fontWeight="bold">{product.name}</Typography>
-                    <Typography variant="body2">{product.typeName}</Typography>
+                    <Typography variant="body2">{product.typeName?.[language] || product.typeName?.en}</Typography>
                     <Typography variant="body2">
-                      Price: {product.price?.currency} {product.price?.currentPrice.toLocaleString()}
+                      {language === 'ar' ? 'السعر' : 'Price'}: {product.price?.currency} {product.price?.currentPrice?.toLocaleString()}
                     </Typography>
-                    <Typography variant="caption">{product.measurement}</Typography>
+
+                    <Typography variant="caption">
+                      {product.measurement?.width && product.measurement?.height
+                        ? language === 'ar'
+                          ? `الحجم: ${product.measurement.width} × ${product.measurement.height}`
+                          : `Size: ${product.measurement.width} x ${product.measurement.height}`
+                        : product.color?.[language]?.trim()
+                          ? language === 'ar'
+                            ? `اللون: ${product.color[language]}`
+                            : `Color: ${product.color[language]}`
+                          : language === 'ar'
+                            ? ''
+                            : ''}
+                    </Typography>
+
+
                   </Box>
-
-                  <Divider orientation="vertical" variant="middle" flexItem  />
-
-                  <KeyboardArrowRightIcon sx={{color:"black", fontSize:'25px'}}/>
+                  <Divider orientation="vertical" flexItem />
+                  <KeyboardArrowRightIcon sx={{ color: "black", fontSize: '25px' }} />
                 </Box>
-
-              ) : (
-                "Loading..."
-              )
+              ) : ""
             }
           >
             <IconButton
-              onMouseEnter={() => handleHotspotHover(hotspot)}
+              onMouseEnter={() => handleHotspotHover(productId)}
+              onClick={() => handleHotspotClick(productId)}
+
               sx={{
                 position: 'absolute',
                 top: hotspot.top,
@@ -97,11 +106,7 @@ const ImageWithHotspots = ({ image, hotspots = [] }) => {
             >
               <FiberManualRecordIcon
                 className="hotspot-icon"
-                sx={{
-                  color: 'white',
-                  fontSize: '18px',
-                  transition: 'font-size 0.3s ease',
-                }}
+                sx={{ color: 'white', fontSize: '18px', transition: 'font-size 0.3s ease' }}
               />
             </IconButton>
           </Tooltip>
@@ -110,5 +115,6 @@ const ImageWithHotspots = ({ image, hotspots = [] }) => {
     </Box>
   );
 };
+
 
 export default ImageWithHotspots;

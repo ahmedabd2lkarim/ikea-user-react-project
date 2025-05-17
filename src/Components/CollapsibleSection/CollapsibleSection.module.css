@@ -1,0 +1,33 @@
+div[aria-expanded] div {
+    cursor: pointer;
+}
+
+.content {
+    transition: all 0.1s linear;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.titleContainer {
+    padding-block: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.title {
+    font-size: 16px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.titleContainer:hover .title{
+    text-decoration: underline;
+}
+
+.arrowIcon {
+    transition: transform 0.1s linear;
+}
+
+.arrowIcon.rotated {
+    transform: rotate(180deg);
+}
