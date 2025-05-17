@@ -15,7 +15,7 @@ const Cart = () => {
     dispatch(fetchOrder())
 
   }, [])
-
+  
   const toggleDrawer1 = (newOpen) => () => {
     setOpenDrawer1(newOpen);
   };

@@ -30,7 +30,6 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
         const product = products.find(product => product._id === item.prdID)
         product.quantity = item.quantity
     })
-    // console.log(data[0]);
 
     return { ...data[0], orderItems: products }
 });
@@ -102,7 +101,6 @@ const orderSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchOrder.fulfilled, (state, action) => {
             state.items = action.payload
-            // console.log(state.items);
             state.isLoading = false
         })
     }

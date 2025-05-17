@@ -14,8 +14,6 @@ const FetchOrderItems = () => {
     let [itemId, setItemId] = useState()
     const dispatch = useDispatch();
     useEffect(() => {
-        // console.log(1);
-        
         dispatch(fetchOrder())
     }, [])
     function decreaseQuantity(prdID) {
@@ -89,12 +87,12 @@ const FetchOrderItems = () => {
                     <hr />
                     <Grid container py={3}>
                         <Grid size={3}>
-                            <img src={item.image} alt="" width={'70%'} />
+                            <img src={item.images[0]} alt="" width={'70%'} />
                         </Grid>
                         <Grid size={7} lineHeight={1.5}>
                             <Typography variant='subtitle2' fontWeight={'bold'}>{item.name}</Typography>
-                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName}{item.imageAlt.substring(item.imageAlt.indexOf(','), item.imageAlt.lastIndexOf(','))} </Typography>
-                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.measurement}</Typography>
+                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName.en}{item.imageAlt.en.substring(item.imageAlt.en.indexOf(','), item.imageAlt.en.lastIndexOf(','))} </Typography>
+                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.measurement.width}x{item.measurement.height} {item.measurement?.unit || 'cm'}</Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.id.match(/.{1,3}/g).join('.')}</Typography>
                             <Grid container pt={4}>
                                 <Grid sx={{ borderRadius: '20px', border: 'grey solid 1px' }} size={{ xs: 6, sm: 3 }} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -102,7 +100,7 @@ const FetchOrderItems = () => {
                                         <RemoveIcon sx={{ color: 'black' }} fontSize='1px' />
                                     </IconButton>
                                     <Typography variant='subtitle2' fontWeight={'bold'}>{item.quantity}</Typography>
-                                    <IconButton size='small' onClick={() => { increaseQuantity(item._id) }} >
+                                    <IconButton size='small' onClick={() => { increaseQuantity(item._id) }} disabled={item.quantity == item.stockQuantity}>
                                         <AddIcon sx={{ color: 'black' }} fontSize='1px' />
                                     </IconButton>
                                 </Grid>
