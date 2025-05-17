@@ -171,21 +171,6 @@ const LoginForm = () => {
                   </Typography>
                 </div>
               )}
-              {/* {isTouchedAndDirty("Password") && !errors.Password && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                     color:"green",
-
-                  }}
-                >
-                  <CheckCircleIcon fontSize="6px" margin="0px" />
-                  <Typography fontSize="12px" color="green" marginLeft="2px">
-                  {t("Login.PasswordAccept")}
-                  </Typography>
-                </div>
-              )} */}
             </FormControl>
             <a> {t("Login.Forget_password?")}</a>
             <div>

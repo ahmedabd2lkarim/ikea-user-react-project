@@ -87,6 +87,7 @@ const Profile = () => {
       </Grid>
     </li>
     <li>
+    <NavLink to="/profile/change-password" style={{ textDecoration: 'none', color: 'inherit' }}>
       <Grid marginTop={2} container spacing={5}>
       <Grid  size={{ xs: 1, md: 1 }} style={{ display: 'flex', alignItems: 'center' }}>
       <LockSVG/>  
@@ -97,9 +98,10 @@ const Profile = () => {
       </Grid>
       <Grid  size={{ xs: 2, md: 2 }} style={{ display: 'flex',alignItems: 'center' ,justifyContent: 'flex-end' }}> <KeyboardArrowRightIcon/> </Grid>
       </Grid>
+    </NavLink>
     </li>
     <li>
-    <NavLink to="/profile/delete-account" style={{ textDecoration: 'none', color: 'inherit' }}> 
+    <NavLink to="/profile/delete-account" style={{ textDecoration: 'none', color: 'inherit' }}>
       <Grid marginTop={2} container spacing={5}>
       <Grid  size={{ xs: 1, md: 1 }} style={{ display: 'flex', alignItems: 'center' }}>
       <Garbish/>

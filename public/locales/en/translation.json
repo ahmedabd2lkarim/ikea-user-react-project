@@ -108,6 +108,35 @@
       "Create_account":"Create account",
       "SubmitErrorMsg":"An account matching this email already exist.",
       "Account_created_successfully":"Account created successfully!"
+    },
+    "Delete_Account":{
+      "Delete_account":"Delete account",
+      "Delete_account_details":"Time to say goodbye? We miss you already! The following happens when you delete your account:",
+      "P_Li1":"You delete all personal information and your shopping lists.",
+      "P_Li2":"You will no longer have access to your account or be able to enjoy any member benefits.",
+      "P_Li3":"For tax and other legal reasons, we will keep your purchase history.",
+      "delete_warning":"Remember that you are always welcome back!",
+      "Any_questions":"Any questions?",
+      "Contact":"Contact",
+      "customer_service":"customer service",
+      "Password":"Password",
+      "ConfirmDelete":"Confirm with your password to continue and delete your account.",
+      "Password_mismatch":"Password mismatch. Please enter the correct password and try again.",
+      "Delete_account_Btn":"Delete account"
+    },
+    "ChangePassword":{
+      "title":"Change password",
+      "description":"It's a good idea to update your password regularly and to make sure it's unique from other passwords you use.",
+      "currentPassword":"Current password",
+      "Current_password_empty":"The current password field cannot be left empty",
+      "newPassword":"New password",
+      "New_password_empty":"The new password field cannot be left empty",
+      "confirmPassword":"Confirm new password",
+      "confirmPasswordRequired":"The confirm new password field cannot be left empty",
+      "Confirm_new_password_mismatch":"The passwords do not match",
+      "changePasswordButton":"Change",
+      "succes":"Password changed successfully",
+      "error":"Error changing password"
     }
     
 

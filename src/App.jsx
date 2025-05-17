@@ -14,6 +14,7 @@ import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
+import ChangePassword from "./Components/ProfilePages/ChangePassword";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -54,6 +55,11 @@ const router = createBrowserRouter([
        {
         path: "/profile/delete-account",
          element: <DeleteProfile/>, 
+       }
+       ,
+       {
+        path: "/profile/change-password",
+         element: <ChangePassword/>, 
        }
        ,
        {
