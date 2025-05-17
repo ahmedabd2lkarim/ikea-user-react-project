@@ -97,9 +97,10 @@
 }
 
 @media screen and (min-width:901px) {
-    .crsl-product-lg{
+    .crsl-product-lg {
         display: flex;
     }
+
     .prd-imgs {
         display: flex;
         position: relative;
@@ -113,6 +114,12 @@
 
 
 @media screen and (max-width:900px) {
+
+    .productDetailsLabel,
+    .measurementsLabel {
+        font-size: 18px;
+    }
+
     .freeDeliver {
         display: flex;
     }

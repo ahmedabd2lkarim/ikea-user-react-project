@@ -1,8 +1,11 @@
 .offCanvas {
-    max-width: 30rem !important;
-    width: 100%!important;
+    max-width: 30rem;
+    width: 80vw!important;
 }
 
 .offCanvasSmall {
     height: 96% !important;
+    width: 100%!important;
+    max-width: 100%;
+    border-radius: 6px;
 }

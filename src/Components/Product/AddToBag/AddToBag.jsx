@@ -1,10 +1,36 @@
 import { Button } from "@mui/joy";
 import styles from "./AddToBag.module.css";
 import { TbBasketPlus } from "react-icons/tb";
-export default function AddToBag({ currentProduct, relatedProducts }) {
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ProductRating from "../../ProductRating/ProductRating";
+
+export default function AddToBag({ currentProduct, products }) {
+  const relatedProducts = [];
+  products.filter((product) => {
+    if (
+      currentProduct._id !== product._id &&
+      currentProduct.typeName.en === product.typeName.en
+    ) {
+      relatedProducts.push(product);
+    }
+  });
+  console.log(relatedProducts);
+
+  const navigate = useNavigate();
+  const [hoveredId, setHoveredId] = useState(null);
+
+  const handleMouseEnter = (productId) => {
+    setHoveredId(productId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredId(null);
+  };
+
   return (
-    <>
-      <div className={` ${styles.addedCardPrd} `}>
+    <div className="d-flex flex-column justify-content-center h-100">
+      <div className={` ${styles.addedCardPrd} mb-3`}>
         <div>
           <img
             src={currentProduct.images[0]}
@@ -12,9 +38,17 @@ export default function AddToBag({ currentProduct, relatedProducts }) {
           />
         </div>
         <div className={`${styles["added-card-product-info"]}`}>
-          <b>{currentProduct.name}</b>
-          <p className="m-0">
-            {currentProduct.typeName.en + ", " + currentProduct.measurement.en}
+          <p className="m-0 " style={{ fontSize: "15px" }}>
+            <b className="d-block ">{currentProduct.name}</b>
+            {currentProduct.typeName.en + ", "}
+            {`${currentProduct.measurement.width}x${
+              currentProduct.measurement.depth
+                ? currentProduct.measurement.depth + "x"
+                : ""
+            }${
+              currentProduct.measurement.height ||
+              currentProduct.measurement.length
+            } ${currentProduct.measurement.unit || "cm"}`}
           </p>
           <p>
             <span
@@ -35,37 +69,72 @@ export default function AddToBag({ currentProduct, relatedProducts }) {
       <div
         style={{
           height: "50vh",
-          borderBlock: "1px solid gray",
+          borderBlock: "1px solid #00000029",
           padding: "2px 6px",
         }}
         className=" overflow-auto "
       >
-        <h2 className="m-3 mb-5 fw-bold">Complement your order</h2>
+        <h3 className="m-3 mb-5 fw-bold">Complement your order</h3>
+
         {relatedProducts.map((prd) => {
-          console.log(prd);
           return (
-            <div key={prd.id} className={styles.compeleteOrderProduct}>
-              <div style={{ width: "fit-content" }}>
-                <img src={prd.images[0]} alt="" />
+            <div className="d-flex" key={prd.id}>
+              <div
+                onClick={() => navigate(`/productDetails/${prd._id}`)}
+                className={styles.compeleteOrderProduct}
+              >
+                <div style={{ width: "fit-content" }}>
+                  <img
+                    src={
+                      hoveredId === prd.id && prd.images[1]
+                        ? prd.images[1]
+                        : prd.images[0]
+                    }
+                    alt="prd.imageAlt.en"
+                    onMouseEnter={() => handleMouseEnter(prd.id)}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                </div>
+
+                <div>
+                  <div className="d-flex justify-content-between mb-2">
+                    <div
+                      style={{ width: "100%" }}
+                      className={styles.compeleteOrderProductInfo}
+                    >
+                      <p className="m-0 " style={{ fontSize: "15px" }}>
+                        <b className="d-block ">{prd.name}</b>
+                        {prd.typeName.en + ", "}
+                        {`${prd.measurement?.width}x${
+                          prd.measurement?.depth
+                            ? prd.measurement?.depth + "x"
+                            : ""
+                        }${
+                          prd.measurement?.height || prd.measurement?.length
+                        } ${prd.measurement?.unit || "cm"}`}
+                      </p>
+                      <p className="m-0">
+                        <span
+                          style={{
+                            fontSize: "12px",
+                            verticalAlign: "top",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {prd.price.currency}
+                        </span>
+                        <strong className="fs-3">
+                          {prd.price.currentPrice}
+                        </strong>
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <ProductRating productPrice={prd.price} />
+                  </div>
+                </div>
               </div>
-              <div className={styles.compeleteOrderProductInfo}>
-                <b>{prd.name}</b>
-                <p className="m-0">
-                  {prd.typeName.en + ", " + prd.measurement.en}
-                </p>
-                <p>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      verticalAlign: "top",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {prd.price.currency}
-                  </span>
-                  <strong className="fs-3">{prd.price.currentPrice}</strong>
-                </p>
-              </div>
+
               <div>
                 <Button
                   sx={{
@@ -83,7 +152,7 @@ export default function AddToBag({ currentProduct, relatedProducts }) {
           );
         })}
       </div>
-      <div className="d-flex justify-content-around my-1 flex-wrap align-items-center">
+      <div className="d-flex justify-content-around flex-wrap py-4">
         <Button
           className="rounded-pill"
           sx={{
@@ -108,6 +177,6 @@ export default function AddToBag({ currentProduct, relatedProducts }) {
           Go to shopping bag
         </Button>
       </div>
-    </>
+    </div>
   );
 }

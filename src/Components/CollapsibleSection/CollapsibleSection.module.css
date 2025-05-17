@@ -9,7 +9,7 @@ div[aria-expanded] div {
 }
 
 .titleContainer {
-    padding-block: 10px 60px;
+    padding-block: 10px;
     display: flex;
     justify-content: space-between;
 }
