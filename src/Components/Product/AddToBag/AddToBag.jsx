@@ -15,11 +15,6 @@ export default function AddToBag({ currentProduct, products }) {
       relatedProducts.push(product);
     }
   });
-<<<<<<< HEAD
-  console.log(relatedProducts);
-=======
-  // console.log(relatedProducts);
->>>>>>> origin/Magy
 
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState(null);
