@@ -1,10 +1,10 @@
 import { Box, Button, Container, Divider, Drawer, Grid, IconButton, List, ListItem, Typography } from '@mui/material'
-import CartHeader from '../../Components/Layout/Cart/cartHeader'
+import CartHeader from '../../Components/Cart/cartHeader'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { fetchOrder } from '../../Store/Slices/orderSlice';
 import CloseIcon from '@mui/icons-material/Close';
-import FetchOrderItems from '../../Components/Layout/Cart/fetchOrderItems';
+import FetchOrderItems from '../../Components/Cart/fetchOrderItems';
 const Cart = () => {
   const [openDrawer1, setOpenDrawer1] = useState(false)
   const [openDrawer2, setOpenDrawer2] = useState(false)
