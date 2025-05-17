@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSwipeable } from "react-swipeable";
 import { Carousel } from "react-bootstrap";
 import { IconButton } from "../../../common/mui/index";
@@ -7,12 +7,11 @@ import {
   ThreeSixtyIcon,
 } from "../../../common/mui-icons/index";
 import Button from "@mui/joy/Button";
-
-export default function PrdImgsCrsl({ imgsUrl }) {
+import "./PrdImgsCrsl.css";
+export default function PrdImgsCrsl({ handleOpenModel, allImgsRef, imgsUrl }) {
   const slideCount = imgsUrl.length;
   const [index, setIndex] = useState(0);
-
-  // Reset index when images change (variant selection)
+  const carouselWrapperRef = useRef(null);
   useEffect(() => {
     setIndex(0);
   }, [imgsUrl]);
@@ -26,42 +25,81 @@ export default function PrdImgsCrsl({ imgsUrl }) {
       setIndex((prev) => (prev - 1 + slideCount) % slideCount),
     trackMouse: true,
   });
-  function handleCarouselImgs() {
-    return imgsUrl.map((img, index) => {
-      return (
-        <Carousel.Item key={img}>
-          <IconButton className="favIcon bg-light">
-            <FavoriteBorderIcon />
-          </IconButton>
-          <div>
-            <img className="img-fluid prd-img" alt="900x500" src={img} />
-            {index === 0 && (
-              <Button
-                sx={{ fontSize: 12 }}
-                className=" rounded-pill Btn3d px-3 py-1"
-              >
-                <ThreeSixtyIcon sx={{ fontSize: 30 }} className="pe-2" />
-                View in 3D
-              </Button>
-            )}
-          </div>
-        </Carousel.Item>
-      );
-    });
-  }
+
+  useEffect(() => {
+    let isThrottled = false;
+
+    const handleWheel = (e) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+
+        if (isThrottled) return;
+
+        if (e.deltaX > 0) {
+          setIndex((prev) => (prev + 1) % slideCount);
+        } else {
+          setIndex((prev) => (prev - 1 + slideCount) % slideCount);
+        }
+
+        isThrottled = true;
+        setTimeout(() => {
+          isThrottled = false;
+        }, 1000);
+      }
+    };
+
+    const carouselEl = carouselWrapperRef.current;
+    if (carouselEl) {
+      carouselEl.addEventListener("wheel", handleWheel, { passive: false });
+    }
+
+    return () => {
+      if (carouselEl) {
+        carouselEl.removeEventListener("wheel", handleWheel);
+      }
+    };
+  }, [slideCount]);
+
   return (
-    <Carousel
-      interval={null}
-      {...handlers}
-      className="crsl-product hide mb-5"
-      activeIndex={index}
-      onSelect={handleSelect}
-      data-bs-theme="dark"
-      slide={false}
-      touch={true}
-      controls={false}
-    >
-      {handleCarouselImgs()}
-    </Carousel>
+    <div ref={carouselWrapperRef}>
+      <Carousel
+        interval={null}
+        {...handlers}
+        className="crsl-product hide mb-5"
+        activeIndex={index}
+        onSelect={handleSelect}
+        data-bs-theme="dark"
+        slide={false}
+        touch={true}
+        controls={false}
+      >
+        {imgsUrl.map((img, index) => {
+          return (
+            <Carousel.Item key={img}>
+              <IconButton className="favIcon ">
+                <FavoriteBorderIcon />
+              </IconButton>
+              <div>
+                <img
+                  onClick={() => handleOpenModel(allImgsRef)}
+                  className="img-fluid prd-img"
+                  alt="900x500"
+                  src={img}
+                />
+                {index === 0 && (
+                  <Button
+                    sx={{ fontSize: 12 }}
+                    className=" rounded-pill Btn3d px-3 py-1"
+                  >
+                    <ThreeSixtyIcon sx={{ fontSize: 30 }} className="pe-2" />
+                    View in 3D
+                  </Button>
+                )}
+              </div>
+            </Carousel.Item>
+          );
+        })}
+      </Carousel>
+    </div>
   );
 }

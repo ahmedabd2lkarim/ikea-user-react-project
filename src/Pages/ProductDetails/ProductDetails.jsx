@@ -16,12 +16,22 @@ import OffCanvas from "./../../Components/OffCanvas/OffCanvas";
 import PrdImgsCrsl from "./../../Components/Product/PrdImgsCrsl/PrdImgsCrsl";
 import ProductImageZoomInOut from "./../../Components/Product/ProductImageZoomInOut/ProductImageZoomInOut";
 import PrdInfoSection from "./../../Components/Product/PrdInfoSection/PrdInfoSection";
-import Recommendedproducts from "../../Components/Product/Recommendedproducts/RecommendedProducts";
+import Recommendedproducts from "../../Components/Product/ProductsCarousel/ProductsCarousel";
 import Loading from "../../Components/Loading/Loading";
+import ProductDetailsOffcanvasContent from "./ProductDetailsOffcanvasContent/ProductDetailsOffcanvasContent";
+import useViewport from "../../hooks/useViewport";
+
 function addDotEvery3Chars(str) {
   const num = str.replace(/\D/g, "");
   return num.match(/.{1,3}/g).join(".");
 }
+const checkResponsive = (width) => {
+  if (width >= 900) {
+    return true;
+  }
+  return false;
+};
+
 const ProductDetails = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -32,16 +42,18 @@ const ProductDetails = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showBtn, setShowBtn] = useState(false);
   const btnRef = useRef(null);
+  const viewWidth = useViewport();
   const addToBag = useRef(products[0]);
   const prdInfoSectionRef = useRef();
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [currentProduct, setCurrentProduct] = useState(null);
-
   useEffect(() => {
     const fetchProductAndRelated = async () => {
       try {
         setIsLoading(true);
-        const productRes = await fetch(`http://localhost:3000/products/${id}`);
+        const productRes = await fetch(
+          `http://127.0.0.1:5000/api/products/${id}`
+        );
         const productData = await productRes.json();
         setProduct(productData);
         setCurrentProduct(productData);
@@ -49,12 +61,15 @@ const ProductDetails = () => {
           setImageUrl(productData.images[0]);
         }
 
-        const relatedRes = await fetch("http://localhost:3000/products");
+        const relatedRes = await fetch("http://127.0.0.1:5000/api/products");
         const relatedData = await relatedRes.json();
-        const filteredRelated = relatedData
-          .filter((p) => p.id !== id)
+        const { data: productsData } = relatedData;
+        setProducts(productsData);
+        const filteredRelated = productsData
+          .filter((p) => p._id !== id)
           .slice(0, 5);
         setRelatedProducts(filteredRelated);
+        // console.log(filteredRelated);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching product:", err);
@@ -105,12 +120,12 @@ const ProductDetails = () => {
   };
   const content = (
     <>
-      <div className="container-fluid d-flex flex-wrap justify-content-center gap-5 ">
+      <div className={"d-flex flex-wrap justify-content-center gap-5 "}>
         {currentProduct?.images.map((img, index) => {
           return (
             <img
               style={{ width: "30vw" }}
-              className="img-fluid "
+              className={checkResponsive(viewWidth) ? "img-fluid" : `w-100`}
               key={index}
               src={img}
               alt={currentProduct.imageAlt.en}
@@ -155,7 +170,7 @@ const ProductDetails = () => {
         <Link>Free delivery</Link>
       </div>
       {/* Carousel on small screens*/}
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", overflow: "hidden" }}>
         {showBtn && (
           <Button
             ref={btnRef}
@@ -168,10 +183,7 @@ const ProductDetails = () => {
         )}
         <OffCanvas
           content={
-            <AddToBag
-              currentProduct={currentProduct}
-              relatedProducts={products}
-            />
+            <AddToBag currentProduct={currentProduct} products={products} />
           }
           title={
             <div
@@ -186,7 +198,11 @@ const ProductDetails = () => {
           }
           ref={addToBag}
         />
-        <PrdImgsCrsl imgsUrl={currentProduct?.images || []} />
+        <PrdImgsCrsl
+          allImgsRef={allImgsRef}
+          handleOpenModel={openModel}
+          imgsUrl={currentProduct?.images || []}
+        />
         {/* Carousel on large screens*/}
         <div className=" crsl-product-lg container-fluid row-gap-5 mt-5 justify-content-around px-4 flex-wrap">
           <div className="hide prd-imgs mt-3 flex-column">
@@ -252,12 +268,13 @@ const ProductDetails = () => {
           </div>
           <PrdInfoSection
             ref={prdInfoSectionRef}
-            product={product}
+            mainProduct={product}
             currentProduct={currentProduct}
             onVariantSelect={handleVariantSelect}
+            addToBagRef={addToBag}
             onImageHover={handleImageHover}
           />
-
+          {/* {console.log(currentProduct)} */}
           <div style={{ width: "94%" }}>
             <p
               className="full-width-mobile text-secondary"
@@ -273,7 +290,7 @@ const ProductDetails = () => {
                 style={{ fontSize: "14px" }}
                 className=" text-light p-1 px-3 me-4 fw-bold bg-black"
               >
-                {addDotEvery3Chars(currentProduct.id)}
+                {addDotEvery3Chars(currentProduct._id)}
               </span>
               <FaLocationDot
                 className="mb-4 me-1"
@@ -284,52 +301,76 @@ const ProductDetails = () => {
               </Link>
               <div>
                 <OffCanvas
-                  content={"hellp"}
-                  title={"All Product details"}
+                  content={
+                    <ProductDetailsOffcanvasContent
+                      currentProduct={currentProduct}
+                    />
+                  }
                   ref={productDetailsRef}
                 />
 
                 <div
-                  className="d-flex justify-content-between align-items-center flex-wrap sections-info info-sections full-width-mobile"
+                  className="d-flex justify-content-between align-items-center flex-wrap sections-info info-sections full-width-mobile "
                   onClick={() => openModel(productDetailsRef)}
                 >
                   <hr style={{ width: "100%" }} />
-                  <h4 className="fw-bold my-3 ">Product details</h4>
+                  <h4 className="fw-bold my-3 productDetailsLabel">
+                    Product details
+                  </h4>
                   <FaArrowRight style={{ fontSize: "24px" }} />
                   <hr style={{ width: "100%" }} />
                 </div>
                 <div
-                  onClick={() => prdInfoSectionRef.current?.openMeasureCanvas()}
+                  onClick={() =>
+                    prdInfoSectionRef.current.measureRef.handleShow()
+                  }
                   className="d-flex sections-info justify-content-between align-items-center flex-wrap  info-sections full-width-mobile"
                 >
-                  <h4 className="fw-bold my-3 ">Measurements</h4>
+                  <h4 className="fw-bold my-3 measurementsLabel ">
+                    Measurements
+                  </h4>
                   <FaArrowRight style={{ fontSize: "24px" }} />
                   <hr className="mb-5" style={{ width: "100%" }} />
                 </div>
-                <div>
-                  <h4 className="fw-bold my-3">Related products</h4>
+                <div className="my-5">
+                  <h3 className="fw-bold m-3">Related products</h3>
                   <Recommendedproducts products={relatedProducts} />
                 </div>
-                <div>
-                  <p className="text-secondary fw-bold">Designer thoughts</p>
-                  <div className="d-flex gap-5">
-                    <h4 className="fw-bold w-50">Designer thoughts</h4>
-                    <p className="text-secondary" style={{ width: "50%" }}>
-                      When I designed ÄSPINGE kitchenette, I wanted to create a
-                      functional solution for small spaces that could also
-                      become a personal expression of who you are. I played with
-                      the idea of scaffolding that you build in levels upwards.
-                      It comes alive when you hang things like herbs and
-                      utensils from the ceiling ribs or show your favourite oils
-                      on the splashback shelf. Move the hooks and shelves as you
-                      please and create your own market booth display full of
-                      warmth and character.
-                      <span className="mt-1 d-block">
-                        Designer Andreas Fredriksson
-                      </span>
+
+                {currentProduct.short_description && (
+                  <div className="mt-5 pt-5 ">
+                    <p
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: "bold",
+                        opacity: 0.8,
+                      }}
+                      className=" text-secondary fw-bold"
+                    >
+                      Designer thoughts
                     </p>
+                    <div className="d-flex gap-5">
+                      <h3 className="fw-bolder w-50">Designer thoughts</h3>
+                      <p
+                        style={{
+                          width: "50%",
+                          fontSize: "16px",
+                          color: "#484848",
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        "{currentProduct.short_description.en}"
+                        {/* <span className="mt-1 d-block text-capitalize">
+                          {
+                            currentProduct.short_description.en.match(
+                              /designed by\s+([^,.]+)/i
+                            )[0]
+                          }
+                        </span> */}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <hr />
               <div>

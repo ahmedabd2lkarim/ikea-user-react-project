@@ -14,7 +14,7 @@ const OffCanvas = forwardRef(({ content, title, ...props }, ref) => {
   return (
     <>
       <Offcanvas
-        className={`rounded-start ${styles.offCanvas} ${
+        className={`rounded-start  ${styles.offCanvas} ${
           width < 600 ? styles.offCanvasSmall : ""
         }`}
         show={show}
@@ -23,9 +23,11 @@ const OffCanvas = forwardRef(({ content, title, ...props }, ref) => {
         {...props}
       >
         <Offcanvas.Header className="pe-4 pt-4" closeButton>
-          <h4>{title}</h4>
+          <h6>{title}</h6>
         </Offcanvas.Header>
-        <Offcanvas.Body style={{ padding: "0" }}>{content}</Offcanvas.Body>
+        <Offcanvas.Body className="p-3" style={{ padding: "0" }}>
+          {content}
+        </Offcanvas.Body>
       </Offcanvas>
     </>
   );

@@ -1,0 +1,10 @@
+
+.OffcanvasBodyPrdDetails{
+    padding:0 36px 30px;
+}
+.OffcanvasBodyPrdDetails div:last-child{
+    margin-bottom: 20px;
+}
+.OffcanvasBodyPrdDetails div:first-child{
+    margin-top: 10px;
+}

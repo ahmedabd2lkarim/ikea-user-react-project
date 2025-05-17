@@ -1,0 +1,32 @@
+.carousel-container .carousel-inner {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  display: flex;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-container .carousel-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-container .carousel-item {
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: start;
+}
+
+.carousel-container .carousel-indicators {
+  z-index: 2;
+}
+
+.favIcon {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+
+  background-color: #fff !important;
+  padding-inline: 20px !important;
+  z-index: 2;
+}

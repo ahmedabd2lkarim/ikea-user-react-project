@@ -1,22 +1,37 @@
-.addedCardPrd{
+.addedCardPrd {
     display: flex;
     justify-content: space-between;
     padding-inline: 20px;
 }
-.addedCardPrd img ,.compeleteOrderProduct img{
+
+.addedCardPrd img,
+.compeleteOrderProduct img {
     width: 100px;
     height: 100px;
 }
 
-.added-card-product-info, .compeleteOrderProductInfo{
-    width: 60%;
+
+.compeleteOrderProductInfo,
+.compeleteOrderProduct img {
+
+    cursor: pointer;
 }
 
-.compeleteOrderProduct{
-    height:180px ;
+.added-card-product-info,
+.compeleteOrderProductInfo {
+    width: 60%;
+
+}
+
+
+.compeleteOrderProduct:hover p>b {
+    text-decoration: underline;
+}
+
+.compeleteOrderProduct {
+    height: 180px;
     display: flex;
     /* align-items: center; */
     column-gap: 20px;
     padding-inline: 20px;
-
 }
