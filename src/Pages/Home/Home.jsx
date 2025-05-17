@@ -1,52 +1,149 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-import Recommendedproducts from "../../Components/Product/ProductsCarousel/ProductsCarousel";
-import Loading from "../../Components/Loading/Loading";
-import "./Home.css";
-const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`http://127.0.0.1:5000/api/products`);
-        const res = await response.json();
-        console.log(response);
+import React from "react";
+import Teaser from "../../Components/Home/Teaser";
+import ProductScroller from "../../Components/Home/ProductScroller";
+import PromoScroller from "../../Components/Home/PromoScroller";
+import { useTranslation } from "react-i18next";
 
-        setProducts(res.data);
-      } catch (err) {
-        setError(err.message);
-        console.error("Error fetching products:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+import { CircularProgress, Box, Button, Typography, Grid } from "@mui/material";
+import useFetchProducts from "../../hooks/useFetchProducts";
+import useFetchTeaser from "../../hooks/useFetchTeaser";
 
-    fetchProducts();
-  }, []);
-  console.log(products);
+function Home() {
 
-  if (isLoading) return <Loading />;
-  if (error) return <div>Error: {error}</div>;
+  const IkeaDeals = {
+    en: 'https://www.ikea.com/images/27/f1/27f1bb0a89ed151d1c177d9750a037c3.png?f=sg',
+    ar: 'https://www.ikea.com/images/3d/f0/3df0ecc1b136cb2385a6652af84a5a9d.png?f=sg', 
+  };
+  const { products, loading } = useFetchProducts();
+  const { teaserData: homeCategory, loading: loadingHomeTeaser } = useFetchTeaser("home");
+
+  const firstTeaser = homeCategory?.teasers?.[0];
+  const secondTeaser = homeCategory?.teasers?.[1];
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
+
+  const categorizedProducts = {
+    [t("categories.kitchen")]: {
+      deal: t("categories.kitchen"),
+      products: products.slice(8, 20),
+    },
+    [t("categories.lowerPrices")]: {
+      deal: t("categories.lowerPrices"),
+      products: products.slice(8, 13),
+    },
+    [t("categories.bestSellers")]: {
+      deal: t("categories.bestSellers"),
+      products: products.slice(13, 20),
+    },
+  };
+  const cp = {
+    "": {
+      deal: t("categories.familyOffer"),
+      products: products.slice(8, 20),
+    },
+  };
+
 
   return (
-    <div className="home-container">
-      <section className="featured-products">
-        <h2 className="section-title">Featured Products</h2>
-        <Recommendedproducts products={products} />
-      </section>
-    </div>
+    <Grid px={{ xs: 1, sm: 2, md: 5 }}>
+
+      <Typography variant="h4" fontWeight="bold" py={5}>
+        {t("welcome")}
+      </Typography>
+
+
+
+      {loadingHomeTeaser ? (
+        <Box display="flex" justifyContent="center" my={5}>
+          <CircularProgress />
+        </Box>
+      ) : firstTeaser ? (
+        <Teaser
+          title={firstTeaser?.title?.[language]}
+          content={firstTeaser?.content?.[language]}
+          promoImage={firstTeaser.promoImage}
+          promoHotspots={firstTeaser.promoHotspots}
+          rightImages={firstTeaser.rightImages}
+          height={firstTeaser.height}
+          language={language}
+        />
+
+
+
+      ) : null}
+      {loading ? (
+        <Box display="flex" justifyContent="center" my={5}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <ProductScroller categories={categorizedProducts} />
+      )}
+      {loading ? (
+        <Box display="flex" justifyContent="center" my={5}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <Box
+            component="img"
+            src={IkeaDeals[language]}
+            alt="Promo"
+            sx={{
+              width: '100%',
+              objectFit: 'cover',
+            }}
+          />
+          <ProductScroller categories={cp} />
+        </>
+      )}
+
+
+      
+      {loadingHomeTeaser ? (
+        <Box display="flex" justifyContent="center" my={5}>
+          <CircularProgress />
+        </Box>
+      ) : secondTeaser ? (
+        <Teaser
+          title={secondTeaser?.title?.[language]}
+          content={secondTeaser?.content?.[language]}
+          promoImage={secondTeaser.promoImage}
+          promoHotspots={secondTeaser.promoHotspots}
+          rightImages={secondTeaser.rightImages}
+          height={secondTeaser.height}
+          language={language}
+
+        />
+
+
+
+      ) : null}
+      <Typography variant="h5" fontSize={27} fontWeight="bold" pt={10} pb={4}>
+        {t("nowInIKEA")}
+      </Typography>
+
+
+      <PromoScroller />
+
+      {loading ? (
+        <Box display="flex" justifyContent="center" my={5}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <> <ProductScroller title={t("recommended")} products={products.slice(0, 10)} cardWidth={250} />
+        </>)}
+
+
+      <Button onClick={() => i18n.changeLanguage('en')}>English</Button>
+      <Button onClick={() => i18n.changeLanguage('ar')}>العربية</Button>
+
+
+
+
+
+    </Grid>
   );
-};
+}
 
-=======
-import React from "react";
 
-const Home = () => {
-  return <div>Home</div>;
-};
-
->>>>>>> origin/Soha
 export default Home;

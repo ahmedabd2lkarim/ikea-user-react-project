@@ -15,6 +15,18 @@ import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
+
+import store from "./Store/store";
+import { Provider } from "react-redux";
+
+import Category from "./Pages/Category/Category";
+import store from "./Store/store";
+import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
+
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -73,6 +85,7 @@ function App() {
     <ToastContainer />
   </Provider>
   );
+
 }
 
 export default App;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { configureStore} from "@reduxjs/toolkit";
 import userSlice from "./Slices/userSlice";
 import chatSlice from "./Slices/chatSlice";
@@ -18,4 +19,17 @@ const store = configureStore({
 
 
 export default store
+=======
+
+import { configureStore } from "@reduxjs/toolkit";
+import orderSlice from "./Slices/orderSlice";
+
+const store = configureStore({
+    reducer: {
+        cart:orderSlice.reducer,
+    }, // Add your reducers here
+})
+
+export default store;
+>>>>>>> origin/Magy
 

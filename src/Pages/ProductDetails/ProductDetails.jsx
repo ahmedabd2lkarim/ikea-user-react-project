@@ -69,7 +69,6 @@ const ProductDetails = () => {
           .filter((p) => p._id !== id)
           .slice(0, 5);
         setRelatedProducts(filteredRelated);
-        console.log(filteredRelated);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching product:", err);
@@ -274,7 +273,6 @@ const ProductDetails = () => {
             addToBagRef={addToBag}
             onImageHover={handleImageHover}
           />
-          {console.log(currentProduct)}
           <div style={{ width: "94%" }}>
             <p
               className="full-width-mobile text-secondary"

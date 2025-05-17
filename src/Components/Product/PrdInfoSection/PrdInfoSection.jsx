@@ -65,7 +65,6 @@ const PrdInfoSection = forwardRef((props, ref) => {
   const storeRef = useRef();
   const storeInfoRef = useRef();
 
-  // Expose refs to parent component
   useEffect(() => {
     if (ref) {
       ref.current = {
@@ -75,7 +74,41 @@ const PrdInfoSection = forwardRef((props, ref) => {
       };
     }
   }, [ref]);
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")));
 
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart])
+  const addToCart = async (prdID, quantity) => {
+    
+    try {
+      const existingItem = cart.find(item => item.prdID === prdID);
+      let updatedCart;
+      if (existingItem) {
+         updatedCart = cart.map(item => {
+          if (item.prdID === prdID) {
+            return { ...item, quantity: item.quantity + quantity };
+          }
+          return item;
+        });
+      } else {
+        updatedCart = [...cart, { prdID, quantity }];
+      }
+      setCart(updatedCart);
+      await fetch(`http://localhost:5000/api/cart/newOrder`, {
+        method: 'POST',
+        body: JSON.stringify({ orderItems: updatedCart }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
+        }
+      })
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+
+  }
+  
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
   };
@@ -337,7 +370,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
           </IconButton>
         </div>
         <Button
-          onClick={() => openOffCanvas(addToBagRef)}
+          onClick={() => { openOffCanvas(addToBagRef); addToCart(currentProduct.id, addToBag) }}
           className={styles.addButton + " rounded-pill  py-3 my-4"}
         >
           {addToBag === 1 ? "Add to bag" : `Add ${addToBag} items to cart`}
