@@ -59,10 +59,8 @@ const router = createBrowserRouter([
         element: <Category />,
       },
 
-      },
-    ],
-  },
-]);
+    ]
+  }])
 
 
 
