@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box;
+}
+
+.variantSelector {
+    box-sizing: border-box;
+    width: 74px;
+    border-radius: 6px;
+    margin: 14px 2px;
+    cursor: pointer;
+    padding: 6px;
+    transition: box-shadow .2s ease-in-out;
+}
+
+.variantSelector:hover {
+    box-shadow: inset 0 0 0 1px rgb(146, 146, 146);
+}
+
+.colorPlaceholder {
+    font-size: 14px;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.colorPlacehodlderDisapled {
+    cursor: text;
+}
+
+.colorPlaceholder:hover b {
+    text-decoration: underline;
+}
+
+.colorPlaceholder {
+    cursor: pointer;
+
+}
+
+
+.selectedVariant {
+    outline: 2px solid black;
+    border-radius: 4px;
+}
+
+
+.selectedVariant:hover {
+    box-shadow: none;
+
+}
+
+.colorName {
+    text-transform: capitalize;
+    opacity: .9;
+    font-size: 14px;
+}
+
+.selectedColorText {
+    color: #484848;
+    font-size: 1rem;
+}
+
+
+.offCanvasContentContainer:focus {
+    outline: 2px solid black;
+}
+
+
+.offCanvasVariantItem {
+    cursor: pointer;
+    padding: 20px 26px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.137);
+}
+
+.offCanvasVariantItem:hover {
+    border-color: rgba(0, 0, 0, 0.493);
+
+}
+
+.offCanvasVariantItem:focus-visible,
+.offCanvasVariantItem:focus,
+.offCanvasVariantItem:active {
+    box-shadow: 0 0 0 4px white;
+    outline: 2px solid #111111;
+    border-color: rgba(0, 0, 0, 0.493);
+    outline-offset: 4px;
+    transition: outline 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+}
+
+.offCanvasVariantItem img {
+    width: 54px;
+    height: auto;
+    border-radius: 4px;
+}
+
+.offCanvasVariantItem p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.offCanvasSelectedVariantItem {
+    border: 2px solid black;
+    cursor: initial;
+}
+
+.offCanvasSelectedVariantItem:hover {
+    outline: none;
+}

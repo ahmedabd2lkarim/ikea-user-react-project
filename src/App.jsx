@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./Components/Layout/Layout";
 import Home from "./Pages/Home/Home";
-import LoginForm from "./Pages/UserForms/LoginForm"
+import LoginForm from "./Pages/UserForms/LoginForm";
 
 import RegisterForm from "./Pages/UserForms/RegisterForm";
 import ProductDetails from "./Pages/ProductDetails/ProductDetails";
@@ -9,10 +9,12 @@ import Cart from "./Pages/Cart/Cart";
 import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
 
+
 import store from "./Store/store";
 import { Provider } from "react-redux";
 
 import Category from "./Pages/Category/Category";
+
 
 const router = createBrowserRouter([
   {
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        index:true ,
+        index: true,
         element: <Home />,
       },
       {
@@ -28,23 +30,33 @@ const router = createBrowserRouter([
         element: <LoginForm />,
       },
       {
-       path: "/signup",
-        element: <RegisterForm  />, 
+        path: "/signup",
+        element: <RegisterForm />,
       },
       {
-        path: "/productDetails",
-         element:< ProductDetails />, 
+        path: "/productDetails/:id",
+        element: <ProductDetails />,
       },
       {
         path: "/cart",
-         element: <Cart/>, 
-       },
-       {
+        element: <Cart />,
+      },
+      {
         path: "/favorite",
-         element: <Favourite/>, 
-       },
-       {
+        element: <Favourite />,
+      },
+      {
         path: "/profile",
+
+        element: <Profile />,
+      },
+    ],
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
+
          element: <Profile/>, 
        },
        {
@@ -62,6 +74,7 @@ function App() {
       <RouterProvider router={router} />
     </Provider>
   );
+
 }
 
-export default App
+export default App;

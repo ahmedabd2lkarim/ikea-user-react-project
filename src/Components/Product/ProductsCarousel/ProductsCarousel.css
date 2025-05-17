@@ -1,0 +1,86 @@
+.carouselContainer {
+    position: relative;
+    margin: 2rem 24px;
+}
+
+.productsCarousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    padding: 12px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+/* Chrome, Edge, Safari custom scrollbar */
+.productsCarousel::-webkit-scrollbar {
+    height: 6px;
+    transition: height 0.3s ease;
+}
+
+.productsCarousel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.productsCarousel::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 0;
+}
+
+.productsCarousel:hover::-webkit-scrollbar {
+    height: 12px;
+}
+
+.productsCarousel:hover::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+.productsCarousel::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* Circular arrow controls */
+.carouselControl {
+    position: absolute;
+    top: 50%;
+    background-color: black;
+    border: none;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+}
+
+
+
+.carouselControl:hover {
+    background-color: #f0f0f0;
+    opacity: 1;
+}
+
+.carouselControl.left {
+    left: -22px;
+}
+
+.carouselControl.right {
+    right: -22px;
+}
+
+/* Hide controls on small devices */
+@media (max-width: 576px) {
+    .carouselControl {
+        display: none;
+    }
+}
