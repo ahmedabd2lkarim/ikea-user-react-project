@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./CollapsibleSection.module.css";
 import { Collapse } from "react-bootstrap";
 import { FaAngleDown } from "react-icons/fa6";
-import PropTypes from "prop-types";
 
 const CollapsibleSection = ({
   title,
@@ -49,12 +48,6 @@ const CollapsibleSection = ({
   );
 };
 
-CollapsibleSection.propTypes = {
-  title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  defaultOpen: PropTypes.bool,
-  scrollOnOpen: PropTypes.bool,
-};
+
 
 export default CollapsibleSection;
