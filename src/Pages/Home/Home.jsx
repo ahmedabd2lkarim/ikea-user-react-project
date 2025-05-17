@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import Recommendedproducts from "../../Components/Product/ProductsCarousel/ProductsCarousel";
 import Loading from "../../Components/Loading/Loading";
@@ -40,4 +41,12 @@ const Home = () => {
   );
 };
 
+=======
+import React from "react";
+
+const Home = () => {
+  return <div>Home</div>;
+};
+
+>>>>>>> origin/Soha
 export default Home;

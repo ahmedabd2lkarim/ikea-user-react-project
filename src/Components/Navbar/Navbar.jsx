@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom"
 import './Navbar.css'
+
 const Navbar = () => {
     const NavbarStyle = ({ isActive }) => (isActive ? "text-danger" : "")
-  return (
+    
+    return (
     <>
     <nav className="container-div">
             <ul>
@@ -30,7 +32,9 @@ const Navbar = () => {
                  <li>
                     <NavLink to="/profile" className={NavbarStyle}>Profile</NavLink>
                 </li> 
+
             </ul>
+
         </nav >
     </>
   )
