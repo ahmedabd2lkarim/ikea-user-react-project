@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Box, Typography, Card, CardMedia, CardContent, IconButton, Tooltip } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Language } from "@mui/icons-material";
+import { useTranslation } from 'react-i18next';
 
-const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }) => {
+
+const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 ,cardHight=180}) => {
+  const { t, i18n } = useTranslation();
+  // const currentLang = i18n.language;
   const [selectedCategory, setSelectedCategory] = useState(
     categories ? Object.keys(categories)[0] : null
   );
@@ -11,22 +16,30 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
     if (categories) {
       const selected = categories[selectedCategory];
       const deal = selected?.deal;
-      return selected?.products.map((product, index) => (
+
+      if (!selected?.products || !Array.isArray(selected.products)) {
+        // maybe render nothing or a placeholder
+        return null;
+      }
+
+      return selected.products.map((product, index) => (
         <HoverCard
           key={index}
           product={product}
           cardWidth={cardWidth}
+          cardHight={cardHight}
           deals={deal}
         />
       ));
     } else if (products) {
       return products.map((product, index) => (
-        <HoverCard key={index} product={product} cardWidth={cardWidth} deals={deals} />
+        <HoverCard key={index} product={product} cardHight={cardHight} cardWidth={cardWidth} deals={deals} />
       ));
     } else {
       return null;
     }
   };
+
 
   if (!categories && !products) return null;
 
@@ -96,17 +109,17 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 }
   );
 };
 
-const HoverCard = ({ product, cardWidth, deals }) => {
+const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
   const [hovered, setHovered] = useState(false);
 
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
-  
+
     const cartItem = {
       prdID: product._id,
       quantity: 1,
     };
-  
+
     if (token) {
       try {
         const response = await fetch("http://localhost:5000/api/cart/newOrder", {
@@ -120,42 +133,44 @@ const HoverCard = ({ product, cardWidth, deals }) => {
             shippingFee: 20,
           }),
         });
-  
+
         if (!response.ok) {
           const error = await response.json();
           alert(`Failed to add to cart: ${error.message}`);
           return;
         }
-  
+
         const data = await response.json();
         alert("Item added to cart (server)");
         console.log("Order created:", data);
-  
+
       } catch (error) {
         console.error("Error adding to cart:", error);
         alert("Error adding item to cart.");
       }
-  
+
     } else {
       const guestCart = JSON.parse(localStorage.getItem("guest_cart")) || [];
-  
+
       const existingIndex = guestCart.findIndex(item => item._id === product._id);
-  
+
       if (existingIndex !== -1) {
         guestCart[existingIndex].quantity += 1;
       } else {
         guestCart.push({ ...product, quantity: 1 });
       }
-  
+
       localStorage.setItem("guest_cart", JSON.stringify(guestCart));
       alert("Item added to guest cart");
     }
   };
-  
+  const { _, i18n } = useTranslation();
+  const currentLang = i18n.language;
 
 
   return (
     <Card
+
       elevation={0}
       sx={{
         minWidth: cardWidth, maxWidth: cardWidth,
@@ -167,10 +182,24 @@ const HoverCard = ({ product, cardWidth, deals }) => {
     >
       <CardMedia
         component="img"
-        image={hovered ? product.contextualImageUrl : product.image}
+        image={hovered ? product.contextualImageUrl : product.images[0]}
+        alt={product.imageAlt?.[currentLang] || product.name}
+        sx={{
+          width: "100%",        // Make the image fill the card's width
+          height: cardHight,          // Fix height (adjust this value as needed)
+          objectFit: "cover",   // Crop and fill the container nicely
+          p: 1,
+        }}
+      />
+
+
+
+      {/* <CardMedia
+        component="img"
+        image={hovered ? product.contextualImageUrl : product.image[0]}
         alt={product.imageAlt || product.name}
         sx={{ objectFit: "cover", p: 1 }}
-      />
+      /> */}
 
       <CardContent sx={{ px: 2, pb: 2 }}>
         {deals && <Typography variant="body1" color="red" fontWeight={'bold'} fontSize={12} sx={{ mb: 2 }}>
@@ -185,7 +214,8 @@ const HoverCard = ({ product, cardWidth, deals }) => {
           {product.name}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          {product.typeName}
+          {product.typeName?.[currentLang] || product.typeName?.en}
+
         </Typography>
         <Box>
           {product.price.discounted ? (
@@ -210,7 +240,7 @@ const HoverCard = ({ product, cardWidth, deals }) => {
           <Tooltip>
             <IconButton
               size="small"
-              sx={{ bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem", ":hover":{bgcolor:"rgb(11, 23, 65)"}}}
+              sx={{ bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem", ":hover": { bgcolor: "rgb(11, 23, 65)" } }}
               onClick={handleAddToCart}
             >
               <span className="pip-btn__inner">
@@ -238,7 +268,7 @@ const HoverCard = ({ product, cardWidth, deals }) => {
             </IconButton>
           </Tooltip>
           <Tooltip >
-            <IconButton size="small" sx={{ bgcolor: "white"}}>
+            <IconButton size="small" sx={{ bgcolor: "white" }}>
               <FavoriteBorderIcon fontSize="small" />
             </IconButton>
           </Tooltip>

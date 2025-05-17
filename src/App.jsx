@@ -18,13 +18,16 @@ import store from "./Store/store";
 
 const router = createBrowserRouter([
   {
+
     path: "/",
     element: <Layout />,
     children: [
+  
       {
         index: true,
         element: <Home />,
       },
+
       {
         path: "/login",
         element: <LoginForm />,
@@ -34,8 +37,10 @@ const router = createBrowserRouter([
         element: <RegisterForm />,
       },
       {
-        path: "/productDetails/:id",
-        element: <ProductDetails />,
+        
+        path: "/productDetails",
+        element: < ProductDetails />,
+
       },
       {
         path: "/cart",
