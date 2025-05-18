@@ -59,7 +59,7 @@ const CartHeader = () => {
     );
     return (
             <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} size={{xs:12,md:7}}>
-                <Typography variant='h4' fontWeight={'bold'} py={5}>Your bag</Typography>
+                <Typography variant='h4' fontWeight={'bold'} py={5}>Your bag is empty</Typography>
                 <IconButton onClick={toggleDrawer(true)}>
                     <MoreHorizIcon fontSize='small' />
                 </IconButton>
