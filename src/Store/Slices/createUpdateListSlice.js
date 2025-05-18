@@ -222,4 +222,4 @@ export const selectListById = (state, id) =>
 
 export const { clearSnackbarMessage, setSnackbarMessage } = createUpdateListSlice.actions;
 
-export default createUpdateListSlice.reducer;
+export default createUpdateListSlice;
