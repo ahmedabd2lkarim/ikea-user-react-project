@@ -3,7 +3,9 @@ import "./ProductImageZoomInOut.css";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import { IconButton } from "@mui/joy";
+// import { IconButton } from "@mui/joy";
+import { IconButton } from "@mui/material";
+
 const MIN_SCALE = 1;
 const MAX_SCALE = 2;
 

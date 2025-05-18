@@ -40,8 +40,6 @@
     "react-redux": "^9.2.0",
     "react-i18next": "^15.5.1",
 
-    "react-router-dom": "^7.5.0",
-    "styled-components": "^6.1.17",
     "stylis": "^4.3.6",
     "stylis-plugin-rtl": "^2.1.1",
     "react-horizontal-scrolling-menu": "^8.2.0"

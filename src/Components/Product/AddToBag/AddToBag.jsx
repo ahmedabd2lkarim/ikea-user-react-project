@@ -1,4 +1,5 @@
-import { Button } from "@mui/joy";
+// import { Button } from "@mui/joy";
+import { Button } from "@mui/material";
 import styles from "./AddToBag.module.css";
 import { TbBasketPlus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
@@ -41,14 +42,14 @@ export default function AddToBag({ currentProduct, products }) {
           <p className="m-0 " style={{ fontSize: "15px" }}>
             <b className="d-block ">{currentProduct.name}</b>
             {currentProduct.typeName.en + ", "}
-            {`${currentProduct.measurement.width}x${
-              currentProduct.measurement.depth
-                ? currentProduct.measurement.depth + "x"
+            {`${currentProduct.measurement?.width}x${
+              currentProduct.measurement?.depth
+                ? currentProduct.measurement?.depth + "x"
                 : ""
             }${
-              currentProduct.measurement.height ||
-              currentProduct.measurement.length
-            } ${currentProduct.measurement.unit || "cm"}`}
+              currentProduct.measurement?.height ||
+              currentProduct.measurement?.length
+            } ${currentProduct.measurement?.unit || "cm"}`}
           </p>
           <p>
             <span
