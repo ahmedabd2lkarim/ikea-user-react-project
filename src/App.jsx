@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./Components/Layout/Layout";
 import Home from "./Pages/Home/Home";
-import LoginForm from "./Pages/UserForms/LoginForm";
-
+import LoginForm from "./Pages/UserForms/LoginForm"
+import { Provider } from 'react-redux';
 import RegisterForm from "./Pages/UserForms/RegisterForm";
 import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
@@ -14,6 +14,12 @@ import store from "./Store/store";
 import { Provider } from "react-redux";
 
 import Category from "./Pages/Category/Category";
+import store from "./Store/store";
+import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
+import ChangePassword from "./Components/ProfilePages/ChangePassword";
 
 
 const router = createBrowserRouter([
@@ -52,8 +58,26 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
-      },
+         element: <Profile/>, 
+       },
+       {
+        path: "/profile/details",
+         element: <ProfileDetails/>, 
+       },
+       {
+        path: "/profile/delete-account",
+         element: <DeleteProfile/>, 
+       }
+       ,
+       {
+        path: "/profile/change-password",
+         element: <ChangePassword/>, 
+       }
+       ,
+       {
+        path: "/category",
+         element: <Category/>, 
+       },
       {
         path: "/category/:id",
         element: <Category />,
@@ -67,8 +91,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <RouterProvider router={router} />
+    <ToastContainer />
+  </Provider>
   );
 }
 

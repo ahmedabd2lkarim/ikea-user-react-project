@@ -1,4 +1,5 @@
 {
+  "test":"It work",
   "welcome": "Welcome to IKEA Egypt",
   "offerTitle": "Enjoy 15% Off On All Kitchens",
   "offerText": "Shop & Enjoy Savings 15% Off On All Kitchens, Limited Offer For Kitchens Only",
@@ -12,6 +13,136 @@
     "bestSellers": "Best Sellers",
     "familyOffer": "IKEA FAMILY OFFER"
   },
+  "profile":{
+      "greetingProfileUserName": "Hej {{name}}!",
+      "welcomeIKEA":"Welcome home to your IKEA account",
+      "welcomeIKEADescription":"Here you can find and update information connected to your account.",
+      "Profile":"Your profile",
+      "p_Details":"Profile details",
+      "p_Details_details":"View and edit your profile details",
+      "p_Planner":"Planner designs",
+      "p_Planner_details":"View and edit your saved designs",
+      "p_Password":"Change password",
+      "p_Password_details":"Requires current password",
+      "p_Delete":"Delete account",
+      "p_Delete_details":"Leave whenever you want",
+      "Logout":"Log out"
+    },
+
+    "PD":{
+      "profile_Details":"Profile details",
+      "Personal-info":"Personal information",
+      "Edit":"Edit",
+      "Preferred_store":"Preferred store",
+      "IKEA_Cairo":"IKEA Cairo Festival City",
+      "Ring_Road":"Ring Road, 5th settlement, P.O. Box 11835",
+      "Selecting_preferred":"Selecting a preferred store ensures that you don’t miss out on offers from your favourite IKEA store, as well as help you to stay informed about product availability and stock information.",
+      "Addresses":"Addresses",
+      "Manage_your_addresses":"Manage your addresses for a quick and easy checkout experience",
+      "Add_address":"Add a new address"
+    },
+    "Edit_User":{
+      "Edit_information":"Edit personal information",
+      "FirstName":"First Name",
+      "F_Name_empty":"The first name field cannot be left empty",
+      "Approved!":"Approved!",
+      "LastName":"Last Name",
+      "L_Name_empty":"The last name field cannot be left empty",
+      "Gender":"Gender",
+      "Choose_option":"Choose an option",
+      "Prefer_not_say":"Prefer not to say",
+      "Male":"Male",
+      "Female":"Female",
+      "Other":"Other",
+      "info":"The information below is linked to your account and, for security reasons, cannot be changed",
+      "Save":" Save",
+      "Cancel":"Cancel"
+    },
+    "Login":{
+      "LoginAccount":"Log in to your account",
+      "LoginAccount_details":"Get a more personalised experience where you don’t need to fill in your information every time",
+      "LoginIKEA":"Log in or join IKEA today to benefit from a more personalized experience",
+      "Email":"Email(username)",
+      "EmailEmpty":"The email (username) field cannot be left empty",
+      "EmailValid":"Please enter a valid email",
+      "accept":" Way to go!",
+      "Password":"Password",
+      "PasswordEmpty":"The password field cannot be left empty",
+      "PasswordAccept":" Well done!",
+      "Forget_password?":"Forget your password?",
+      "login":"Log in",
+      "New_IKEA?":"New at IKEA?",
+      "Create_account":"Create account",
+      "SubmitErrorMsg":"The email address or password you entered is incorrect or the account does not exist in IKEA Egypt",
+      "loggedin_Successfyly":"You are now logged in!"
+    },
+    "Register":{
+      "Create_account_Form":"Create an IKEA account",
+      "Already_account":"Already have an account?",
+      "Log_here":"Log in here",
+      "RegisterForm":"From your profile, you will find all information connected to your account.",
+      "First_name":"First name",
+      "F_Name_empty":"The first name field cannot be left empty",
+      "Approved!":"Approved!",
+      "Last_name":"Last name",
+      "L_Name_empty":"The last name field cannot be left empty",
+      "Email_address":"Email address",
+      "Email_Empty":"The email (username) field cannot be left empty",
+      "Email_Valid":"Please enter a valid email",
+      "Success!":"Success!",
+      "Password":"Password",
+      "password_empty":"The password field cannot be left empty",
+      "password_valid":"Password must contain at least one lowercase letter, one uppercase letter, and one special character.",
+      "password_minlen":"Password must be at least 8 characters long",
+      "password_maxlen":"Password must not exceed 20 characters",
+      "accept":"Way to go!",
+      "password_Contain":"Your password must contain",
+      "lowercase":"A lowercase letter (a-z)",
+      "uppercase":"A uppercase letter (A-Z)",
+      "8characters":"8-20 characters",
+      "Special_character":"Special character",
+      "number":"A number",
+      "privacy_policy_ErrorMsg":"You must have read and accepted the privacy policy",
+      "Accept_privacy_policy":"I have read and understood the",
+      "privacy_policy":"privacy policy",
+      "Create_account":"Create account",
+      "SubmitErrorMsg":"An account matching this email already exist.",
+      "Account_created_successfully":"Account created successfully!"
+    },
+    "Delete_Account":{
+      "Delete_account":"Delete account",
+      "Delete_account_details":"Time to say goodbye? We miss you already! The following happens when you delete your account:",
+      "P_Li1":"You delete all personal information and your shopping lists.",
+      "P_Li2":"You will no longer have access to your account or be able to enjoy any member benefits.",
+      "P_Li3":"For tax and other legal reasons, we will keep your purchase history.",
+      "delete_warning":"Remember that you are always welcome back!",
+      "Any_questions":"Any questions?",
+      "Contact":"Contact",
+      "customer_service":"customer service",
+      "Password":"Password",
+      "ConfirmDelete":"Confirm with your password to continue and delete your account.",
+      "Password_mismatch":"Password mismatch. Please enter the correct password and try again.",
+      "Delete_account_Btn":"Delete account"
+    },
+    "ChangePassword":{
+      "title":"Change password",
+      "description":"It's a good idea to update your password regularly and to make sure it's unique from other passwords you use.",
+      "currentPassword":"Current password",
+      "Current_password_empty":"The current password field cannot be left empty",
+      "newPassword":"New password",
+      "New_password_empty":"The new password field cannot be left empty",
+      "confirmPassword":"Confirm new password",
+      "confirmPasswordRequired":"The confirm new password field cannot be left empty",
+      "Confirm_new_password_mismatch":"The passwords do not match",
+      "changePasswordButton":"Change",
+      "succes":"Password changed successfully",
+      "error":"Error changing password"
+    }
+    
+,
+    "moreTips": "More tips and ideas"
+    
+  }
   
-  "moreTips": "More tips and ideas"
-}
+  
+
