@@ -4,10 +4,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Language } from "@mui/icons-material";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FavouriteManager from "../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, cardHight = 180 }) => {
 
@@ -166,31 +167,34 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
 
         if (!response.ok) {
           const error = await response.json();
-          alert(`Failed to add to cart: ${error.message}`);
+          toast.error("Failed to add to cart");
+
           return;
         }
 
         const data = await response.json();
-        alert("Item added to cart (server)");
         console.log("Order created:", data);
+        toast.error("Item added to cart");
+
 
       } catch (error) {
         console.error("Error adding to cart:", error);
-        alert("Error adding item to cart.");
+        toast.error("Error adding item to cart.");
       }
     } else {
-      const guestCart = JSON.parse(localStorage.getItem("guest_cart")) || [];
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      const existingIndex = guestCart.findIndex(item => item._id === product._id);
+      const productIndex = cart.findIndex(item => item.prdID === cartItem.prdID);
 
-      if (existingIndex !== -1) {
-        guestCart[existingIndex].quantity += 1;
+      if (productIndex !== -1) {
+        cart[productIndex].quantity += cartItem.quantity;
       } else {
-        guestCart.push({ ...product, quantity: 1 });
+        cart.push(cartItem);
       }
 
-      localStorage.setItem("guest_cart", JSON.stringify(guestCart));
-      alert("Item added to guest cart");
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      toast.success("Item added to guest cart");
     }
   };
   const { _, i18n } = useTranslation();
