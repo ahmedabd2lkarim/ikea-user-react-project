@@ -104,7 +104,7 @@ const Cart = () => {
       </Drawer>
       {order.length == 0 ?
         <Grid container display={'flex'} flexDirection={'column'}>
-          <Typography variant='h4' fontWeight={'bold'} py={5} >Your bag</Typography>
+          <Typography variant='h4' fontWeight={'bold'} py={5} >Your bag is Empty</Typography>
           <Typography variant='subtitle1' color='rgb(72, 72, 72)'>You can add products to your shopping bag, either by searching or by <a href='' style={{ color: 'rgb(72, 72, 72)' }}>browsing products.</a></Typography>
           {commonSection}
         </Grid>
