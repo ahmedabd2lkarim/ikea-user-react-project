@@ -167,8 +167,7 @@ function Home() {
       <IKEAFood />
       <Tipsandideas />
 
-      <Button onClick={() => i18n.changeLanguage('en')}>English</Button>
-      <Button onClick={() => i18n.changeLanguage('ar')}>العربية</Button>
+      
     </Grid>
   );
 }

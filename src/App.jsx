@@ -92,10 +92,10 @@ const router = createBrowserRouter([
 
 
 function App() {
-  localStorage.setItem(
-    "token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTA4MTBkOGM4ZjYzMWRjNDkwYTE5ZSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQ3NTY4NzEyLCJleHAiOjE3NDc1ODY3MTJ9.QK9ukrhdd3m2COAe06DxHNiNqGfotHVP2NZ097-p75w"
-  );
+  // localStorage.setItem(
+  //   "token",
+  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTA4MTBkOGM4ZjYzMWRjNDkwYTE5ZSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQ3NTY4NzEyLCJleHAiOjE3NDc1ODY3MTJ9.QK9ukrhdd3m2COAe06DxHNiNqGfotHVP2NZ097-p75w"
+  // );
   return (
     <Provider store={store}>
     <RouterProvider router={router} />
