@@ -121,7 +121,10 @@ const RightArrow = () => {
 
 // Main Header component
 export const Header = () => {
-  
+  const handleClick = () => {
+    navigate('/favourite-lists');
+  };
+
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
 
@@ -866,7 +869,7 @@ export const Header = () => {
             </Box>
           </Button>
 
-          <IconButton>
+          <IconButton onClick={handleClick}>
             <FavoriteBorderIcon sx={{ color: "black", fontSize: 20 }} />
           </IconButton>
 
