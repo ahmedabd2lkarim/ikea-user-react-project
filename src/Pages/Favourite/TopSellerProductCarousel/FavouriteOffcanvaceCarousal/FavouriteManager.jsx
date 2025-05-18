@@ -6,8 +6,6 @@ import axios from "axios";
 
 
 function FavouriteManager({ product, onOffcanvasToggle }) {
-  console.log("Received product in FavouriteManager:", product);
-
   const [showFavourite, setShowFavourite] = useState(false);
   const [showCreateList, setShowCreateList] = useState(false);
   const [favourites, setFavourites] = useState([]);
@@ -78,9 +76,9 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
           prev.map((f) =>
             f._id === favoriteListId
               ? {
-                ...f,
-                items: f.items.filter((item) => item._id !== product._id),
-              }
+                  ...f,
+                  items: f.items.filter((item) => item._id !== product._id),
+                }
               : f
           )
         );
@@ -94,8 +92,8 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
       handleOpenFavourite(e);
     }
   };
-
-
+  
+  
   const handleOpenFavourite = (e) => {
     if (e) {
       e.stopPropagation();
@@ -202,7 +200,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
         }}
       />
 
-
+     
     </>
   );
 }
