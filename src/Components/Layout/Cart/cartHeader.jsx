@@ -5,9 +5,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import './cartHeader.css'
+import { deleteAllOrder } from '../../../Store/Slices/orderSlice';
+import { useDispatch } from 'react-redux';
 const CartHeader = () => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [openDialoge, setOpenDialoge] = useState(false)
+    const dispatch = useDispatch();
 
     const handleOpenDialoge = () => {
 
@@ -22,11 +25,15 @@ const CartHeader = () => {
         setOpenDrawer(newOpen);
     };
 
+    const deleteOrder =()=>{
+        dispatch(deleteAllOrder())
+    }
+
     const DrawerList = (
         <Box sx={{ width: 450 }} onClick={toggleDrawer(false)}>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} p={3}>
-                <IconButton onClick={toggleDrawer(false)} >
+                <IconButton onClick={()=>toggleDrawer(false)} >
                     <CloseIcon fontSize='small' sx={{ color: 'black' }} />
                 </IconButton>
             </Box>
@@ -68,7 +75,7 @@ const CartHeader = () => {
                     <DialogTitle fontWeight={'bold'} fontSize={25}>Do you want to empty your bag?</DialogTitle>
                     <Typography variant='subtitle1' textAlign={'center'} color='rgb(72, 72, 72)'>All items and designs will be removed from your bag.</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 5, py: 3 }}>
-                        <Button variant="contained" sx={{ borderRadius: '30px', backgroundColor: 'black', px: 5, py: 2 }} autoFocus>
+                        <Button variant="contained" sx={{ borderRadius: '30px', backgroundColor: 'black', px: 5, py: 2 }} autoFocus onClick={deleteOrder}>
                             Confirm
                         </Button>
                         <Button variant="outlined" onClick={handleClose} sx={{ borderRadius: '30px', color: 'black', borderColor: 'black', px: 5, py: 2 }}>

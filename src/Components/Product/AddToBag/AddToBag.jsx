@@ -41,14 +41,14 @@ export default function AddToBag({ currentProduct, products }) {
           <p className="m-0 " style={{ fontSize: "15px" }}>
             <b className="d-block ">{currentProduct.name}</b>
             {currentProduct.typeName.en + ", "}
-            {`${currentProduct.measurement.width}x${
-              currentProduct.measurement.depth
-                ? currentProduct.measurement.depth + "x"
+            {`${currentProduct.measurement?.width}x${
+              currentProduct.measurement?.depth
+                ? currentProduct.measurement?.depth + "x"
                 : ""
             }${
-              currentProduct.measurement.height ||
-              currentProduct.measurement.length
-            } ${currentProduct.measurement.unit || "cm"}`}
+              currentProduct.measurement?.height ||
+              currentProduct.measurement?.length
+            } ${currentProduct.measurement?.unit || "cm"}`}
           </p>
           <p>
             <span

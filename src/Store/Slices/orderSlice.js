@@ -6,7 +6,7 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
         }
     })
     const data = await res.json();
@@ -17,7 +17,7 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
                 }
             })
             .then(res => res.json())
@@ -34,6 +34,22 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
     return { ...data[0], orderItems: products }
 });
 
+function calculateTotal(orderItems, shippingFee = 0) {
+    const total = orderItems.reduce((acc, item) => acc + (item.price.currentPrice * item.quantity), 0);
+    return total + shippingFee;
+}
+
+function authFetch(url, options = {}) {
+    return fetch(url, {
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`,
+            ...(options.headers || {})
+        }
+    });
+}
+
 const orderSlice = createSlice({
     name: 'orderSlice',
     initialState: {
@@ -44,58 +60,44 @@ const orderSlice = createSlice({
         decreaseQ(state, action) {
             const item = state.items.orderItems.find(item => item._id === action.payload)
             item.quantity -= 1
-            fetch(`http://localhost:5000/api/cart/amount/${state.items._id}`, {
+            authFetch(`http://localhost:5000/api/cart/amount/${state.items._id}`, {
                 method: 'PATCH',
-                body: JSON.stringify({ prdID: item._id, quantity: item.quantity }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
-                }
-            })
-            state.items.total = state.items.orderItems.reduce((acc, item) => acc + (item.price.currentPrice * item.quantity), 0)
-            state.items.total += state.items.shippingFee
+                body: JSON.stringify({ prdID: item._id, quantity: item.quantity })
+            });
+            state.items.total = calculateTotal(state.items.orderItems, state.items.shippingFee);
         },
         increaseQ(state, action) {
             const item = state.items.orderItems.find(item => item._id === action.payload)
             item.quantity += 1
-            fetch(`http://localhost:5000/api/cart/amount/${state.items._id}`, {
+            authFetch(`http://localhost:5000/api/cart/amount/${state.items._id}`, {
                 method: 'PATCH',
-                body: JSON.stringify({ prdID: item._id, quantity: item.quantity }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
-                }
-            })
-            state.items.total = state.items.orderItems.reduce((acc, item) => acc + (item.price.currentPrice * item.quantity), 0)
-            state.items.total += state.items.shippingFee
+                body: JSON.stringify({ prdID: item._id, quantity: item.quantity })
+            });
+            state.items.total = calculateTotal(state.items.orderItems, state.items.shippingFee);
         },
         deleteItem(state, action) {
             if (state.items.orderItems.length > 1) {
                 const item = state.items.orderItems.find(item => item._id === action.payload)
-                fetch(`http://localhost:5000/api/cart/deleteItem/${state.items._id}`, {
+                authFetch(`http://localhost:5000/api/cart/deleteItem/${state.items._id}`, {
                     method: 'PATCH',
-                    body: JSON.stringify({ prdID: item._id }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
-                    }
-                })
-
+                    body: JSON.stringify({ prdID: item._id })
+                });
                 state.items.orderItems = state.items.orderItems.filter(item => item._id !== action.payload)
-                state.items.total = state.items.orderItems.reduce((acc, item) => acc + (item.price.currentPrice * item.quantity), 0)
-                state.items.total += state.items.shippingFee
+                state.items.total = calculateTotal(state.items.orderItems, state.items.shippingFee);
             }
             else {
-                console.log(2);
-                fetch(`http://localhost:5000/api/cart/${state.items._id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
-                    }
-                })
-                state.items=[];
+                authFetch(`http://localhost:5000/api/cart/${state.items._id}`, {
+                    method: 'DELETE'
+                });
+                state.items = [];
+                this.DeleteOrder(state, action);
             }
+        },
+        deleteAllOrder(state, action) {
+            authFetch(`http://localhost:5000/api/cart/${state.items._id}`, {
+                method: 'DELETE'
+            });
+            state.items = [];
         },
     },
     extraReducers: (builder) => {
@@ -106,5 +108,5 @@ const orderSlice = createSlice({
     }
 })
 
-export const { decreaseQ, increaseQ, deleteItem } = orderSlice.actions
+export const { decreaseQ, increaseQ, deleteItem,deleteAllOrder } = orderSlice.actions
 export default orderSlice

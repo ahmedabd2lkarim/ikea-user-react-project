@@ -7,20 +7,41 @@ import { decreaseQ, deleteItem, fetchOrder, increaseQ } from '../../../Store/Sli
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 
-const FetchOrderItems = () => {
+function calculateTotal(items) {
+    return items.reduce((acc, item) => acc + item.price.currentPrice * item.quantity, 0) + 20;
+}
+
+const FetchOrderItems = ({det,fun}) => {
     const [open, setOpen] = useState(false);
-    const items = useSelector((state) => state.cart.items.orderItems)
+    let [items,setItems] = useState(JSON.parse(localStorage.getItem('cart')) || [])
+    if(localStorage.getItem('token')){
+        items = useSelector((state) => state.cart.items.orderItems)
+    }
     let [isLoading, setIsLoading] = useState()
     let [itemId, setItemId] = useState()
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(fetchOrder())
+        if (localStorage.getItem('token')) {
+            dispatch(fetchOrder())
+        }
     }, [])
     function decreaseQuantity(prdID) {
         setItemId(prdID)
         setIsLoading(true)
         setTimeout(() => {
-            dispatch(decreaseQ(prdID))
+            if (localStorage.getItem('token')) {
+                dispatch(decreaseQ(prdID))
+            }
+            else {
+                items = items.map((item) => {
+                    if (item._id == prdID) {
+                        item.quantity -= 1
+                    }
+                    return item
+                })
+                localStorage.setItem('cart', JSON.stringify(items))
+                fun({ orderItems: items, total: calculateTotal(items) })
+            }
             setIsLoading(false)
         }, 1000)
     }
@@ -28,18 +49,35 @@ const FetchOrderItems = () => {
         setItemId(prdID)
         setIsLoading(true)
         setTimeout(() => {
-            dispatch(increaseQ(prdID))
+            if (localStorage.getItem('token')) {
+                dispatch(increaseQ(prdID))
+            }
+            else {
+                items = items.map((item) => {
+                    if (item._id == prdID) {
+                        item.quantity += 1
+                    }
+                    return item
+                })
+                localStorage.setItem('cart', JSON.stringify(items))
+                fun({ orderItems: items, total: calculateTotal(items) })
+            }
             setIsLoading(false)
         }, 1000)
 
     }
     function deleteOrderItem(prdID) {
         setOpen(true);
-        dispatch(deleteItem(prdID))
+        if (localStorage.getItem('token')) {
+            dispatch(deleteItem(prdID))
+        }
+        else {
+            items = items.filter((item) => item._id != prdID)
+            localStorage.setItem('cart', JSON.stringify(items))
+            setItems(items)
+            fun([])
+        }
     }
-    const handleClick = () => {
-        setOpen(true);
-    };
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -48,8 +86,7 @@ const FetchOrderItems = () => {
 
         setOpen(false);
     };
-    // console.log(items);
-    
+
     function SlideTransition(props) {
         return <Slide {...props} direction="left" />;
     }
@@ -68,15 +105,6 @@ const FetchOrderItems = () => {
             </IconButton>
         </>
     );
-    // function moveToFavourites(prdID) {
-    //     setItemId(prdID)
-    //     setIsLoading(true)
-    //     setTimeout(() => {
-    //         dispatch(moveToFavourites(prdID))
-    //         setIsLoading(false)
-    //     }, 1000)
-
-    // }
 
     return (
         <Grid>
@@ -92,7 +120,7 @@ const FetchOrderItems = () => {
                         <Grid size={7} lineHeight={1.5}>
                             <Typography variant='subtitle2' fontWeight={'bold'}>{item.name}</Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName.en}{item.imageAlt.en.substring(item.imageAlt.en.indexOf(','), item.imageAlt.en.lastIndexOf(','))} </Typography>
-                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.measurement.width}x{item.measurement.height} {item.measurement?.unit || 'cm'}</Typography>
+                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.measurement?.length ? `${item.measurement?.length} ${item.measurement?.unit || 'cm'}` : item.measurement?.width ? `${item.measurement?.width}x${item.measurement?.height} ${item.measurement?.unit || 'cm'}` : ''}</Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.id.match(/.{1,3}/g).join('.')}</Typography>
                             <Grid container pt={4}>
                                 <Grid sx={{ borderRadius: '20px', border: 'grey solid 1px' }} size={{ xs: 6, sm: 3 }} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -127,5 +155,4 @@ const FetchOrderItems = () => {
         </Grid>
     )
 }
-
 export default FetchOrderItems
