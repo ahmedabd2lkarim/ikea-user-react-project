@@ -32,7 +32,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
         let productFoundInList = null;
         const isProductFavorite = lists.some((list) => {
           const found = list.items?.some(
-            (item) => item._id === "6827d89a1af3522bce002c2c"
+            (item) => item._id === product._id
           );
           if (found) {
             productFoundInList = list._id;
@@ -65,7 +65,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
           "http://localhost:5000/api/favourites/remove-product",
           {
             listId: favoriteListId,
-            productId: "6827d89a1af3522bce002c2c",
+            productId: product._id,
           },
           {
             headers: {
@@ -83,7 +83,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
               : f
           )
         );
-        window.location.reload()
+        // window.location.reload()
         setIsFavorite(false);
         setFavoriteListId(null);
       } catch (error) {
@@ -146,14 +146,14 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
         return;
       }
 
-      if (list.items?.some((item) => item._id === "6827d89a1af3522bce002c2c")) {
+      if (list.items?.some((item) => item._id === product._id)) {
         handleCloseFavourite();
         return;
       }
 
       await axios.put(
         "http://localhost:5000/api/favourites/add-product",
-        { listId, productId: "6827d89a1af3522bce002c2c" },
+        { listId, productId: product._id },
         {
           headers: {
             Authorization: token,

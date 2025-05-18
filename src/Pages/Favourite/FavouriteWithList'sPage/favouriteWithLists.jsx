@@ -163,10 +163,7 @@ function FavouriteWithLists() {
 
           <CreateListManager />
 
-          <FavouriteManager
-            product={{}}
-            onOffcanvasToggle={setIsOffcanvasOpen}
-          />
+         
         </>
       )}
     </Container>

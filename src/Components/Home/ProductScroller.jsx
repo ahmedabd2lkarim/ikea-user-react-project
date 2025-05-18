@@ -174,7 +174,7 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
 
         const data = await response.json();
         console.log("Order created:", data);
-        toast.error("Item added to cart");
+        toast.success("Item added to cart");
 
 
       } catch (error) {
@@ -206,11 +206,7 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
 
   return (
     <Card
-      onClick={(e) => {
-        if (!e.target.closest('button')) {
-          navigate(`/productDetails/${product._id}`);
-        }
-      }}
+
 
       elevation={0}
       sx={{
@@ -223,6 +219,11 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
       onMouseLeave={() => setHovered(false)}
     >
       <CardMedia
+        onClick={(e) => {
+          if (!e.target.closest('button')) {
+            navigate(`/productDetails/${product._id}`);
+          }
+        }}
         component="img"
         image={hovered ? product.contextualImageUrl : product.images[0]}
         alt={product.imageAlt?.[currentLang] || product.name}
@@ -279,48 +280,52 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
 
         </Box>
 
-        <Box sx={{ gap: 1 }}>
 
-          <Tooltip>
-            <IconButton
-              size="small"
-              sx={{ bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem", ":hover": { bgcolor: "rgb(11, 23, 65)" } }}
-              onClick={handleAddToCart}
-            >
-              <span className="pip-btn__inner">
-                <svg
-                  viewBox="0 0 24 24"
-                  focusable="false"
-                  width="25"
-                  height="20"
-                  aria-hidden="true"
-                  className="pip-svg-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="white"
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M11.9997 4C10.2948 4 9.019 5.122 8.5418 6.7127 8.2172 7.7946 7.97 8.9013 7.7083 10H1.5566l3.7501 10h9.6931v-2h-8.307l-2.2501-6h3.3251c.6634 2.1065 1.7665 4 4.2319 4 2.4653 0 3.5685-1.8935 4.2318-4h3.3252l-.375 1h2.136l1.125-3H16.291c-.2617-1.0987-.5089-2.2054-.8335-3.2873C14.9803 5.122 13.7045 4 11.9997 4zm2.2348 6c-.2293-.9532-.5299-2.1701-.6927-2.7127C13.3155 6.533 12.8255 6 11.9997 6s-1.3159.533-1.5422 1.2873C10.2947 7.83 9.9941 9.0468 9.7648 10h4.4697zm-4.361 2h4.2523c-.3635 1.0612-.8841 2-2.1261 2-1.2421 0-1.7627-.9388-2.1262-2z"
-                  ></path>
-                  <path
-                    fill="white"
-                    d="M19.9998 14h-2v2h-2v2h2v2h2v-2h2v-2h-2v-2z"
-                  ></path>
-                </svg>
-              </span>
-            </IconButton>
-          </Tooltip>
-          <Tooltip >
-            <IconButton size="small" sx={{ bgcolor: "white" }}>
-              <FavouriteManager
-                product={product}
-                onOffcanvasToggle={setIsOffcanvasOpen}
-              />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Tooltip>
+
+        </Tooltip>
+        <Tooltip >
+
+        </Tooltip>
       </CardContent>
+      <Box sx={{ gap: 1 }}>
+
+        <IconButton
+          size="small"
+          sx={{ bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem", ":hover": { bgcolor: "rgb(11, 23, 65)" } }}
+          onClick={handleAddToCart}
+        >
+          <span className="pip-btn__inner">
+            <svg
+              viewBox="0 0 24 24"
+              focusable="false"
+              width="25"
+              height="20"
+              aria-hidden="true"
+              className="pip-svg-icon"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill="white"
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M11.9997 4C10.2948 4 9.019 5.122 8.5418 6.7127 8.2172 7.7946 7.97 8.9013 7.7083 10H1.5566l3.7501 10h9.6931v-2h-8.307l-2.2501-6h3.3251c.6634 2.1065 1.7665 4 4.2319 4 2.4653 0 3.5685-1.8935 4.2318-4h3.3252l-.375 1h2.136l1.125-3H16.291c-.2617-1.0987-.5089-2.2054-.8335-3.2873C14.9803 5.122 13.7045 4 11.9997 4zm2.2348 6c-.2293-.9532-.5299-2.1701-.6927-2.7127C13.3155 6.533 12.8255 6 11.9997 6s-1.3159.533-1.5422 1.2873C10.2947 7.83 9.9941 9.0468 9.7648 10h4.4697zm-4.361 2h4.2523c-.3635 1.0612-.8841 2-2.1261 2-1.2421 0-1.7627-.9388-2.1262-2z"
+              ></path>
+              <path
+                fill="white"
+                d="M19.9998 14h-2v2h-2v2h2v2h2v-2h2v-2h-2v-2z"
+              ></path>
+            </svg>
+          </span>
+        </IconButton>
+        <IconButton size="small" sx={{ bgcolor: "white" }}>
+          <FavouriteManager
+            product={product}
+            onOffcanvasToggle={setIsOffcanvasOpen}
+          />
+        </IconButton>
+      </Box>
+
     </Card>
   );
 };
