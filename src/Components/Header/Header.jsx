@@ -34,6 +34,7 @@ import RoomIcon from "@mui/icons-material/Room";
 import { useNavigate } from "react-router-dom";
 
 
+
 // Tabs list
 const tabs = [
   "Products",
@@ -852,7 +853,7 @@ export const Header = () => {
             </Box>
           </Button>
 
-          <IconButton>
+          <IconButton onClick={() => navigate("/favourite-lists")} >
             <FavoriteBorderIcon sx={{ color: "black", fontSize: 20 }} />
           </IconButton>
 
@@ -1001,7 +1002,6 @@ export const Header = () => {
                     </Typography>
                   </Box>
                 ))}
-
               </ScrollMenu>
             </Box>
           ) : (
