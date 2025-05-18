@@ -6,6 +6,7 @@ import axios from "axios";
 
 
 function FavouriteManager({ product, onOffcanvasToggle }) {
+
   const [showFavourite, setShowFavourite] = useState(false);
   const [showCreateList, setShowCreateList] = useState(false);
   const [favourites, setFavourites] = useState([]);
