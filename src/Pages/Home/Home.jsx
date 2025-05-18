@@ -151,6 +151,7 @@ function Home() {
       ) : null}
 
       <PromoScroller title={t("nowInIKEA")} />
+      
 
       <Createspace />
       <ShopbyRoom />
