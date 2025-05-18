@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Box,
@@ -6,71 +6,49 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+
 import Teaser from "../../Components/Home/Teaser";
 import ProductScroller from "../../Components/Home/ProductScroller";
-import useFetchTeaser from "../../hooks/useFetchTeaser";
-import { useTranslation } from "react-i18next";
-import axios from "axios";
 import PromoScroller from "../../Components/Home/PromoScroller";
-import { useParams } from "react-router-dom";
+import useFetchTeaser from "../../hooks/useFetchTeaser";
+
+import {
+  fetchCategoryIntro,
+  fetchCategoryProducts,
+} from "../../Store/Slices/categorySlice";
 
 function Category() {
   const { id: categoryId } = useParams();
   const { i18n } = useTranslation();
   const language = i18n.language;
+  const dispatch = useDispatch();
+
+  const {
+    intro,
+    introLoading,
+    products,
+    productsLoading,
+  } = useSelector((state) => state.category);
 
   const {
     teaserData: categoryTeasers,
     loading: loadingCategoryTeasers,
   } = useFetchTeaser(categoryId);
 
-  const [categoryIntro, setCategoryIntro] = React.useState(null);
-  const [loadingIntro, setLoadingIntro] = React.useState(true);
-  const [products, setProducts] = React.useState([]);
-  const [loadingProducts, setLoadingProducts] = React.useState(true);
+  useEffect(() => {
+    dispatch(fetchCategoryIntro(categoryId));
+  }, [categoryId, language, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCategoryProducts(categoryId));
+  }, [categoryId, dispatch]);
 
   const getLocalized = (obj) => obj?.[language] || obj?.["en"];
 
-  React.useEffect(() => {
-    const fetchCategoryIntro = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/intros/${categoryId}`
-        );
-        setCategoryIntro(response.data);
-      } catch (error) {
-        console.error("Error fetching category intro", error);
-      } finally {
-        setLoadingIntro(false);
-      }
-    };
-
-    setLoadingIntro(true);
-    setCategoryIntro(null);
-    fetchCategoryIntro();
-  }, [categoryId, language]);
-
-  // Fetch products
-  React.useEffect(() => {
-    const fetchCategoryProducts = async () => {
-      setLoadingProducts(true);
-      try {
-        const res = await axios.get(
-          `http://localhost:5000/api/promos/products/${categoryId}`
-        );
-        setProducts(res.data || []);
-      } catch (error) {
-        console.error("Error fetching category products", error);
-        setProducts([]);
-      } finally {
-        setLoadingProducts(false);
-      }
-    };
-
-    fetchCategoryProducts();
-  }, [categoryId]);
-
-  if (loadingCategoryTeasers || loadingIntro || loadingProducts) {
+  if (loadingCategoryTeasers || introLoading || productsLoading) {
     return (
       <Box display="flex" justifyContent="center" my={5}>
         <CircularProgress />
@@ -80,13 +58,13 @@ function Category() {
 
   return (
     <Grid container px={{ xs: 1, sm: 2, md: 5 }}>
-      {categoryIntro && (
+      {intro && (
         <Box mb={4}>
           <Typography variant="h4" fontWeight="bold" py={5}>
-            {getLocalized(categoryIntro.title)}
+            {getLocalized(intro.title)}
           </Typography>
           <Typography variant="body1" color="textSecondary" width={{ md: 900 }}>
-            {getLocalized(categoryIntro.content)}
+            {getLocalized(intro.content)}
           </Typography>
         </Box>
       )}
@@ -101,7 +79,6 @@ function Category() {
           rightImages={categoryTeasers.teasers[0].rightImages}
           language={language}
           categoryId={categoryId}
-
         />
       )}
 
@@ -117,11 +94,8 @@ function Category() {
           rightImages={teaser.rightImages}
           language={language}
           categoryId={categoryId}
-
         />
       ))}
-
-
 
       {products?.length > 0 && (
         <Box my={5} width="100%">
@@ -137,17 +111,9 @@ function Category() {
           />
         </Box>
       )}
-      <Box my={3} display="flex" gap={2}>
-        <Button variant="outlined" onClick={() => i18n.changeLanguage("en")}>
-          English
-        </Button>
-        <Button variant="outlined" onClick={() => i18n.changeLanguage("ar")}>
-          العربية
-        </Button>
-      </Box>
+
     </Grid>
   );
-
 }
 
 export default Category;

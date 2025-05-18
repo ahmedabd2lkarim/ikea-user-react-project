@@ -15,6 +15,7 @@ import {
   ButtonBase,
   InputAdornment,
 } from "@mui/material";
+
 import { ArrowBackIos, ArrowForwardIos, Flag } from "@mui/icons-material";
 import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 import "react-horizontal-scrolling-menu/dist/styles.css";
@@ -32,7 +33,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import RoomIcon from "@mui/icons-material/Room";
 import { useNavigate } from "react-router-dom";
-
+// import LanguageIcon from "@mui/icons-material/Language";
+import { useTranslation } from "react-i18next";
 
 
 // Tabs list
@@ -119,6 +121,15 @@ const RightArrow = () => {
 
 // Main Header component
 export const Header = () => {
+  
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
+
+  const handleChangeLanguage = (lang) => {
+    if (lang !== currentLang) {
+      i18n.changeLanguage(lang);
+    }
+  };
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false); // Move this inside the component
@@ -304,16 +315,9 @@ export const Header = () => {
               onClick={toggleDrawer(false)}
             >
               <List>
-                <Box
-                  display={"flex"}
-                  justifyContent={"flex-end"}
-                  paddingRight={3}
-                >
-                  <IconButton>
-                    <CloseIcon
-                      onClick={toggleDrawer(false)}
-                      sx={{ cursor: "pointer", color: "black" }}
-                    />
+                <Box display="flex" justifyContent="flex-end" paddingRight={3}>
+                  <IconButton onClick={toggleDrawer(false)}>
+                    <CloseIcon sx={{ cursor: "pointer", color: "black" }} />
                   </IconButton>
                 </Box>
 
@@ -332,7 +336,6 @@ export const Header = () => {
                       marginRight: "10px",
                       fontSize: 12,
                       fontWeight: 700,
-                      // padding: "10px 20px",
                       "&:hover": {
                         backgroundColor: "transparent",
                         border: "2px solid black",
@@ -340,8 +343,18 @@ export const Header = () => {
                     },
                   }}
                 >
-                  <Button disabled>English</Button>
-                  <Button>العربية</Button>
+                  <Button
+                    onClick={() => handleChangeLanguage("en")}
+                    disabled={currentLang === "en"}
+                  >
+                    English
+                  </Button>
+                  <Button
+                    onClick={() => handleChangeLanguage("ar")}
+                    disabled={currentLang === "ar"}
+                  >
+                    العربية
+                  </Button>
                 </Box>
 
                 <Typography marginTop={5} fontSize={16} fontWeight={700}>
@@ -370,8 +383,7 @@ export const Header = () => {
                   fontWeight={400}
                   color="rgb(118, 118, 118)"
                 >
-                  Be aware your shopping cart will be emptied when you change
-                  your online store.
+                  Be aware your shopping cart will be emptied when you change your online store.
                 </Typography>
               </List>
 
@@ -780,9 +792,10 @@ export const Header = () => {
             src="https://www.ikea.com/global/assets/logos/brand/ikea.svg"
             width="90px"
             sx={{
-              // display: { xs: "block", sm: "block" }, // Visible on all breakpoints
               transform: { xs: "translateY(40px)", sm: "translateY(0)" },
+              cursor: "pointer",
             }}
+            onClick={() => navigate('/')}
           />
 
           {/* DESKTOP/TABLET Search (next to logo) */}
@@ -853,7 +866,7 @@ export const Header = () => {
             </Box>
           </Button>
 
-          <IconButton onClick={() => navigate("/favourite-lists")} >
+          <IconButton>
             <FavoriteBorderIcon sx={{ color: "black", fontSize: 20 }} />
           </IconButton>
 
@@ -1002,6 +1015,7 @@ export const Header = () => {
                     </Typography>
                   </Box>
                 ))}
+
               </ScrollMenu>
             </Box>
           ) : (

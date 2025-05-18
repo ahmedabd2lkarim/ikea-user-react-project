@@ -3,9 +3,14 @@ import { Box, Typography, Card, CardMedia, CardContent, IconButton, Tooltip } fr
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Language } from "@mui/icons-material";
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import FavouriteManager from "../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
 
 
-const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 ,cardHight=180}) => {
+const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, cardHight = 180 }) => {
+
   const { t, i18n } = useTranslation();
   // const currentLang = i18n.language;
   const [selectedCategory, setSelectedCategory] = useState(
@@ -109,8 +114,9 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170 ,
   );
 };
 
-const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
+const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
   const [hovered, setHovered] = useState(false);
+
 
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
@@ -122,6 +128,30 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
 
     if (token) {
       try {
+        const getOrderResponse = await fetch("http://localhost:5000/api/cart/showAllMyOrders", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        let currentOrderItems = [];
+        if (getOrderResponse.ok) {
+          const currentOrder = await getOrderResponse.json();
+          if (currentOrder.length > 0) {
+            currentOrderItems = currentOrder[0].orderItems || [];
+          }
+        }
+
+        const productIndex = currentOrderItems.findIndex(
+          (item) => item.prdID === cartItem.prdID
+        );
+
+        if (productIndex !== -1) {
+          currentOrderItems[productIndex].quantity += cartItem.quantity;
+        } else {
+          currentOrderItems.push(cartItem);
+        }
+
         const response = await fetch("http://localhost:5000/api/cart/newOrder", {
           method: "POST",
           headers: {
@@ -129,7 +159,7 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            orderItems: [cartItem],
+            orderItems: currentOrderItems,
             shippingFee: 20,
           }),
         });
@@ -148,7 +178,6 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
         console.error("Error adding to cart:", error);
         alert("Error adding item to cart.");
       }
-
     } else {
       const guestCart = JSON.parse(localStorage.getItem("guest_cart")) || [];
 
@@ -166,17 +195,26 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
   };
   const { _, i18n } = useTranslation();
   const currentLang = i18n.language;
+  const navigate = useNavigate();
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+
 
 
   return (
     <Card
+      onClick={(e) => {
+        if (!e.target.closest('button')) {
+          navigate(`/productDetails/${product._id}`);
+        }
+      }}
 
       elevation={0}
       sx={{
         minWidth: cardWidth, maxWidth: cardWidth,
         flex: "0 0 auto", position: "relative",
         cursor: "pointer", overflow: "hidden",
-      }}
+      }
+      }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -185,9 +223,9 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
         image={hovered ? product.contextualImageUrl : product.images[0]}
         alt={product.imageAlt?.[currentLang] || product.name}
         sx={{
-          width: "100%",        // Make the image fill the card's width
-          height: cardHight,          // Fix height (adjust this value as needed)
-          objectFit: "cover",   // Crop and fill the container nicely
+          width: "100%",
+          height: cardHight,
+          objectFit: "cover",
           p: 1,
         }}
       />
@@ -234,9 +272,11 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
               <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
             </Typography>
           )}
+
         </Box>
 
         <Box sx={{ gap: 1 }}>
+
           <Tooltip>
             <IconButton
               size="small"
@@ -269,7 +309,10 @@ const HoverCard = ({ product, cardWidth, deals ,cardHight}) => {
           </Tooltip>
           <Tooltip >
             <IconButton size="small" sx={{ bgcolor: "white" }}>
-              <FavoriteBorderIcon fontSize="small" />
+              <FavouriteManager
+                product={product}
+                onOffcanvasToggle={setIsOffcanvasOpen}
+              />
             </IconButton>
           </Tooltip>
         </Box>

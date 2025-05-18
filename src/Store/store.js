@@ -4,7 +4,10 @@ import chatSlice from "./Slices/chatSlice";
 import productSlice from "./Slices/productChatSlice";
 import orderSlice from "./Slices/orderSlice";
 // import settingSlice from "./slices/settingSlice"
-import createUpdateListReducer from "Slices/createUpdateListReducer"
+import createUpdateListReducer from "./Slices/createUpdateListSlice"
+import categoryReducer from "./Slices/categorySlice";
+import productReducer from "./Slices/productSlice";
+import homeReducer from "./Slices/homeSlice";
 
 
 const store = configureStore({
@@ -14,6 +17,9 @@ const store = configureStore({
         products: productSlice.reducer,
         cart: orderSlice.reducer,
         createUpdateList: createUpdateListReducer.reducer,
+        category: categoryReducer,
+        products: productReducer,
+        home: homeReducer,
 
         // settingLanguage: languageSlice.reducer,
     }
