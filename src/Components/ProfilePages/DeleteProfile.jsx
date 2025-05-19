@@ -28,7 +28,6 @@ const DeleteProfile = () => {
               };
               try {
                 const loginResponse = await dispatch(loginUser(loginData)).unwrap();
-                console.log(loginResponse)
                 if (loginResponse) {
                   localStorage.removeItem('token');
                   localStorage.removeItem('user');
@@ -46,7 +45,7 @@ const DeleteProfile = () => {
 
     const isTouchedOrDirty = (name) => touchedFields[name] || dirtyFields[name];
   return (
-    <div className='delete-profile'>
+    <div className='delete-profile' style={{marginTop:"80px",marginRight:"30px"}}>
         <h1 className='Content-Profile-Page'>{t("Delete_Account.Delete_account")}</h1>
         <Grid className="login-form-page" marginTop={2} container spacing={5}>
         <Grid className="Content-Profile-Page delete-info" size={{ xs: 12, md: 6 }}>
@@ -60,7 +59,7 @@ const DeleteProfile = () => {
        <h2 style={{color:'black',fontSize:"1rem"}}>{t("Delete_Account.Any_questions")}</h2>
        <span >{t("Delete_Account.Contact")}</span> 
        <span style={{textDecoration:'underline',marginLeft:'4px',marginRight:"4px"}} >{t("Delete_Account.customer_service")}</span>
-       <h3 style={{color:'black',fontSize:".9rem" ,marginTop:"20px",paddingTop:"14px", borderTop:"1px solid rgb(185, 185, 185)"}}>{t("Delete_Account.Password")}</h3>
+       <h3 style={{color:'black',fontSize:".9rem",fontWeight:"bold" ,marginTop:"20px",paddingTop:"14px", borderTop:"1px solid rgb(185, 185, 185)"}}>{t("Delete_Account.Password")}</h3>
        <p>{t("Delete_Account.ConfirmDelete")}</p>
        <form onSubmit={handleSubmit(onSubmit)}>
        <InputLabel className="label">{t("Login.Password")}</InputLabel>

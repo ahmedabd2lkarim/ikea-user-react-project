@@ -10,7 +10,7 @@ const ProfileDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const userProfile = useSelector((state) => state.user.items).user;
-  console.log(userProfile);
+  // console.log(userProfile);
 
   const fullName = userProfile?.name || "";
   const [firstName = "", lastName = ""] = fullName.trim().split(" ");
@@ -22,7 +22,7 @@ const ProfileDetails = () => {
 
   return (
     <div>
-      <div className="Content-Profile-Page">
+      <div className="Content-Profile-Page" style={{marginTop:"80px"}}>
         <h4 style={{ fontSize: "1.2rem", marginBottom: "-5px" }}>
           {t("PD.profile_Details")}
         </h4>
@@ -37,7 +37,7 @@ const ProfileDetails = () => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid size={{ xs: 10, md: 9 }}>
+              <Grid size={{ xs: 10, md: 9 }} marginTop={2}>
                 <p
                   style={{
                     fontWeight: "bold",
@@ -81,7 +81,7 @@ const ProfileDetails = () => {
               {userProfile?.email}
             </p>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 10, md: 9 }}>
+              <Grid size={{ xs: 10, md: 9 }} style={{ marginTop: "18px" }}>
                 <p
                   style={{
                     fontWeight: "bold",
@@ -100,6 +100,7 @@ const ProfileDetails = () => {
                     fontWeight: "bold",
                     fontSize: ".7rem",
                     cursor: "pointer",
+                    marginBottom: "5px",
                   }}
                 >
                   <PenSVG fontSize="12px" />

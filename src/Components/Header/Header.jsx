@@ -33,6 +33,7 @@ import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlin
 import RoomIcon from "@mui/icons-material/Room";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 // Tabs list
 
@@ -268,6 +269,9 @@ export const Header = () => {
     "Bathroom products",
     "New",
   ];
+  const userProfile = useSelector((state) => state.user.items).user;
+  // console.log(userProfile);
+  const userName = userProfile?.name.split(" ")[0] || "";
 
   return (
     <Box>
@@ -881,7 +885,6 @@ export const Header = () => {
           ml={{ xs: 35, sm: 0 }} // Remove margin for xs
         >
           <Button
-            onClick={() => navigate("/login")}
             sx={{
               width: { xs: "0px", sm: "0", md: "0", lg: "230px" }, // Adjust width for xs and sm
               height: "40px",
@@ -895,15 +898,27 @@ export const Header = () => {
                 cursor: "pointer",
               },
             }}
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (token) {
+                navigate("/profile"); // Navigate to profile if token exists
+              } else {
+                navigate("/login"); // Navigate to login if no token
+              }
+            }}
           >
             <PermIdentityIcon />
             <Box
               ml={1}
               display={{ xs: "none", sm: "none", md: "none", lg: "block" }}
             >
-              {t("loginOrSignup")}
+              {localStorage.getItem("token")
+                ? `${t("hello")} ${userName}`
+                : t("loginOrSignup")
+              }
             </Box>
           </Button>
+
 
           <IconButton onClick={handleClick}>
             <FavoriteBorderIcon sx={{ color: "black", fontSize: 20 }} />
