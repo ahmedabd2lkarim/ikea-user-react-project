@@ -42,7 +42,7 @@ const Profile = () => {
     // console.log(t("greetingProfileUserName", { name: "Test" }));
   return (
     <div>
-  <div className="Content-Profile-Page">
+  <div className="Content-Profile-Page" style={{marginTop:"80px"}}>
 <h2 style={{fontSize:"1.8rem" , marginBottom:"-5px"}}> 
 {t("profile.greetingProfileUserName", { name: userName })}
   </h2>

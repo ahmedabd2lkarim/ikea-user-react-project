@@ -69,13 +69,13 @@ const EditModel = ({ firstName, lastName, setIsModalOpen, gender }) => {
       style={{
         position: "absolute",
         width: "100%",
-        height: "100vh",
+        height: "300vh",
         backgroundColor: "rgb(0 0 0 /.5)",
         top: "0",
       }}
     >
       <div
-        className="modal"
+        className="Editmodal"
         style={{
           borderRadius: "7px 0 7px 0",
           backgroundColor: "[rgba(0,0,0,0.2)",
@@ -90,7 +90,7 @@ const EditModel = ({ firstName, lastName, setIsModalOpen, gender }) => {
               justifyContent: "center",
             }}
           >
-            <h5>{t("Edit_User.Edit_information")} </h5>
+            <h5 style={{fontSize:"16px",fontWeight:"bold"}} >{t("Edit_User.Edit_information")} </h5>
           </div>
           <form
             size={{ md: 10 }}

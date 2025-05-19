@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { Button, FormControl, Grid, InputLabel, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-// import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import InfoIcon from "@mui/icons-material/Info";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckIcon from "@mui/icons-material/Check";
 import { toast } from "react-toastify";
-
+import "../../Pages/Profile/Profile.css";
+import { editUserProfile, loginUser } from "../../Store/Slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 const ChangePassword = () => {
   const { t } = useTranslation();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // const userProfile = useSelector((state) => state.user.items)?.user;
 
@@ -38,24 +39,31 @@ const ChangePassword = () => {
       hasNumber: /\d/.test(password),
     };
   })();
-
+  const userProfile = useSelector((state) => state.user.items).user;
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    const changedData = {
-      oldPassword: data.OldPassword,
-      password: data.Password,
+    const updatedUser = {
+      currentPassword: data.OldPassword,
+      newPassword: data.Password,
     };
-console.log(changedData);
+    const loginData = {
+      email: userProfile?.email,
+      password: data.OldPassword
+  };
+// console.log(updatedUser);
+// console.log(loginData);
     try {
-      // Dispatch change password action
-      // const res = await dispatch(changePassword(changedData)).unwrap();
-      // localStorage.setItem("token", res.token);
+      const loginResponse = await dispatch(loginUser(loginData)).unwrap();
+      if (loginResponse) {
+        await dispatch(editUserProfile( {updatedUser} )).unwrap()
+        navigate("/");
+        // console.log("Password changed successfully");
+        toast.success(t("ChangePassword.succes"), {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
 
-      toast.success(t("ChangePassword.succes"), {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      navigate("/");
     } catch {
       toast.error(t("ChangePassword.error"), {
         position: "top-right",
@@ -65,13 +73,13 @@ console.log(changedData);
   };
 
   return (
-    <div className="change-password">
-      <h1 className="Content-Profile-Page" style={{ fontSize: "1.2rem" }}>
+    <div className="change-password" style={{marginTop:"80px",marginRight:"30px"}}>
+      <h1 className="Content-Profile-Page " style={{ fontSize: "1.2rem" ,fontWeight:"bold"}}>
         {t("ChangePassword.title")}
       </h1>
       <Grid className="login-form-page" marginTop={2} container spacing={5}>
         <Grid className="Content-Profile-Page" size={{ xs: 12, md: 6 }}>
-          <p style={{ marginBottom: ".75rem" }}>
+          <p style={{ marginBottom: ".75rem",color:" #4d4d4d" ,fontSize:"12px"}}>
             {t("ChangePassword.description")}
           </p>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -199,7 +207,7 @@ console.log(changedData);
                     value: true,
                     message: t("ChangePassword.confirmPasswordRequired"),
                   },
-                  validate: (value) => value === getValues("Password") || t("ChangePassword.passwordsDoNotMatch"),
+                  validate: (value) => value === getValues("Password") || t("ChangePassword.Confirm_new_password_mismatch"),
                 })}
               />
               {isTouchedOrDirty("confirmPassword") && errors.confirmPassword && (
