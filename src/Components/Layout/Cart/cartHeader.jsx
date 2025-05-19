@@ -7,7 +7,9 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import './cartHeader.css'
 import { deleteAllOrder } from '../../../Store/Slices/orderSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 const CartHeader = ({det,fun}) => {
+    const {t} = useTranslation();
     const [openDrawer, setOpenDrawer] = useState(false)
     const [openDialoge, setOpenDialoge] = useState(false)
     const dispatch = useDispatch();
@@ -49,7 +51,7 @@ const CartHeader = ({det,fun}) => {
                     <Typography pr={2}>
                         <ShoppingBasketOutlinedIcon />
                     </Typography>
-                    <Typography className='item-text' fontWeight={'bold'} fontSize={14}>Add by article number</Typography>
+                    <Typography className='item-text' fontWeight={'bold'} fontSize={14}>{t("cart.addbyarticle")}</Typography>
                 </ListItem>
                 <hr />
 
@@ -57,7 +59,7 @@ const CartHeader = ({det,fun}) => {
                     <Typography pr={2}>
                         <DeleteOutlinedIcon />
                     </Typography>
-                    <Typography className='item-text' fontWeight={'bold'} fontSize={14}>Empty shopping bag</Typography>
+                    <Typography className='item-text' fontWeight={'bold'} fontSize={14}>{t("cart.makeemptybag")}</Typography>
                 </ListItem>
                 <hr />
             </List>
@@ -65,7 +67,7 @@ const CartHeader = ({det,fun}) => {
     );
     return (
         <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} size={{ xs: 12, md: 7 }}>
-            <Typography variant='h4' fontWeight={'bold'} py={5}>Your bag</Typography>
+            <Typography variant='h4' fontWeight={'bold'} py={5}>{t("cart.yourBag")}</Typography>
             <IconButton onClick={toggleDrawer(true)}>
                 <MoreHorizIcon fontSize='small' />
             </IconButton>
@@ -78,14 +80,14 @@ const CartHeader = ({det,fun}) => {
                         <CloseIcon fontSize='small' sx={{ color: 'black' }} />
                     </IconButton>
                 </Box>
-                <DialogTitle fontWeight={'bold'} fontSize={25}>Do you want to empty your bag?</DialogTitle>
-                <Typography variant='subtitle1' textAlign={'center'} color='rgb(72, 72, 72)'>All items and designs will be removed from your bag.</Typography>
+                <DialogTitle fontWeight={'bold'} fontSize={25}>{t("cart.areyousure")}</DialogTitle>
+                <Typography variant='subtitle1' textAlign={'center'} color='rgb(72, 72, 72)'>{t("cart.makeClear")}</Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 5, py: 3 }}>
                     <Button variant="contained" sx={{ borderRadius: '30px', backgroundColor: 'black', px: 5, py: 2 }} autoFocus onClick={deleteOrder}>
-                        Confirm
+                        {t("cart.confirm")}
                     </Button>
                     <Button variant="outlined" onClick={handleClose} sx={{ borderRadius: '30px', color: 'black', borderColor: 'black', px: 5, py: 2 }}>
-                        Cancel
+                        {t("cart.cancel")}
                     </Button>
                 </Box>
             </Dialog>

@@ -268,5 +268,39 @@
     "newsroom": "Newsroom",
     "productRecalls": "Product recalls"
   },
-  "hello":"Hej"
+  "hello":"Hej",
+  "cart":{
+    "emptyBag":{
+      "title":"Your bag is empty",
+      "description":"You can add products to your shopping bag, either by searching or by browsing products."
+    },
+    "commonSection":{
+      "changemind":"90 days to change your mind",
+      "secureshopping":"Secure shopping with SSL encryption"
+    },
+    "yourBag":"Your bag",
+    "TotalProducts":"products in total",
+    "remove":"Remove",
+    "addtoFav":"Move to favourites",
+    "EGB":"EGP",
+    "ordersummary":"Order Summary",
+    "products":"Products",
+    "subtotal":"Subtotal incl. VAT",
+    "byClicking":"By clicking to 'check out' you're agreeing to our Privacy Policy",
+    "checkout":"Go to checkout",
+    "it'sok":"It's ok to change your mind!",
+    "discription":"If you're not totally satisfied with your IKEA purchase, you can return it within 90 days, together with proof of purchase, for a full refund. Refunds will be made in the same form of payment originally used to make the purchase.",
+    "enjoying":"Enjoy the benefit of 90 days to return unopened products.",
+    "exploring":"Explore IKEA's return policy for more information",
+    "securesite":"This site is secure",
+    "validation":"www.ikea.com is validated as a secure site for sending and receiving sensitive data by DigiCert OV SSL Certificate.",
+    "technology":"The SSL technology encrypts the communication between the web browser and website, ensuring that no information can be intercepted or accessed by a third party.",
+    "makeemptybag":"Empty shopping bag",
+    "areyousure":"Do you want to empty your bag?",
+    "makeClear":"All items and designs will be removed from your bag.",
+    "cancel":"CANCEL",
+    "confirm":"CONFIRM",
+    "addbyarticle":"Add by article number",
+    "removed":"was removed from your bag"
+  }
 }
