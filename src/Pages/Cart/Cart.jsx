@@ -108,7 +108,7 @@ const Cart = () => {
           <Typography variant='subtitle1' color='rgb(72, 72, 72)'>You can add products to your shopping bag, either by searching or by <a href='' style={{ color: 'rgb(72, 72, 72)' }}>browsing products.</a></Typography>
           {commonSection}
         </Grid>
-        : <><CartHeader />
+        : <><CartHeader fun={setOrder}/>
           <Grid container display={'flex'} justifyContent={'space-between'} position={'relative'}>
             <Grid size={{ xs: 12, md: 7, lg: 7 }} order={{ xs: '1', md: '0' }}>
               <FetchOrderItems det={order} fun={setOrder} />

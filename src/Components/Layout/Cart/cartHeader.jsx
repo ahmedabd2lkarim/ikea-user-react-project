@@ -7,7 +7,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import './cartHeader.css'
 import { deleteAllOrder } from '../../../Store/Slices/orderSlice';
 import { useDispatch } from 'react-redux';
-const CartHeader = () => {
+const CartHeader = ({det,fun}) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [openDialoge, setOpenDialoge] = useState(false)
     const dispatch = useDispatch();
@@ -25,15 +25,21 @@ const CartHeader = () => {
         setOpenDrawer(newOpen);
     };
 
-    const deleteOrder =()=>{
-        dispatch(deleteAllOrder())
+    const deleteOrder = () => {
+        if (localStorage.getItem('token')) {
+            dispatch(deleteAllOrder())
+        }
+        else {
+            localStorage.setItem('cart', JSON.stringify([]))
+            fun([])
+        }
     }
 
     const DrawerList = (
         <Box sx={{ width: 450 }} onClick={toggleDrawer(false)}>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} p={3}>
-                <IconButton onClick={()=>toggleDrawer(false)} >
+                <IconButton onClick={() => toggleDrawer(false)} >
                     <CloseIcon fontSize='small' sx={{ color: 'black' }} />
                 </IconButton>
             </Box>
@@ -58,32 +64,32 @@ const CartHeader = () => {
         </Box>
     );
     return (
-            <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} size={{xs:12,md:7}}>
-                <Typography variant='h4' fontWeight={'bold'} py={5}>Your bag</Typography>
-                <IconButton onClick={toggleDrawer(true)}>
-                    <MoreHorizIcon fontSize='small' />
-                </IconButton>
-                <Drawer ModalProps={{ disableScrollLock: true }} PaperProps={{ sx: { borderRadius: '10px 0 0 10px' } }} open={openDrawer} anchor='right' onClose={toggleDrawer(false)}>
-                    {DrawerList}
-                </Drawer>
-                <Dialog onClose={handleClose} open={openDialoge}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} p={1}>
-                        <IconButton onClick={handleClose} >
-                            <CloseIcon fontSize='small' sx={{ color: 'black' }} />
-                        </IconButton>
-                    </Box>
-                    <DialogTitle fontWeight={'bold'} fontSize={25}>Do you want to empty your bag?</DialogTitle>
-                    <Typography variant='subtitle1' textAlign={'center'} color='rgb(72, 72, 72)'>All items and designs will be removed from your bag.</Typography>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 5, py: 3 }}>
-                        <Button variant="contained" sx={{ borderRadius: '30px', backgroundColor: 'black', px: 5, py: 2 }} autoFocus onClick={deleteOrder}>
-                            Confirm
-                        </Button>
-                        <Button variant="outlined" onClick={handleClose} sx={{ borderRadius: '30px', color: 'black', borderColor: 'black', px: 5, py: 2 }}>
-                            Cancel
-                        </Button>
-                    </Box>
-                </Dialog>
-            </Grid>
+        <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} size={{ xs: 12, md: 7 }}>
+            <Typography variant='h4' fontWeight={'bold'} py={5}>Your bag</Typography>
+            <IconButton onClick={toggleDrawer(true)}>
+                <MoreHorizIcon fontSize='small' />
+            </IconButton>
+            <Drawer ModalProps={{ disableScrollLock: true }} PaperProps={{ sx: { borderRadius: '10px 0 0 10px' } }} open={openDrawer} anchor='right' onClose={toggleDrawer(false)}>
+                {DrawerList}
+            </Drawer>
+            <Dialog onClose={handleClose} open={openDialoge}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} p={1}>
+                    <IconButton onClick={handleClose} >
+                        <CloseIcon fontSize='small' sx={{ color: 'black' }} />
+                    </IconButton>
+                </Box>
+                <DialogTitle fontWeight={'bold'} fontSize={25}>Do you want to empty your bag?</DialogTitle>
+                <Typography variant='subtitle1' textAlign={'center'} color='rgb(72, 72, 72)'>All items and designs will be removed from your bag.</Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 5, py: 3 }}>
+                    <Button variant="contained" sx={{ borderRadius: '30px', backgroundColor: 'black', px: 5, py: 2 }} autoFocus onClick={deleteOrder}>
+                        Confirm
+                    </Button>
+                    <Button variant="outlined" onClick={handleClose} sx={{ borderRadius: '30px', color: 'black', borderColor: 'black', px: 5, py: 2 }}>
+                        Cancel
+                    </Button>
+                </Box>
+            </Dialog>
+        </Grid>
     )
 }
 
