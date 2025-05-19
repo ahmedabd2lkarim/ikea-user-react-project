@@ -93,7 +93,7 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: <Search />,
- 
+      }, {
         path: "/favourite",
         element: <EmptyOrNotLogin />,
       },
