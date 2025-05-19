@@ -121,7 +121,7 @@ const FetchOrderItems = ({det,fun}) => {
                             <Typography variant='subtitle2' fontWeight={'bold'}>{item.name}</Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName.en}{item.imageAlt.en.substring(item.imageAlt.en.indexOf(','), item.imageAlt.en.lastIndexOf(','))} </Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.measurement?.length ? `${item.measurement?.length} ${item.measurement?.unit || 'cm'}` : item.measurement?.width ? `${item.measurement?.width}x${item.measurement?.height} ${item.measurement?.unit || 'cm'}` : ''}</Typography>
-                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.id.match(/.{1,3}/g).join('.')}</Typography>
+                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.id.substring(0,8).match(/.{1,3}/g).join('.')}</Typography>
                             <Grid container pt={4}>
                                 <Grid sx={{ borderRadius: '20px', border: 'grey solid 1px' }} size={{ xs: 6, sm: 3 }} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                                     <IconButton size='small' onClick={() => { decreaseQuantity(item._id) }} disabled={item.quantity == 1} >
