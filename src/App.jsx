@@ -19,6 +19,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
 import ChangePassword from "./Components/ProfilePages/ChangePassword";
+import BillingShippingForm from "./Pages/Cart/Billing Form";
 
 
 const router = createBrowserRouter([
@@ -85,7 +86,11 @@ const router = createBrowserRouter([
         path: "/favourite-lists",
         element: <FavouriteWithLists />,
       },
-    ],
+    ]
+  },
+  {
+    path: "/billing-shipping-form",
+    element: <BillingShippingForm />,
   },
 ]);
 

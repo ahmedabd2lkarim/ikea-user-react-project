@@ -6,6 +6,7 @@ import { fetchOrder } from '../../Store/Slices/orderSlice';
 import CloseIcon from '@mui/icons-material/Close';
 import FetchOrderItems from '../../Components/Layout/Cart/fetchOrderItems';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 function calculateTotal(items) {
   return items.reduce((acc, item) => acc + item.price.currentPrice * item.quantity, 0) + 20;
@@ -13,6 +14,7 @@ function calculateTotal(items) {
 
 const Cart = () => {
   // const { t } = useTranslation();
+  const navigate = useNavigate();
   const [openDrawer1, setOpenDrawer1] = useState(false)
   const [openDrawer2, setOpenDrawer2] = useState(false)
   let [order, setOrder] = useState([])
@@ -126,7 +128,7 @@ const Cart = () => {
                   <Typography variant='h4' fontWeight={'bold'}><sup style={{ fontSize: '16px', verticalAlign: '3px' }}>EGP</sup>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                 </Grid>
                 <Typography variant='subtitle2' color='rgb(72, 72, 72)'>By clicking "check out" you're agreeing to our <a href='' style={{ color: 'rgb(72, 72, 72)' }}>Privacy Policy</a></Typography>
-                <Button variant='contained' sx={{ backgroundColor: 'rgb(0, 88, 163)', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 3, py: 2, fontSize: '15px', borderRadius: '27px', width: '100%', mt: 1 }} >Go to checkout</Button>
+                <Button variant='contained' sx={{ backgroundColor: 'rgb(0, 88, 163)', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 3, py: 2, fontSize: '15px', borderRadius: '27px', width: '100%', mt: 1 }} onClick={() => navigate('/billing-shipping-form')}>Go to checkout</Button>
                 {commonSection}
               </Grid>
             </Grid>
