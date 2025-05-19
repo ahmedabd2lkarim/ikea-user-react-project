@@ -1,7 +1,9 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Createspace = () => {
+  const { t } = useTranslation();
   return (
     <Box>
       <Stack
@@ -31,7 +33,7 @@ const Createspace = () => {
         >
           <Box width={"80%"} gap={2} display={"flex"} flexDirection={"column"}>
             <Typography fontSize={24} fontWeight={700}>
-              Create space for meaningful moments
+              {t("Createspace")}
             </Typography>
             <Typography
               fontSize={14}
@@ -39,8 +41,7 @@ const Createspace = () => {
               color="rgb(72, 72, 72)
 "
             >
-              Thanks to our soft and colourful textiles, you can start your day
-              stress-free.
+              {t("Thankstoour")}
             </Typography>
             <Button
               variant="contained"
@@ -58,7 +59,7 @@ const Createspace = () => {
                 },
               }}
             >
-              Explore more
+              {t("Exploremore")}
             </Button>
           </Box>
         </Box>
