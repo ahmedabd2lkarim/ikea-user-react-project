@@ -13,7 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import Grid from "@mui/material/Grid";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
 import { editUserProfile } from "../../Store/Slices/userSlice";
 import { useTranslation } from "react-i18next";
 const EditModel = ({ firstName, lastName, setIsModalOpen, gender }) => {
@@ -64,6 +64,7 @@ const EditModel = ({ firstName, lastName, setIsModalOpen, gender }) => {
   }, [firstName, lastName, setValue]);
 
   // const selectedGender = watch("gender", "");
+  const userProfile = useSelector((state) => state.user.items).user;
   return (
     <div
       style={{
@@ -90,7 +91,7 @@ const EditModel = ({ firstName, lastName, setIsModalOpen, gender }) => {
               justifyContent: "center",
             }}
           >
-            <h5 style={{fontSize:"16px",fontWeight:"bold"}} >{t("Edit_User.Edit_information")} </h5>
+            <h5 style={{ fontSize: "16px", fontWeight: "bold" }} >{t("Edit_User.Edit_information")} </h5>
           </div>
           <form
             size={{ md: 10 }}
@@ -273,7 +274,7 @@ const EditModel = ({ firstName, lastName, setIsModalOpen, gender }) => {
                     color: "rgb(77, 77, 77)",
                   }}
                 >
-                  sohagamal@gmail.com
+                  {userProfile?.email}
                 </label>
               </div>
             </div>
