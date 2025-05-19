@@ -1,34 +1,18 @@
-import { Typography, Box, Snackbar, Alert } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import ListOptionsButton from "../Buttons/ListOptions/ListOptionsButton";
 import BackToListButton from "../Buttons/BackToListButton";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useSelector , useDispatch } from "react-redux";
 import {
   selectListById,
-  clearSnackbarMessage,
 } from "../../../Store/Slices/createUpdateListSlice";
+
 const EmptyListPage = () => {
   const { listId } = useParams();
   const list = useSelector((state) => selectListById(state, listId));
   const status = useSelector((state) => state.createUpdateList.status);
   const error = useSelector((state) => state.createUpdateList.error);
-  const snackbarMessage = useSelector((state) => state.createUpdateList.snackbarMessage);
-  const snackbarSeverity = useSelector((state) => state.createUpdateList.snackbarSeverity);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (snackbarMessage) {
-      setSnackbarOpen(true);
-    }
-  }, [snackbarMessage]);
-
-  const handleSnackbarClose = (_, reason) => {
-    if (reason === "clickaway") return;
-    setSnackbarOpen(false);
-    dispatch(clearSnackbarMessage());
-  };
-
+  
   if (status === "loading") {
     return (
       <Box sx={{ p: 5 }}>
@@ -90,20 +74,6 @@ const EmptyListPage = () => {
         ready for them.
       </Typography>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={5000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%", backgroundColor: "black", color: "#fff" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

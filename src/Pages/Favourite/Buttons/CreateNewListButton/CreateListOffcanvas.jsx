@@ -1,13 +1,15 @@
 // CreateListOffcanvas.jsx
-import { useEffect } from "react";
+import  { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Offcanvas } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   TextField,
   Typography,
   IconButton,
   Chip,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -18,6 +20,7 @@ import {
   createList,
   updateList,
   fetchFavourites,
+  clearSnackbarMessage,
 } from "../../../../Store/Slices/createUpdateListSlice";
 
 function CreateListOffcanvas({
@@ -30,6 +33,13 @@ function CreateListOffcanvas({
 }) {
   const maxChars = 50;
   const dispatch = useDispatch();
+  const snackbarMessage = useSelector(
+    (state) => state.createUpdateList.snackbarMessage
+  );
+  const snackbarSeverity = useSelector(
+    (state) => state.createUpdateList.snackbarSeverity
+  );
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const {
     register,
     handleSubmit,
@@ -54,6 +64,18 @@ function CreateListOffcanvas({
       reset({ name: "" });
     }
   }, [show, reset, mode]);
+
+  useEffect(() => {
+    if (snackbarMessage) {
+      setOpenSnackbar(true);
+    }
+  }, [snackbarMessage]);
+
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    dispatch(clearSnackbarMessage());
+  };
 
   const listName = watch("name");
 
@@ -291,6 +313,23 @@ function CreateListOffcanvas({
           />
         </Offcanvas.Body>
       </Offcanvas>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      
     </>
   );
 }

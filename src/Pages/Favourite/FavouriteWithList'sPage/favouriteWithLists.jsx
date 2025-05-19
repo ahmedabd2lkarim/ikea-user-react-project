@@ -1,22 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import { Typography, Box, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { DotLoader } from "react-spinners";
-import { fetchFavourites } from "../../../Store/Slices/createUpdateListSlice";
+import {
+  fetchFavourites,
+} from "../../../Store/Slices/createUpdateListSlice"; 
 import CreateListManager from "../Buttons/CreateNewListButton/CreateListManager";
 import ListOptionsButton from "../Buttons/ListOptions/ListOptionsButton";
 import EmptyOrNotLogin from "../EmptyOrNotLoginFavouritePage/emptyOrNotLogin";
-import FavouriteManager from "../TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function FavouriteWithLists() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
 
-  const { items, status } = useSelector((state) => state.createUpdateList);
+  const { items, status} = useSelector(
+    (state) => state.createUpdateList
+  ); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -35,6 +37,7 @@ function FavouriteWithLists() {
   const handleProductClick = (listId) => {
     navigate(`/list-details/${listId}`);
   };
+
 
   const lists = items?.lists || [];
 
@@ -154,6 +157,7 @@ function FavouriteWithLists() {
           <CreateListManager />
         </>
       )}
+
     </Container>
   );
 }

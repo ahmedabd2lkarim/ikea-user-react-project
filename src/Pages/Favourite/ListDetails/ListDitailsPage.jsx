@@ -5,8 +5,6 @@ import {
   Grid,
   Divider,
   Paper,
-  Snackbar,
-  Alert,
   IconButton,
   Dialog,
   DialogTitle,
@@ -22,7 +20,6 @@ import {
   fetchFavourites,
   deleteProductFromList,
   selectListById,
-  clearSnackbarMessage,
 } from "../../../Store/Slices/createUpdateListSlice";
 import BackToListButton from "../Buttons/BackToListButton";
 import ListOptionsButton from "../Buttons/ListOptions/ListOptionsButton";
@@ -31,7 +28,7 @@ function ListDetailsPage() {
   const dispatch = useDispatch();
   const { listId } = useParams();
   const [open, setOpen] = useState(false);
-  const [itemIdToDelete, setItemIdToDelete] = useState(null); // <-- هنا نخزن id المنتج
+  const [itemIdToDelete, setItemIdToDelete] = useState(null); 
 
   const list = useSelector((state) => selectListById(state, listId));
   const loading = useSelector(
@@ -39,13 +36,13 @@ function ListDetailsPage() {
   );
 
   const handleClickOpen = (itemId) => {
-    setItemIdToDelete(itemId); // نخزن الـ id اللي المستخدم ضغط عليه
+    setItemIdToDelete(itemId); 
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setItemIdToDelete(null); // نفرغ الـ id بعد إغلاق الديالوج
+    setItemIdToDelete(null); 
   };
 
   const confirmDelete = () => {
@@ -62,26 +59,6 @@ function ListDetailsPage() {
 
   const handleDelete = (productId) => {
     dispatch(deleteProductFromList({ listId, productId }));
-  };
-
-  const snackbarMessage = useSelector(
-    (state) => state.createUpdateList.snackbarMessage
-  );
-  const snackbarSeverity = useSelector(
-    (state) => state.createUpdateList.snackbarSeverity
-  );
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  useEffect(() => {
-    if (snackbarMessage) {
-      setSnackbarOpen(true);
-    }
-  }, [snackbarMessage]);
-
-  const handleSnackbarClose = (_, reason) => {
-    if (reason === "clickaway") return;
-    setSnackbarOpen(false);
-    dispatch(clearSnackbarMessage());
   };
 
   if (loading) {
@@ -121,20 +98,6 @@ function ListDetailsPage() {
             you’re ready for them.
           </Typography>
         </Box>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={5000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbarSeverity}
-            sx={{ width: "100%", backgroundColor: "black", color: "#fff" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
       </>
     );
   }
@@ -316,7 +279,7 @@ function ListDetailsPage() {
                     >
                       <Box sx={{ display: "flex", alignItems: "center" }} />
                       <IconButton
-                        onClick={() => handleClickOpen(item.id)} // <-- هنا نبعت id المنتج
+                        onClick={() => handleClickOpen(item.id)} 
                         sx={{
                           backgroundColor: "white",
                           padding: "10px",
@@ -490,20 +453,6 @@ function ListDetailsPage() {
         </DialogActions>
       </Dialog>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={5000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%", backgroundColor: "black", color: "#fff" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }
