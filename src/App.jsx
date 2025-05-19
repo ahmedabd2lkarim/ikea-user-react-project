@@ -9,6 +9,8 @@ import Cart from "./Pages/Cart/Cart";
 import Profile from "./Pages/Profile/Profile";
 import Search from './Pages/Search/Search';
 
+
+import EmptyOrNotLogin from "./Pages/Favourite/EmptyOrNotLoginFavouritePage/emptyOrNotLogin"
 import FavouriteWithLists from "./Pages/Favourite/FavouriteWithList'sPage/favouriteWithLists";
 import EmptyListPage from "./Pages/Favourite/EmptyList/EmptyListPage";
 import ListDetailsPage from "./Pages/Favourite/ListDetails/ListDitailsPage";
@@ -67,6 +69,7 @@ const router = createBrowserRouter([
         element: <ChangePassword />,
       }
       ,
+
       {
         path: "/category",
         element: <Category />,
@@ -90,8 +93,11 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: <Search />,
-      }
-    ]
+ 
+        path: "/favourite",
+        element: <EmptyOrNotLogin />,
+      },
+    ],
   },
   {
     path: "/billing-shipping-form",
