@@ -25,6 +25,7 @@ const FetchOrderItems = ({det,fun}) => {
     }
     let [isLoading, setIsLoading] = useState()
     let [itemId, setItemId] = useState()
+    let [itemName, setItemName] = useState()
     const dispatch = useDispatch();
     useEffect(() => {
         if (localStorage.getItem('token')) {
@@ -72,8 +73,9 @@ const FetchOrderItems = ({det,fun}) => {
         }, 1000)
 
     }
-    function deleteOrderItem(prdID) {
+    function deleteOrderItem(prdID,prdName) {
         setOpen(true);
+        setItemName(prdName)
         if (localStorage.getItem('token')) {
             dispatch(deleteItem(prdID))
         }
@@ -98,9 +100,9 @@ const FetchOrderItems = ({det,fun}) => {
     }
     const action = (
         <>
-            <Button color="primary" size="small" onClick={handleClose}>
+            {/* <Button color="primary" size="small" onClick={handleClose}>
                 UNDO
-            </Button>
+            </Button> */}
             <IconButton
                 size="small"
                 aria-label="close"
@@ -138,7 +140,7 @@ const FetchOrderItems = ({det,fun}) => {
                                         <AddIcon sx={{ color: 'black' }} fontSize='1px' />
                                     </IconButton>
                                 </Grid>
-                                <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} onClick={() => { deleteOrderItem(item._id) }}>{t("cart.remove")}</Button>
+                                <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} onClick={() => { deleteOrderItem(item._id,item.name) }}>{t("cart.remove")}</Button>
                                 <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} >
                                     {t("cart.addtoFav")}
                                 </Button>
@@ -152,7 +154,7 @@ const FetchOrderItems = ({det,fun}) => {
                         open={open}
                         autoHideDuration={6000}
                         onClose={handleClose}
-                        message={item.name + " " + t("cart.removed")}
+                        message={itemName + " " + t("cart.removed")}
                         action={action}
                         TransitionComponent={SlideTransition}
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
