@@ -7,6 +7,9 @@ import RegisterForm from "./Pages/UserForms/RegisterForm";
 import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
 import Profile from "./Pages/Profile/Profile";
+import Search from './Pages/Search/Search';
+
+
 import EmptyOrNotLogin from "./Pages/Favourite/EmptyOrNotLoginFavouritePage/emptyOrNotLogin"
 import FavouriteWithLists from "./Pages/Favourite/FavouriteWithList'sPage/favouriteWithLists";
 import EmptyListPage from "./Pages/Favourite/EmptyList/EmptyListPage";
@@ -59,11 +62,14 @@ const router = createBrowserRouter([
       {
         path: "/profile/delete-account",
         element: <DeleteProfile />,
-      },
+      }
+      ,
       {
         path: "/profile/change-password",
         element: <ChangePassword />,
-      },
+      }
+      ,
+
       {
         path: "/category",
         element: <Category />,
@@ -85,6 +91,9 @@ const router = createBrowserRouter([
         element: <FavouriteWithLists />,
       },
       {
+        path: "/search",
+        element: <Search />,
+      }, {
         path: "/favourite",
         element: <EmptyOrNotLogin />,
       },
@@ -94,6 +103,7 @@ const router = createBrowserRouter([
     path: "/billing-shipping-form",
     element: <BillingShippingForm />,
   },
+
 ]);
 
 
@@ -105,9 +115,9 @@ function App() {
   // );
   return (
     <Provider store={store}>
-    <RouterProvider router={router} />
-    <ToastContainer />
-  </Provider>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </Provider>
   );
 }
 

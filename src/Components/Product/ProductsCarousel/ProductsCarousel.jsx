@@ -109,7 +109,6 @@ const Recommendedproducts = ({ products }) => {
                   <FavoriteBorderIcon />
                 </IconButton>
               </div>
-              <Button variant="primary">Add to Cart</Button>
             </Card.Body>
           </Card>
         ))}

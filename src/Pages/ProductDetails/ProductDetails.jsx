@@ -184,7 +184,7 @@ const ProductDetails = () => {
         )}
         <OffCanvas
           content={
-            <AddToBag currentProduct={currentProduct} products={products} />
+            <AddToBag currentProduct={currentProduct} products={products} addToBagRef={addToBag} />
           }
           title={
             <div
@@ -245,7 +245,7 @@ const ProductDetails = () => {
             <div className="btnsOnimgs">
               <Button
                 onClick={() => openModel(allImgsRef)}
-                sx={{ fontSize: 12, marginRight: "8px" }}
+                sx={{ fontSize: 12, marginRight: "8px", color: "white" }}
                 className=" rounded-pill Btn3d px-3 py-1"
               >
                 <PhotoLibraryIcon
@@ -256,7 +256,7 @@ const ProductDetails = () => {
               </Button>
               <Model content={content} title={"All media"} ref={allImgsRef} />
               <Button
-                sx={{ fontSize: 12 }}
+                sx={{ fontSize: 12, color: "white" }}
                 className=" rounded-pill Btn3d px-3 py-1"
               >
                 <ThreeSixtyIcon

@@ -22,7 +22,6 @@ import ProductRating from "../../ProductRating/ProductRating";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import styles from "./prdInfoSection.module.css";
-import js from "@eslint/js";
 function addDotEvery3Chars(str) {
   const num = str.replace(/\D/g, "");
   return num.match(/.{1,3}/g).join(".");
@@ -371,6 +370,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
         <Button
           onClick={() => { openOffCanvas(addToBagRef); addToCart(currentProduct, addToBag) }}
           className={styles.addButton + " rounded-pill  py-3 my-4"}
+          style={{ backgroundColor: "#0058A3", color: "white" }}
         >
           {addToBag === 1 ? "Add to bag" : `Add ${addToBag} items to cart`}
         </Button>

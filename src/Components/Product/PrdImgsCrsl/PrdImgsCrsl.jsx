@@ -88,7 +88,7 @@ export default function PrdImgsCrsl({ handleOpenModel, allImgsRef, imgsUrl }) {
                 />
                 {index === 0 && (
                   <Button
-                    sx={{ fontSize: 12 }}
+                    sx={{ fontSize: 12, color: "white" }}
                     className=" rounded-pill Btn3d px-3 py-1"
                   >
                     <ThreeSixtyIcon sx={{ fontSize: 30 }} className="pe-2" />
