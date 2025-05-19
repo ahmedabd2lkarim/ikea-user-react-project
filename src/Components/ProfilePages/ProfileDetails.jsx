@@ -18,7 +18,7 @@ const ProfileDetails = () => {
 
   useEffect(() => {
     dispatch(fetchProfile());
-  }, [dispatch]);
+  }, [dispatch, userProfile]);
 
   return (
     <div>

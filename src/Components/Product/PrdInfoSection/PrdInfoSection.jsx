@@ -77,6 +77,8 @@ const PrdInfoSection = forwardRef((props, ref) => {
         updatedCart = [...cart, { ...prd, quantity: quantity }];
       }      
       setCart(updatedCart);
+      console.log(localStorage.getItem('token'));
+      
       if (localStorage.getItem('token')) {
         updatedCart = updatedCart.map(item => {
           return {prdID: item.id, quantity: item.quantity}
@@ -87,7 +89,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
           body: JSON.stringify({ orderItems: updatedCart }),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         })
       }

@@ -26,7 +26,7 @@ const Cart = () => {
       }
       : order = []);
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) {      
       dispatch(fetchOrder())
     }
 

@@ -6,7 +6,7 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
     })
     const data = await res.json();
@@ -17,7 +17,7 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             })
             .then(res => res.json())
@@ -44,7 +44,7 @@ function authFetch(url, options = {}) {
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
             ...(options.headers || {})
         }
     });
