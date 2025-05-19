@@ -4,7 +4,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import CreateListManager from "../Buttons/CreateNewListButton/CreateListManager";
-
 import LoginButton from '../Buttons/LoginButton'
 function EmptyOrNotLogin() {
 
@@ -70,7 +69,7 @@ function EmptyOrNotLogin() {
           }}
         >
           {!isLoggedIn && <LoginButton />}
-          <CreateListManager />
+          {isLoggedIn && <CreateListManager />}
         </Stack>
       </Box>
     </Fragment>

@@ -1,35 +1,32 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Image } from "react-bootstrap";
-import {
-  Typography,
-  Box,
-  Paper,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Typography, Box, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { DotLoader } from "react-spinners";
-import { fetchFavourites, clearSnackbarMessage } from "../../../Store/Slices/createUpdateListSlice";
+import { fetchFavourites } from "../../../Store/Slices/createUpdateListSlice";
 import CreateListManager from "../Buttons/CreateNewListButton/CreateListManager";
 import ListOptionsButton from "../Buttons/ListOptions/ListOptionsButton";
 import EmptyOrNotLogin from "../EmptyOrNotLoginFavouritePage/emptyOrNotLogin";
 import FavouriteManager from "../TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 function FavouriteWithLists() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
 
-  const { items, status, error } = useSelector(
-    (state) => state.createUpdateList
-  );
-  
+  const { items, status } = useSelector((state) => state.createUpdateList);
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/favourite");
+      return;
+    }
+
     dispatch(fetchFavourites());
-  }, [dispatch]);
-
-
+  }, [dispatch, navigate]);
 
   const handleEmptyListRedirect = (listId) => {
     navigate(`/empty-list-page/${listId}`);
@@ -54,15 +51,8 @@ function FavouriteWithLists() {
         >
           <DotLoader color="#333" size={40} />
         </Box>
-      ) : error ? (
-        <Typography variant="h5" color="error">
-          Error loading favourites.
-        </Typography>
       ) : lists.length === 0 ? (
-        <>
-          <EmptyOrNotLogin />
-
-        </>
+        <EmptyOrNotLogin />
       ) : (
         <>
           <Typography variant="h3" fontWeight="bold">
@@ -162,8 +152,6 @@ function FavouriteWithLists() {
           ))}
 
           <CreateListManager />
-
-         
         </>
       )}
     </Container>
