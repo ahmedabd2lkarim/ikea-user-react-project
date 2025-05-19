@@ -5,12 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProductRating from "../../ProductRating/ProductRating";
 
-export default function AddToBag({ currentProduct, products }) {
+export default function AddToBag({ currentProduct, products ,addToBagRef}) {
   const relatedProducts = [];
-  products.filter((product) => {
+  products.filter((product) => {   
     if (
-      currentProduct._id !== product._id &&
-      currentProduct.typeName.en === product.typeName.en
+      currentProduct._id !== product._id
     ) {
       relatedProducts.push(product);
     }
@@ -26,6 +25,10 @@ export default function AddToBag({ currentProduct, products }) {
 
   const handleMouseLeave = () => {
     setHoveredId(null);
+  };
+
+  const closeOffCanvas = (ref) => {
+    ref.current?.handleClose();
   };
 
   return (
@@ -75,7 +78,7 @@ export default function AddToBag({ currentProduct, products }) {
         className=" overflow-auto "
       >
         <h3 className="m-3 mb-5 fw-bold">Complement your order</h3>
-
+        
         {relatedProducts.map((prd) => {
           return (
             <div className="d-flex" key={prd.id}>
@@ -152,8 +155,9 @@ export default function AddToBag({ currentProduct, products }) {
           );
         })}
       </div>
-      <div className="d-flex justify-content-around flex-wrap py-4">
+      <div className="d-flex justify-content-around py-4 gap-3">
         <Button
+          onClick={() => closeOffCanvas(addToBagRef)}
           className="rounded-pill"
           sx={{
             border: "1px black solid",
@@ -166,6 +170,7 @@ export default function AddToBag({ currentProduct, products }) {
           Continue shopping
         </Button>
         <Button
+          onClick={() => navigate("/cart")}
           className="rounded-pill"
           sx={{
             background: "black",
