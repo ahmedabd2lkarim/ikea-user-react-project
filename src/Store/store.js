@@ -4,7 +4,7 @@ import chatSlice from "./Slices/chatSlice";
 import productSlice from "./Slices/productChatSlice";
 import orderSlice from "./Slices/orderSlice";
 // import settingSlice from "./slices/settingSlice"
-import createUpdateListReducer from "Slices/createUpdateListReducer"
+import createUpdateListReducer from "./Slices/createUpdateListSlice"
 
 
 const store = configureStore({

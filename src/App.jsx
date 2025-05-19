@@ -7,15 +7,9 @@ import RegisterForm from "./Pages/UserForms/RegisterForm";
 import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
 import Profile from "./Pages/Profile/Profile";
-
 import FavouriteWithLists from "./Pages/Favourite/FavouriteWithList'sPage/favouriteWithLists";
 import EmptyListPage from "./Pages/Favourite/EmptyList/EmptyListPage";
 import ListDetailsPage from "./Pages/Favourite/ListDetails/ListDitailsPage";
-
-
-import store from "./Store/store";
-import { Provider } from "react-redux";
-
 import Category from "./Pages/Category/Category";
 import store from "./Store/store";
 import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
