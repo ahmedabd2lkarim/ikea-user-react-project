@@ -6,12 +6,17 @@ import AddIcon from '@mui/icons-material/Add';
 import { decreaseQ, deleteItem, fetchOrder, increaseQ } from '../../../Store/Slices/orderSlice';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 function calculateTotal(items) {
     return items.reduce((acc, item) => acc + item.price.currentPrice * item.quantity, 0) + 20;
 }
 
 const FetchOrderItems = ({det,fun}) => {
+    const lng =()=>{        
+        return localStorage.getItem('i18nextLng')
+    }
+    const {t} = useTranslation();
     const [open, setOpen] = useState(false);
     let [items,setItems] = useState(JSON.parse(localStorage.getItem('cart')) || [])
     if(localStorage.getItem('token')){
@@ -109,7 +114,7 @@ const FetchOrderItems = ({det,fun}) => {
     return (
         <Grid>
 
-            <Typography variant='subtitle1' color='rgb(72, 72, 72)'>{items?.length} products in total</Typography>
+            <Typography variant='subtitle1' color='rgb(72, 72, 72)'>{items?.length} {t("cart.TotalProducts")}</Typography>
             {items?.map((item) =>
                 <Container disableGutters key={item._id}>
                     <hr />
@@ -119,7 +124,7 @@ const FetchOrderItems = ({det,fun}) => {
                         </Grid>
                         <Grid size={7} lineHeight={1.5}>
                             <Typography variant='subtitle2' fontWeight={'bold'}>{item.name}</Typography>
-                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName.en}{item.imageAlt.en.substring(item.imageAlt.en.indexOf(','), item.imageAlt.en.lastIndexOf(','))} </Typography>
+                            <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName[lng()]}{item.imageAlt[lng()].substring(item.imageAlt[lng()].indexOf(','), item.imageAlt[lng()].lastIndexOf(','))} </Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.measurement?.length ? `${item.measurement?.length} ${item.measurement?.unit || 'cm'}` : item.measurement?.width ? `${item.measurement?.width}x${item.measurement?.height} ${item.measurement?.unit || 'cm'}` : ''}</Typography>
                             <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.id.substring(0,8).match(/.{1,3}/g).join('.')}</Typography>
                             <Grid container pt={4}>
@@ -132,20 +137,21 @@ const FetchOrderItems = ({det,fun}) => {
                                         <AddIcon sx={{ color: 'black' }} fontSize='1px' />
                                     </IconButton>
                                 </Grid>
-                                <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} onClick={() => { deleteOrderItem(item._id) }}>Remove</Button>
+                                <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} onClick={() => { deleteOrderItem(item._id) }}>{t("cart.remove")}</Button>
                                 <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} >
-                                    Move to favourites</Button>
+                                    {t("cart.addtoFav")}
+                                </Button>
                             </Grid>
                         </Grid>
                         <Grid size={2} textAlign={'end'}>
-                            {isLoading && itemId == item._id ? <Skeleton variant='rectangular' /> : <Typography variant='subtitle2' fontWeight={'bold'}>EGP{item.price.currentPrice * item.quantity}</Typography>}
+                            {isLoading && itemId == item._id ? <Skeleton variant='rectangular' /> : <Typography variant='subtitle2' fontWeight={'bold'}>{item.price.currentPrice * item.quantity}{t("cart.EGB")}</Typography>}
                         </Grid>
                     </Grid>
                     <Snackbar
                         open={open}
                         autoHideDuration={6000}
                         onClose={handleClose}
-                        message={item.name + "  was removed from your bag"}
+                        message={item.name + " " + t("cart.removed")}
                         action={action}
                         TransitionComponent={SlideTransition}
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
