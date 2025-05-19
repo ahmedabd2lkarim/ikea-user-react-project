@@ -33,8 +33,8 @@ export const Footer = () => {
   };
 
   return (
-    <Box mt={10}>
-      <Box bgcolor={"#F5F5F5"}>
+    <Box>
+      <Box bgcolor={"#F5F5F5"} px={5}>
         <Stack
           display={"flex"}
           direction={"row"}
