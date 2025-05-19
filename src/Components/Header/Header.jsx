@@ -31,7 +31,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import RoomIcon from "@mui/icons-material/Room";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -39,6 +39,28 @@ import { useSelector } from "react-redux";
 
 // Main Header component
 export const Header = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get('search');
+  const [searchValue, setSearchValue] = useState('');
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      navigate(`/search?search=${encodeURIComponent(searchValue.trim())}`);
+      setSearchValue(''); // Clear the search input after navigation
+    }
+
+    if (!searchValue.length) {
+      navigate(`/search`);
+    }
+
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
+
   const handleClick = () => {
     navigate('/favourite-lists');
   };
@@ -160,6 +182,9 @@ export const Header = () => {
   const [products, setProducts] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
+  const userProfile = useSelector((state) => state.user.items).user;
+  // console.log(userProfile);
+  const userName = userProfile?.name.split(" ")[0] || "";
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -168,7 +193,7 @@ export const Header = () => {
       setProducts(data);
     };
     fetchProducts();
-  }, []);
+  }, [userProfile]);
 
   // useEffect(() => {
   //   const fetchRooms = async () => {
@@ -269,9 +294,6 @@ export const Header = () => {
     "Bathroom products",
     "New",
   ];
-  const userProfile = useSelector((state) => state.user.items).user;
-  // console.log(userProfile);
-  const userName = userProfile?.name.split(" ")[0] || "";
 
   return (
     <Box>
@@ -849,7 +871,10 @@ export const Header = () => {
           >
             <TextField
               variant="outlined"
-              placeholder={t("whatAreYouLookingFor")}
+              placeholder="What are you looking for"
+              value={searchValue || search}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyPress={handleKeyPress}
               sx={{
                 width: { xs: "100%", sm: "90%", md: "90%", lg: "60%" },
                 "& .MuiOutlinedInput-root": {
@@ -864,7 +889,15 @@ export const Header = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon
+                      onClick={handleSearch}
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          cursor: 'pointer'
+                        }
+                      }}
+                    />
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -939,7 +972,10 @@ export const Header = () => {
           <TextField
             variant="outlined"
             fullWidth
-            placeholder={t("whatAreYouLookingFor")}
+            placeholder="What are you looking for"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyPress={handleKeyPress}
             sx={{
               "& .MuiOutlinedInput-root": {
                 backgroundColor: "#f5f5f5",
@@ -953,7 +989,15 @@ export const Header = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon
+                    onClick={handleSearch}
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                  />
                 </InputAdornment>
               ),
               endAdornment: (
