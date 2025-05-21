@@ -1,10 +1,10 @@
-
 import React from "react";
 import Teaser from "../../Components/Home/Teaser";
 import ProductScroller from "../../Components/Home/ProductScroller";
 import PromoScroller from "../../Components/Home/PromoScroller";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
+const { VITE_API_URL } = import.meta.env;
 
 import { CircularProgress, Box, Button, Typography, Grid } from "@mui/material";
 import useFetchTeaser from "../../hooks/useFetchTeaser";
@@ -41,7 +41,9 @@ function Home() {
 
   async function fetchProducts(categoryId) {
     try {
-      const response = await fetch(`http://localhost:5000/api/promos/products/${categoryId}`);
+      const response = await fetch(
+        `${VITE_API_URL}/api/promos/products/${categoryId}`
+      );
       const data = await response.json();
       return data;
     } catch (error) {
@@ -100,8 +102,7 @@ function Home() {
       {loadingHomeTeaser ? (
         <Box display="flex" justifyContent="center" my={5}>
           <CircularProgress />
-        </Box>
-      ) : firstTeaser ? (
+        </Box>      ) : firstTeaser ? (
         <Teaser
           title={firstTeaser?.title?.[language]}
           content={firstTeaser?.content?.[language]}

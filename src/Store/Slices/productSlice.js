@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+const { VITE_API_URL } = import.meta.env;
 
 // Async thunk: fetch product by ID with caching handled in slice
 export const fetchProductById = createAsyncThunk(
@@ -10,7 +11,9 @@ export const fetchProductById = createAsyncThunk(
       return products.productData[productId];
     }
     try {
-      const response = await axios.get(`http://localhost:5000/api/products/${productId}`);
+      const response = await axios.get(
+        `${VITE_API_URL}/api/products/${productId}`
+      );
       return { id: productId, data: response.data };
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
@@ -24,7 +27,9 @@ export const fetchRandomProductsByCategory = createAsyncThunk(
   async ({ categoryId, count = 50, teaserId }, { rejectWithValue }) => {
     if (!categoryId) return [];
     try {
-      const response = await axios.get(`http://localhost:5000/api/promos/products/${categoryId}`);
+      const response = await axios.get(
+        `${VITE_API_URL}/api/promos/products/${categoryId}`
+      );
       const allProducts = response.data;
 
       // Pick random unique products

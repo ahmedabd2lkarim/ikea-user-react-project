@@ -34,6 +34,7 @@ import RoomIcon from "@mui/icons-material/Room";
 import { useNavigate ,useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+const { VITE_API_URL } = import.meta.env;
 
 // Tabs list
 
@@ -188,7 +189,7 @@ export const Header = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const res = await fetch("http://localhost:5000/api/categories");
+      const res = await fetch(`${VITE_API_URL}/api/categories`);
       const data = await res.json();
       setProducts(data);
     };

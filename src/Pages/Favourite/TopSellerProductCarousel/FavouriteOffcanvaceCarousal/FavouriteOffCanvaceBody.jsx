@@ -15,6 +15,7 @@ import CreateListOffcanvas from "../../Buttons/CreateNewListButton/CreateListOff
 import { useNavigate } from "react-router-dom";
 import { clearSnackbarMessage } from "../../../../Store/Slices/createUpdateListSlice";
 import { useSelector, useDispatch } from "react-redux";
+const {VITE_API_URL} = import.meta.env;
 function FavouriteOffCanvaceBody({
   show,
   handleClose,
@@ -54,7 +55,7 @@ function FavouriteOffCanvaceBody({
   const fetchFavorites = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/favourites", {
+      const response = await axios.get(`${VITE_API_URL}/api/favourites`, {
         headers: {
           Authorization: token,
         },

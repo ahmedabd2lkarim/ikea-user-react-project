@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+const { VITE_API_URL } = import.meta.env;
 
 
 export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
-    const res = await fetch("http://localhost:5000/api/cart/showAllMyOrders", {
+    const res = await fetch(`${VITE_API_URL}/api/cart/showAllMyOrders`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -11,18 +12,15 @@ export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
     })
     const data = await res.json();
 
-    const productsRequests = data[0].orderItems.map(item =>
-        fetch(`http://localhost:5000/api/products/${item.prdID}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then(res => res.json())
-
-    )
+    const productsRequests = data[0].orderItems.map((item) =>
+      fetch(`${VITE_API_URL}/api/products/${item.prdID}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }).then((res) => res.json())
+    );
 
     const products = await Promise.all(productsRequests)
 
@@ -60,42 +58,51 @@ const orderSlice = createSlice({
         decreaseQ(state, action) {
             const item = state.items.orderItems.find(item => item._id === action.payload)
             item.quantity -= 1
-            authFetch(`http://localhost:5000/api/cart/amount/${state.items._id}`, {
-                method: 'PATCH',
-                body: JSON.stringify({ prdID: item._id, quantity: item.quantity })
+            authFetch(`${VITE_API_URL}/api/cart/amount/${state.items._id}`, {
+              method: "PATCH",
+              body: JSON.stringify({
+                prdID: item._id,
+                quantity: item.quantity,
+              }),
             });
             state.items.total = calculateTotal(state.items.orderItems, state.items.shippingFee);
         },
         increaseQ(state, action) {
             const item = state.items.orderItems.find(item => item._id === action.payload)
             item.quantity += 1
-            authFetch(`http://localhost:5000/api/cart/amount/${state.items._id}`, {
-                method: 'PATCH',
-                body: JSON.stringify({ prdID: item._id, quantity: item.quantity })
+            authFetch(`${VITE_API_URL}/api/cart/amount/${state.items._id}`, {
+              method: "PATCH",
+              body: JSON.stringify({
+                prdID: item._id,
+                quantity: item.quantity,
+              }),
             });
             state.items.total = calculateTotal(state.items.orderItems, state.items.shippingFee);
         },
         deleteItem(state, action) {
             if (state.items.orderItems.length > 1) {
                 const item = state.items.orderItems.find(item => item._id === action.payload)
-                authFetch(`http://localhost:5000/api/cart/deleteItem/${state.items._id}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ prdID: item._id })
-                });
+                authFetch(
+                  `${VITE_API_URL}/api/cart/deleteItem/${state.items._id}`,
+                  {
+                    method: "PATCH",
+                    body: JSON.stringify({ prdID: item._id }),
+                  }
+                );
                 state.items.orderItems = state.items.orderItems.filter(item => item._id !== action.payload)
                 state.items.total = calculateTotal(state.items.orderItems, state.items.shippingFee);
             }
             else {
-                authFetch(`http://localhost:5000/api/cart/${state.items._id}`, {
-                    method: 'DELETE'
+                authFetch(`${VITE_API_URL}/api/cart/${state.items._id}`, {
+                  method: "DELETE",
                 });
                 state.items = [];
                 this.DeleteOrder(state, action);
             }
         },
         deleteAllOrder(state, action) {
-            authFetch(`http://localhost:5000/api/cart/${state.items._id}`, {
-                method: 'DELETE'
+            authFetch(`${VITE_API_URL}/api/cart/${state.items._id}`, {
+              method: "DELETE",
             });
             state.items = [];
         },

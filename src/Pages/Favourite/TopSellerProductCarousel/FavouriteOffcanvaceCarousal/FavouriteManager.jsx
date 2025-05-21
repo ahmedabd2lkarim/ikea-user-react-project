@@ -3,37 +3,32 @@ import FavouriteOffCanvaceBody from "./FavouriteOffCanvaceBody";
 import CreateListOffcanvas from "../../Buttons/CreateNewListButton/CreateListOffcanvas";
 import FavoriteToggleButton from "./FavoriteToggleButton";
 import axios from "axios";
-
+const { VITE_API_URL } = import.meta.env;
 
 function FavouriteManager({ product, onOffcanvasToggle }) {
-
   const [showFavourite, setShowFavourite] = useState(false);
   const [showCreateList, setShowCreateList] = useState(false);
   const [favourites, setFavourites] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteListId, setFavoriteListId] = useState(null);
 
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/favourites",
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${VITE_API_URL}/api/favourites`, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
+        // console.log("response is: ",response)
 
         const lists = response.data.lists || response.data;
         setFavourites(lists);
 
         let productFoundInList = null;
         const isProductFavorite = lists.some((list) => {
-          const found = list.items?.some(
-            (item) => item._id === product._id
-          );
+          const found = list.items?.some((item) => item._id === product._id);
           if (found) {
             productFoundInList = list._id;
           }
@@ -62,7 +57,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
         }
 
         await axios.put(
-          "http://localhost:5000/api/favourites/remove-product",
+          `${VITE_API_URL}/api/favourites/remove-product`,
           {
             listId: favoriteListId,
             productId: product._id,
@@ -93,8 +88,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
       handleOpenFavourite(e);
     }
   };
-  
-  
+
   const handleOpenFavourite = (e) => {
     if (e) {
       e.stopPropagation();
@@ -120,7 +114,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
   const handleCloseCreateList = async () => {
     setShowCreateList(false);
     try {
-      const response = await axios.get("http://localhost:5000/api/favourites", {
+      const response = await axios.get(`${VITE_API_URL}/api/favourites`, {
         headers: { Authorization: token },
       });
       setFavourites(response.data.lists || response.data);
@@ -132,7 +126,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
   const handleAddToList = async (listId, listName) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/favourites/list/${listId}`,
+        `${VITE_API_URL}/api/favourites/list/${listId}`,
         {
           headers: {
             Authorization: token,
@@ -152,7 +146,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
       }
 
       await axios.put(
-        "http://localhost:5000/api/favourites/add-product",
+        `${VITE_API_URL}/api/favourites/add-product`,
         { listId, productId: product._id },
         {
           headers: {
@@ -200,8 +194,6 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
           handleCloseCreateList();
         }}
       />
-
-     
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+const { VITE_API_URL } = import.meta.env;
 
 const getAuthToken = () => localStorage.getItem('token');
 
@@ -7,7 +8,7 @@ export const fetchFavourites = createAsyncThunk(
     async (_, thunkAPI) => {
         const token = getAuthToken();
         try {
-            const response = await fetch('http://localhost:5000/api/favourites', {
+            const response = await fetch(`${VITE_API_URL}/api/favourites`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -30,7 +31,7 @@ export const createList = createAsyncThunk(
     async (listObject, thunkAPI) => {
         const token = getAuthToken();
         try {
-            const response = await fetch('http://localhost:5000/api/favourites/add-list', {
+            const response = await fetch(`${VITE_API_URL}/api/favourites/add-list`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,14 +61,17 @@ export const updateList = createAsyncThunk(
     async ({ id, name }, thunkAPI) => {
         const token = getAuthToken();
         try {
-            const response = await fetch('http://localhost:5000/api/favourites/rename-list', {
-                method: 'PATCH',
+            const response = await fetch(
+              `${VITE_API_URL}/api/favourites/rename-list`,
+              {
+                method: "PATCH",
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `${token}`,
+                  "Content-Type": "application/json",
+                  Authorization: `${token}`,
                 },
                 body: JSON.stringify({ listId: id, newName: name }),
-            });
+              }
+            );
 
             if (!response.ok) {
                 throw new Error('Failed to update list');
@@ -91,12 +95,15 @@ export const deleteList = createAsyncThunk(
         const token = getAuthToken();
 
         try {
-            const response = await fetch(`http://localhost:5000/api/favourites/delete-list/${listId}`, {
-                method: 'DELETE',
+            const response = await fetch(
+              `${VITE_API_URL}/api/favourites/delete-list/${listId}`,
+              {
+                method: "DELETE",
                 headers: {
-                    Authorization: `${token}`,
+                  Authorization: `${token}`,
                 },
-            });
+              }
+            );
 
             if (!response.ok) {
                 throw new Error('Failed to delete list');
@@ -117,7 +124,7 @@ export const deleteProductFromList = createAsyncThunk(
     async ({ listId, productId }, thunkAPI) => {
         const token = getAuthToken();
         try {
-            const response = await fetch('http://localhost:5000/api/favourites/remove-product', {
+            const response = await fetch(`${VITE_API_URL}/api/favourites/remove-product`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

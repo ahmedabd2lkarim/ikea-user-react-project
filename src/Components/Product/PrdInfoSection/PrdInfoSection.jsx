@@ -3,15 +3,13 @@ import {
   HiOutlineBuildingStorefront,
   GrDeliver,
 } from "../../../common/react-icons/index";
-// import { Button } from "../../../common/mui/index";
-import { Button } from "@mui/material";
-
 import {
   FavoriteBorderIcon,
   NavigateNextIcon,
+  RemoveIcon,
+  AddIcon,
 } from "../../../common/mui-icons/index";
-// import { IconButton } from "../../../common/mui/index";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "../../../common/mui/index";
 import OffCanvas from "../../OffCanvas/OffCanvas";
 import VariantSelector from "../VariantSelector/VariantSelector";
 import useViewport from "../../../hooks/useViewport";
@@ -19,9 +17,27 @@ import useProductViews from "../../../hooks/useProductViews";
 import { forwardRef, useRef, useState, useEffect } from "react";
 import CollapsibleSection from "./../../CollapsibleSection/CollapsibleSection";
 import ProductRating from "../../ProductRating/ProductRating";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import styles from "./prdInfoSection.module.css";
+import FavouriteManager from "../../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
+const {VITE_API_URL} = import.meta.env;
+const formatMeasurement = (measurement) => {
+  if (!measurement) return "";
+
+  const { width, length, depth, height, unit = "cm" } = measurement;
+
+  if (length && !width && !height && !depth) return `${length} ${unit}`;
+
+  if (width && height && !length && !depth) return `${width}x${height} ${unit}`;
+
+  if (width && length && height) return `${width}x${length}x${height} ${unit}`;
+
+  if (width && depth && height) return `${width}x${depth}x${height} ${unit}`;
+
+  return `${width || ""}${width ? "x" : ""}${depth || length || ""}${
+    depth || length ? "x" : ""
+  }${height || ""} ${unit}`;
+};
+
 function addDotEvery3Chars(str) {
   const num = str.replace(/\D/g, "");
   return num.match(/.{1,3}/g).join(".");
@@ -32,6 +48,8 @@ const formatPrice = (price) => {
 };
 
 const PrdInfoSection = forwardRef((props, ref) => {
+    const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+
   const {
     mainProduct,
     currentProduct,
@@ -44,7 +62,6 @@ const PrdInfoSection = forwardRef((props, ref) => {
   const storeRef = useRef();
   const storeInfoRef = useRef();
 
-  // Expose refs to parent component
   useEffect(() => {
     if (ref) {
       ref.current = {
@@ -54,50 +71,49 @@ const PrdInfoSection = forwardRef((props, ref) => {
       };
     }
   }, [ref]);
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart"))||[]);
+  const [cart, setCart] = useState(
+    JSON.parse(localStorage.getItem("cart")) || []
+  );
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart])
+  }, [cart]);
   const addToCart = async (prd, quantity) => {
-    
     try {
-      const existingItem = cart.find(item => item.id === prd.id);
+      const existingItem = cart.find((item) => item.id === prd.id);
       let updatedCart;
       if (existingItem) {
-         updatedCart = cart.map(item => {
+        updatedCart = cart.map((item) => {
           if (item.id === prd.id) {
-            
             return { ...item, quantity: item.quantity + quantity };
           }
           return item;
         });
       } else {
         updatedCart = [...cart, { ...prd, quantity: quantity }];
-      }      
+      }
       setCart(updatedCart);
-      console.log(localStorage.getItem('token'));
-      
-      if (localStorage.getItem('token')) {
-        updatedCart = updatedCart.map(item => {
-          return {prdID: item.id, quantity: item.quantity}
-        })
-        
-        await fetch(`http://localhost:5000/api/cart/newOrder`, {
-          method: 'POST',
+      console.log(localStorage.getItem("token"));
+
+      if (localStorage.getItem("token")) {
+        updatedCart = updatedCart.map((item) => {
+          return { prdID: item.id, quantity: item.quantity };
+        });
+
+        await fetch(`${VITE_API_URL}/api/cart/newOrder`, {
+          method: "POST",
           body: JSON.stringify({ orderItems: updatedCart }),
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
+  };
 
-  }
-  
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
   };
@@ -208,11 +224,8 @@ const PrdInfoSection = forwardRef((props, ref) => {
       </div>
     );
   };
-  // console.log(addToBag)
-  // console.log("currentProduct", currentProduct);
-  // console.log("mainProduct", mainProduct);
-  return (
 
+  return (
     <div className="prd-description mb-5">
       <div className="d-flex justify-content-between  flex-column">
         <div>
@@ -242,13 +255,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
                 className="hoverLink"
                 onClick={() => openOffCanvas(measureRef)}
               >
-                {`${currentProduct.measurement?.width + "x"}${currentProduct.measurement?.depth
-                  ? currentProduct.measurement?.depth + "x"
-                  : currentProduct.measurement?.length
-                    ? currentProduct.measurement?.length + "x"
-                    : ""
-                  }${currentProduct.measurement?.height} ${currentProduct.measurement?.unit || "cm"
-                  },`}
+                {formatMeasurement(currentProduct.measurement)}
               </Link>
               <OffCanvas
                 ref={measureRef}
@@ -272,9 +279,10 @@ const PrdInfoSection = forwardRef((props, ref) => {
           </div>
 
           <div>
-            <IconButton className="favIcon">
-              <FavoriteBorderIcon />
-            </IconButton>
+            <FavouriteManager
+            product={currentProduct}
+            onOffcanvasToggle={setIsOffcanvasOpen}
+          />
           </div>
         </div>
       </div>
@@ -368,7 +376,10 @@ const PrdInfoSection = forwardRef((props, ref) => {
           </IconButton>
         </div>
         <Button
-          onClick={() => { openOffCanvas(addToBagRef); addToCart(currentProduct, addToBag) }}
+          onClick={() => {
+            openOffCanvas(addToBagRef);
+            addToCart(currentProduct, addToBag);
+          }}
           className={styles.addButton + " rounded-pill  py-3 my-4"}
           style={{ backgroundColor: "#0058A3", color: "white" }}
         >

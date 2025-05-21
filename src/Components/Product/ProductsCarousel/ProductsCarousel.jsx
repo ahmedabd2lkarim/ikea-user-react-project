@@ -2,12 +2,33 @@ import React, { useRef, useEffect, useState } from "react";
 import { Card, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./ProductsCarousel.css";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ProductRating from "../../ProductRating/ProductRating";
-import { TbBasketPlus } from "react-icons/tb";
-import { IconButton } from "@mui/material";
-import { FavoriteBorderIcon } from "../../../common/mui-icons";
+import { TbBasketPlus } from "../../../common/react-icons/index";
+import { IconButton } from "../../../common/mui/index";
+import {
+  FavoriteBorderIcon,
+  ArrowForwardIosIcon,
+  ArrowBackIosNewIcon
+} from "../../../common/mui-icons/index";
+
+const formatMeasurement = (measurement) => {
+  if (!measurement) return "";
+
+  const { width, length, depth, height, unit = "cm" } = measurement;
+
+  if (length && !width && !height && !depth) return `${length} ${unit}`;
+
+  if (width && height && !length && !depth) return `${width}x${height} ${unit}`;
+
+  if (width && length && height) return `${width}x${length}x${height} ${unit}`;
+
+  if (width && depth && height) return `${width}x${depth}x${height} ${unit}`;
+
+  return `${width || ""}${width ? "x" : ""}${depth || length || ""}${
+    depth || length ? " " : ""
+  }${height || ""} ${unit}`;
+};
+
 const Recommendedproducts = ({ products }) => {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
@@ -75,35 +96,28 @@ const Recommendedproducts = ({ products }) => {
             <Card.Body>
               <Card.Title>{product.name}</Card.Title>
               <Card.Text>
-                {product.typeName.en},<br />{" "}
-                {`${product.measurement?.width + "x"}${
-                  product.measurement?.depth
-                    ? product.measurement?.depth + "x"
-                    : product.measurement?.length
-                    ? product.measurement?.length + "x"
-                    : ""
-                }${product.measurement?.height} ${
-                  product.measurement?.unit || "cm"
-                }`}
+                {product.typeName.en}
+                {formatMeasurement(product.measurement) !== "" ? "," : ""}
+                <br />
+                {formatMeasurement(product.measurement)}
               </Card.Text>
               <Card.Text>
                 <sup className="fw-bold">{product.price.currency}</sup>
                 <strong className="fs-3 ">{product.price.currentPrice}</strong>
               </Card.Text>
               <ProductRating productPrice={product.price} />
-              <div className={{}} >
+              <div className={{}}>
                 <IconButton
                   className="bg-primary text-light"
-                  sx=
-                  {{
+                  sx={{
                     borderRadius: "20px",
                     minWidth: 0,
                     width: 40,
                     height: 40,
                     padding: 0,
                   }}
-                  >
-                  <TbBasketPlus  fontSize={20} />
+                >
+                  <TbBasketPlus fontSize={20} />
                 </IconButton>
                 <IconButton>
                   <FavoriteBorderIcon />

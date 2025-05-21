@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./Slices/userSlice";
 import chatSlice from "./Slices/chatSlice";
-import productSlice from "./Slices/productChatSlice";
 import orderSlice from "./Slices/orderSlice";
+import productSlice from "./Slices/productChatSlice";
 // import settingSlice from "./slices/settingSlice"
 import createUpdateListReducer from "./Slices/createUpdateListSlice"
 import categoryReducer from "./Slices/categorySlice";
@@ -22,6 +22,7 @@ const store = configureStore({
         home: homeReducer,
 
         // settingLanguage: languageSlice.reducer,
+        cart:orderSlice.reducer,
     }
 })
 

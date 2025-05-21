@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import "./ProductImageZoomInOut.css";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import {
+  ZoomInIcon,
+  ZoomOutIcon,
+  RestartAltIcon,
+} from "../../../common/mui-icons/index";
 import { IconButton } from "../../../common/mui/index";
 const MIN_SCALE = 1;
 const MAX_SCALE = 2;

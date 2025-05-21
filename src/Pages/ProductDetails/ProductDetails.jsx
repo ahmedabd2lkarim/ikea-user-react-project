@@ -1,17 +1,22 @@
-// import { Button } from "../../common/mui/index";
-import { Button } from "@mui/material";
-import {IconButton} from "@mui/material";
-import "bootstrap/dist/css/bootstrap.min.css";
+const { VITE_API_URL } = import.meta.env;
 import { useState, useRef, useEffect } from "react";
-import { GrDeliver } from "react-icons/gr";
-import { Link, useParams } from "react-router-dom";
-import "./ProductDetails.css";
-import { FaLocationDot, FaArrowRight } from "react-icons/fa6";
+import { Button, IconButton } from "../../common/mui/index";
 import { ThreeSixtyIcon, PhotoLibraryIcon } from "../../common/mui-icons/index";
+import {
+  GrDeliver,
+  FaLocationDot,
+  FaArrowRight,
+  IoMdCheckmarkCircleOutline,
+} from "../../common/react-icons/index";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  KeyboardArrowLeftIcon,
+  KeyboardArrowRightIcon,
+} from "../../common/mui-icons/index";
+import "./ProductDetails.css";
+import { Link, useParams } from "react-router-dom";
 import Model from "../../Components/Model/Model";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+
 import AddToBag from "../../Components/Product/AddToBag/AddToBag";
 import OffCanvas from "./../../Components/OffCanvas/OffCanvas";
 import PrdImgsCrsl from "./../../Components/Product/PrdImgsCrsl/PrdImgsCrsl";
@@ -52,9 +57,7 @@ const ProductDetails = () => {
     const fetchProductAndRelated = async () => {
       try {
         setIsLoading(true);
-        const productRes = await fetch(
-          `http://127.0.0.1:5000/api/products/${id}`
-        );
+        const productRes = await fetch(`${VITE_API_URL}/api/products/${id}`);
         const productData = await productRes.json();
         setProduct(productData);
         setCurrentProduct(productData);
@@ -62,7 +65,7 @@ const ProductDetails = () => {
           setImageUrl(productData.images[0]);
         }
 
-        const relatedRes = await fetch("http://127.0.0.1:5000/api/products");
+        const relatedRes = await fetch(`${VITE_API_URL}/api/products`);
         const relatedData = await relatedRes.json();
         const { data: productsData } = relatedData;
         setProducts(productsData);
@@ -70,7 +73,6 @@ const ProductDetails = () => {
           .filter((p) => p._id !== id)
           .slice(0, 5);
         setRelatedProducts(filteredRelated);
-        // console.log(filteredRelated);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching product:", err);
@@ -184,7 +186,11 @@ const ProductDetails = () => {
         )}
         <OffCanvas
           content={
-            <AddToBag currentProduct={currentProduct} products={products} addToBagRef={addToBag} />
+            <AddToBag
+              currentProduct={currentProduct}
+              products={products}
+              addToBagRef={addToBag}
+            />
           }
           title={
             <div
@@ -275,7 +281,6 @@ const ProductDetails = () => {
             addToBagRef={addToBag}
             onImageHover={handleImageHover}
           />
-          {/* {console.log(currentProduct)} */}
           <div style={{ width: "94%" }}>
             <p
               className="full-width-mobile text-secondary"

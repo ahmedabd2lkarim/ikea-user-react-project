@@ -1,6 +1,5 @@
-import React, { useMemo } from "react";
-import { styled } from "@mui/material/styles";
-import { Rating } from "@mui/material";
+import { useMemo } from "react";
+import { Rating, styled } from "../../common/mui/index";
 
 export default function ProductRating({ productPrice }) {
   const StyledRating = styled(Rating)({

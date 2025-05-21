@@ -4,7 +4,6 @@ import styles from "./ProductDetailsOffcanvasContent.module.css";
 const GoodToKnow = ({ paragraphs }) => {
   if (!paragraphs?.en) return null;
 
-  // Get last two elements of the array
   const lastTwoElements = paragraphs.en.slice(-2);
 
   return (

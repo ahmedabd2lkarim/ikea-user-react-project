@@ -1,9 +1,9 @@
 import { Button } from "../../../common/mui/index";
 import styles from "./AddToBag.module.css";
-import { TbBasketPlus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProductRating from "../../ProductRating/ProductRating";
+import { TbBasketPlus } from "../../../common/react-icons/index";
 
 export default function AddToBag({ currentProduct, products ,addToBagRef}) {
   const relatedProducts = [];
@@ -14,7 +14,6 @@ export default function AddToBag({ currentProduct, products ,addToBagRef}) {
       relatedProducts.push(product);
     }
   });
-  // console.log(relatedProducts);
 
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState(null);
