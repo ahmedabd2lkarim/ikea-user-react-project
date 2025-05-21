@@ -1,9 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+const { VITE_API_URL } = import.meta.env;
 
 export const fetchFilteredProducts = createAsyncThunk(
   'products/fetchFilteredProducts',
   async ({ category, color }) => {
-    const response = await fetch(`http://localhost:5000/api/products?category=${category}&color=${color}`);
+    const response = await fetch(
+      `${VITE_API_URL}/api/products?category=${category}&color=${color}`
+    );
     const allProducts = await response.json();
     console.log(allProducts)
     const groupedByCategory = {};

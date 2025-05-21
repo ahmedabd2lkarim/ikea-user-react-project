@@ -18,7 +18,9 @@ const ImageWithHotspots = ({ image, hotspots = [], language = 'en', assignedProd
     setLoading((prev) => ({ ...prev, [productId]: true }));
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/products/${productId}`);
+      const response = await axios.get(
+        `${VITE_API_URL}/api/products/${productId}`
+      );
       setProductData((prev) => ({ ...prev, [productId]: response.data }));
     } catch (error) {
       console.error("Error fetching product:", error);

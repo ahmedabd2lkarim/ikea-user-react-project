@@ -1,5 +1,6 @@
 // src/redux/slices/homeSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+const { VITE_API_URL } = import.meta.env;
 
 // Async thunk to fetch teasers for a category (e.g., "home")
 export const fetchTeaser = createAsyncThunk(
@@ -7,7 +8,7 @@ export const fetchTeaser = createAsyncThunk(
   async (category) => {
     // You were using a custom hook useFetchTeaser; here we simulate fetch logic
     // Replace this with your actual API call if needed
-    const response = await fetch(`http://localhost:5000/api/teasers/${category}`);
+    const response = await fetch(`${VITE_API_URL}/api/teasers/${category}`);
     const data = await response.json();
     return data;
   }
@@ -22,7 +23,9 @@ export const fetchProductsByCategory = createAsyncThunk(
     await Promise.all(
       Object.entries(categoryIds).map(async ([key, catId]) => {
         try {
-          const res = await fetch(`http://localhost:5000/api/promos/products/${catId}`);
+          const res = await fetch(
+            `${VITE_API_URL}/api/promos/products/${catId}`
+          );
           const data = await res.json();
           console.log(`Fetched products for ${key}:`, data);
 

@@ -3,15 +3,13 @@ import {
   HiOutlineBuildingStorefront,
   GrDeliver,
 } from "../../../common/react-icons/index";
-// import { Button } from "../../../common/mui/index";
-import { Button } from "@mui/material";
-
 import {
   FavoriteBorderIcon,
   NavigateNextIcon,
+  RemoveIcon,
+  AddIcon,
 } from "../../../common/mui-icons/index";
-// import { IconButton } from "../../../common/mui/index";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "../../../common/mui/index";
 import OffCanvas from "../../OffCanvas/OffCanvas";
 import VariantSelector from "../VariantSelector/VariantSelector";
 import useViewport from "../../../hooks/useViewport";
@@ -19,8 +17,6 @@ import useProductViews from "../../../hooks/useProductViews";
 import { forwardRef, useRef, useState, useEffect } from "react";
 import CollapsibleSection from "./../../CollapsibleSection/CollapsibleSection";
 import ProductRating from "../../ProductRating/ProductRating";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import styles from "./prdInfoSection.module.css";
 
 const formatMeasurement = (measurement) => {
@@ -72,50 +68,49 @@ const PrdInfoSection = forwardRef((props, ref) => {
       };
     }
   }, [ref]);
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart"))||[]);
+  const [cart, setCart] = useState(
+    JSON.parse(localStorage.getItem("cart")) || []
+  );
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart])
+  }, [cart]);
   const addToCart = async (prd, quantity) => {
-    
     try {
-      const existingItem = cart.find(item => item.id === prd.id);
+      const existingItem = cart.find((item) => item.id === prd.id);
       let updatedCart;
       if (existingItem) {
-         updatedCart = cart.map(item => {
+        updatedCart = cart.map((item) => {
           if (item.id === prd.id) {
-            
             return { ...item, quantity: item.quantity + quantity };
           }
           return item;
         });
       } else {
         updatedCart = [...cart, { ...prd, quantity: quantity }];
-      }      
+      }
       setCart(updatedCart);
-      console.log(localStorage.getItem('token'));
-      
-      if (localStorage.getItem('token')) {
-        updatedCart = updatedCart.map(item => {
-          return {prdID: item.id, quantity: item.quantity}
-        })
-        
+      console.log(localStorage.getItem("token"));
+
+      if (localStorage.getItem("token")) {
+        updatedCart = updatedCart.map((item) => {
+          return { prdID: item.id, quantity: item.quantity };
+        });
+
         await fetch(`http://localhost:5000/api/cart/newOrder`, {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify({ orderItems: updatedCart }),
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
+  };
 
-  }
-  
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
     ref.current?.handleClose();
@@ -378,7 +373,10 @@ const PrdInfoSection = forwardRef((props, ref) => {
           </IconButton>
         </div>
         <Button
-          onClick={() => { openOffCanvas(addToBagRef); addToCart(currentProduct, addToBag) }}
+          onClick={() => {
+            openOffCanvas(addToBagRef);
+            addToCart(currentProduct, addToBag);
+          }}
           className={styles.addButton + " rounded-pill  py-3 my-4"}
           style={{ backgroundColor: "#0058A3", color: "white" }}
         >

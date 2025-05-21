@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+const { VITE_API_URL } = import.meta.env;
+
 // import.meta.env.baseURL
 // const baseURL = import.meta.env.baseURL
 // console.log(baseURL)
@@ -8,7 +10,7 @@ export const fetchProfile = createAsyncThunk('fetchUserProfile/UserProfile', asy
     if (!token) {
         throw new Error('No token found');
     }
-    const res = await fetch("http://localhost:5000/api/auth/profile", {
+    const res = await fetch(`${VITE_API_URL}/api/auth/profile`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -30,13 +32,13 @@ export const editUserProfile = createAsyncThunk('users/editUser', async ({ updat
         throw new Error('No token found');
     }
 
-    const res = await fetch(`http://localhost:5000/api/auth/profile`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedUser),
+    const res = await fetch(`${VITE_API_URL}/api/auth/profile`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedUser),
     });
 
     if (!res.ok) {
@@ -49,12 +51,12 @@ export const editUserProfile = createAsyncThunk('users/editUser', async ({ updat
 
 // Delete user
 export const deleteUserAccount = createAsyncThunk('users/deleteUser', async (id) => {
-    const res = await fetch(`http://localhost:5000/api/admin/delete-user/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
+    const res = await fetch(`${VITE_API_URL}/api/admin/delete-user/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (!res.ok) {
         throw new Error('Failed to delete user');
@@ -65,7 +67,7 @@ export const deleteUserAccount = createAsyncThunk('users/deleteUser', async (id)
 // Login user
 export const loginUser = createAsyncThunk('users/login', async (credentials) => {
     console.log(credentials)
-    const res = await fetch('http://localhost:5000/api/auth/login', {
+    const res = await fetch(`${VITE_API_URL}/api/auth/login`, {
         method: 'POST', //http://localhost:5000/api/auth/login
         headers: { 
             'Content-Type': 'application/json'
@@ -81,13 +83,13 @@ export const loginUser = createAsyncThunk('users/login', async (credentials) => 
 
 // Register user
 export const registerUser = createAsyncThunk('users/register', async (newUser) => {
-    const res = await fetch(`http://localhost:5000/api/auth/register`, {
-        method: 'POST',
-        headers: { 
-            // 'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-         },
-        body: JSON.stringify(newUser),
+    const res = await fetch(`${VITE_API_URL}/api/auth/register`, {
+      method: "POST",
+      headers: {
+        // 'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
     });
     if (!res.ok) {
         throw new Error('Registration failed');

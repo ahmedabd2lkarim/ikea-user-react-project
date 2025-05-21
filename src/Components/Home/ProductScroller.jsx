@@ -1,17 +1,31 @@
 import React, { useState } from "react";
-import { Box, Typography, Card, CardMedia, CardContent, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Language } from "@mui/icons-material";
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 // import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FavouriteManager from "../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, cardHight = 180 }) => {
-
+const ProductScroller = ({
+  deals,
+  title,
+  categories,
+  products,
+  cardWidth = 170,
+  cardHight = 180,
+}) => {
   const { t, i18n } = useTranslation();
   // const currentLang = i18n.language;
   const [selectedCategory, setSelectedCategory] = useState(
@@ -39,19 +53,23 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, 
       ));
     } else if (products) {
       return products.map((product, index) => (
-        <HoverCard key={index} product={product} cardHight={cardHight} cardWidth={cardWidth} deals={deals} />
+        <HoverCard
+          key={index}
+          product={product}
+          cardHight={cardHight}
+          cardWidth={cardWidth}
+          deals={deals}
+        />
       ));
     } else {
       return null;
     }
   };
 
-
   if (!categories && !products) return null;
 
   return (
     <Box sx={{ my: 4 }}>
-
       {title && (
         <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
           {title}
@@ -67,11 +85,12 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, 
                 onClick={() => setSelectedCategory(category)}
                 sx={{
                   cursor: "pointer",
-                  color:
-                    selectedCategory === category ? "black" : "gray",
+                  color: selectedCategory === category ? "black" : "gray",
                   fontWeight: selectedCategory === category ? "bold" : "normal",
                   borderBottom:
-                    selectedCategory === category ? "3px solid #007bff" : "none",
+                    selectedCategory === category
+                      ? "3px solid #007bff"
+                      : "none",
                   pb: 0.5,
                   transition: "all 0.3s ease",
                 }}
@@ -82,9 +101,12 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, 
           </Box>
           <Box
             sx={{
-              height: "1px", width: "100%",
-              bgcolor: "lightgray", position: "absolute",
-              bottom: 0, left: 0,
+              height: "1px",
+              width: "100%",
+              bgcolor: "lightgray",
+              position: "absolute",
+              bottom: 0,
+              left: 0,
             }}
           />
         </Box>
@@ -94,18 +116,22 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, 
         sx={{
           display: "flex",
           overflowX: "auto",
-          gap: 2, pb: 2,
+          gap: 2,
+          pb: 2,
           "&::-webkit-scrollbar": {
-            height: 4, width: 10,
+            height: 4,
+            width: 10,
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "gray", borderRadius: 4,
+            backgroundColor: "gray",
+            borderRadius: 4,
           },
           "&::-webkit-scrollbar-thumb:hover": {
             backgroundColor: "black",
           },
           "&:hover::-webkit-scrollbar": {
-            height: 5, width: 10,
+            height: 5,
+            width: 10,
           },
         }}
       >
@@ -118,7 +144,6 @@ const ProductScroller = ({ deals, title, categories, products, cardWidth = 170, 
 const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
   const [hovered, setHovered] = useState(false);
 
-
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
 
@@ -129,11 +154,14 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
 
     if (token) {
       try {
-        const getOrderResponse = await fetch("http://localhost:5000/api/cart/showAllMyOrders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const getOrderResponse = await fetch(
+          `${VITE_API_URL}/api/cart/showAllMyOrders`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         let currentOrderItems = [];
         if (getOrderResponse.ok) {
@@ -153,7 +181,7 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
           currentOrderItems.push(cartItem);
         }
 
-        const response = await fetch("http://localhost:5000/api/cart/newOrder", {
+        const response = await fetch(`${VITE_API_URL}/api/cart/newOrder`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -175,8 +203,6 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
         const data = await response.json();
         console.log("Order created:", data);
         toast.success("Item added to cart");
-
-
       } catch (error) {
         console.error("Error adding to cart:", error);
         toast.error("Error adding item to cart.");
@@ -184,7 +210,9 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
     } else {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      const productIndex = cart.findIndex(item => item.prdID === cartItem.prdID);
+      const productIndex = cart.findIndex(
+        (item) => item.prdID === cartItem.prdID
+      );
 
       if (productIndex !== -1) {
         cart[productIndex].quantity += cartItem.quantity;
@@ -202,25 +230,23 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
   const navigate = useNavigate();
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
 
-
-
   return (
     <Card
-
-
       elevation={0}
       sx={{
-        minWidth: cardWidth, maxWidth: cardWidth,
-        flex: "0 0 auto", position: "relative",
-        cursor: "pointer", overflow: "hidden",
-      }
-      }
+        minWidth: cardWidth,
+        maxWidth: cardWidth,
+        flex: "0 0 auto",
+        position: "relative",
+        cursor: "pointer",
+        overflow: "hidden",
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <CardMedia
         onClick={(e) => {
-          if (!e.target.closest('button')) {
+          if (!e.target.closest("button")) {
             navigate(`/productDetails/${product._id}`);
           }
         }}
@@ -235,8 +261,6 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
         }}
       />
 
-
-
       {/* <CardMedia
         component="img"
         image={hovered ? product.contextualImageUrl : product.image[0]}
@@ -245,54 +269,79 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
       /> */}
 
       <CardContent sx={{ px: 2, pb: 2 }}>
-        {deals && <Typography variant="body1" color="red" fontWeight={'bold'} fontSize={12} sx={{ mb: 2 }}>
-          {deals}
-        </Typography>}
+        {deals && (
+          <Typography
+            variant="body1"
+            color="red"
+            fontWeight={"bold"}
+            fontSize={12}
+            sx={{ mb: 2 }}
+          >
+            {deals}
+          </Typography>
+        )}
         <Typography
-          variant="subtitle2" fontWeight="bold" sx={{
-            height: 38, overflow: "hidden", display: "-webkit-box",
-            WebkitLineClamp: 2, WebkitBoxOrient: "vertical", mb: 0.5,
+          variant="subtitle2"
+          fontWeight="bold"
+          sx={{
+            height: 38,
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            mb: 0.5,
           }}
         >
           {product.name}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           {product.typeName?.[currentLang] || product.typeName?.en}
-
         </Typography>
         <Box>
           {product.price.discounted ? (
             <>
-              <Typography variant="body2" color="black" sx={{ textDecoration: "line-through", fontSize: "1rem", }}
+              <Typography
+                variant="body2"
+                color="black"
+                sx={{ textDecoration: "line-through", fontSize: "1rem" }}
               >
-                <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography>{" "}
-                {((product.price?.currentPrice + Math.floor(15 * 50) + 10) * 0.8).toFixed(2)}
+                <Typography variant="span" fontSize=".8rem">
+                  {product.price?.currency}
+                </Typography>{" "}
+                {(
+                  (product.price?.currentPrice + Math.floor(15 * 50) + 10) *
+                  0.8
+                ).toFixed(2)}
               </Typography>
               <Typography color="error" fontWeight="bold" fontSize="1.2rem">
-                <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
+                <Typography variant="span" fontSize=".8rem">
+                  {product.price?.currency}
+                </Typography>{" "}
+                {product.price?.currentPrice}
               </Typography>
             </>
           ) : (
             <Typography color="black" fontWeight="bold" fontSize="1.2rem">
-              <Typography variant="span" fontSize=".8rem">{product.price?.currency}</Typography> {product.price?.currentPrice}
+              <Typography variant="span" fontSize=".8rem">
+                {product.price?.currency}
+              </Typography>{" "}
+              {product.price?.currentPrice}
             </Typography>
           )}
-
         </Box>
 
-
-        <Tooltip>
-
-        </Tooltip>
-        <Tooltip >
-
-        </Tooltip>
+        <Tooltip></Tooltip>
+        <Tooltip></Tooltip>
       </CardContent>
       <Box sx={{ gap: 1 }}>
-
         <IconButton
           size="small"
-          sx={{ bgcolor: "#004F93", borderRadius: "50%", p: "0.3rem", ":hover": { bgcolor: "rgb(11, 23, 65)" } }}
+          sx={{
+            bgcolor: "#004F93",
+            borderRadius: "50%",
+            p: "0.3rem",
+            ":hover": { bgcolor: "rgb(11, 23, 65)" },
+          }}
           onClick={handleAddToCart}
         >
           <span className="pip-btn__inner">
@@ -325,7 +374,6 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
           />
         </IconButton>
       </Box>
-
     </Card>
   );
 };

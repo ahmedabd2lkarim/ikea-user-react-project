@@ -1,9 +1,8 @@
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward } from "../../../common/react-icons/index";
 import useViewport from "../../../hooks/useViewport";
 import OffCanvas from "../../OffCanvas/OffCanvas";
 import styles from "./variantSelector.module.css";
 import { useState, useRef } from "react";
-import Offcanvas from "react-bootstrap/Offcanvas";
 
 const VariantSelector = ({
   product,

@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchFilteredProducts } from './productChatSlice';
 // import { fetchFilteredProducts } from './producChattSlice'; // you need to have this in your project
+const { VITE_API_URL } = import.meta.env;
 
 export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
   async (message, { dispatch }) => {
-    const response = await fetch('http://localhost:5000/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch(`${VITE_API_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
     });
 

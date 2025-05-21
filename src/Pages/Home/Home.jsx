@@ -4,6 +4,7 @@ import ProductScroller from "../../Components/Home/ProductScroller";
 import PromoScroller from "../../Components/Home/PromoScroller";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
+const { VITE_API_URL } = import.meta.env;
 
 import { CircularProgress, Box, Button, Typography, Grid } from "@mui/material";
 import useFetchTeaser from "../../hooks/useFetchTeaser";

@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+const { VITE_API_URL } = import.meta.env;
 
 export const fetchCategoryIntro = createAsyncThunk(
   'category/fetchIntro',
   async (categoryId) => {
-    const res = await axios.get(`http://localhost:5000/api/intros/${categoryId}`);
+    const res = await axios.get(`${VITE_API_URL}/api/intros/${categoryId}`);
     return res.data;
   }
 );
@@ -12,7 +13,9 @@ export const fetchCategoryIntro = createAsyncThunk(
 export const fetchCategoryProducts = createAsyncThunk(
   'category/fetchProducts',
   async (categoryId) => {
-    const res = await axios.get(`http://localhost:5000/api/promos/products/${categoryId}`);
+    const res = await axios.get(
+      `${VITE_API_URL}/api/promos/products/${categoryId}`
+    );
     return res.data || [];
   }
 );

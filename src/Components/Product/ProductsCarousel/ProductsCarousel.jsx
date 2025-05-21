@@ -2,12 +2,14 @@ import React, { useRef, useEffect, useState } from "react";
 import { Card, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./ProductsCarousel.css";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ProductRating from "../../ProductRating/ProductRating";
-import { TbBasketPlus } from "react-icons/tb";
-import { IconButton } from "@mui/material";
-import { FavoriteBorderIcon } from "../../../common/mui-icons";
+import { TbBasketPlus } from "../../../common/react-icons/index";
+import { IconButton } from "../../../common/mui/index";
+import {
+  FavoriteBorderIcon,
+  ArrowForwardIosIcon,
+  ArrowBackIosNewIcon
+} from "../../../common/mui-icons/index";
 
 const formatMeasurement = (measurement) => {
   if (!measurement) return "";
@@ -23,7 +25,7 @@ const formatMeasurement = (measurement) => {
   if (width && depth && height) return `${width}x${depth}x${height} ${unit}`;
 
   return `${width || ""}${width ? "x" : ""}${depth || length || ""}${
-    depth || length ? "x" : ""
+    depth || length ? " " : ""
   }${height || ""} ${unit}`;
 };
 
