@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import FavouriteManager from "../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+const { VITE_API_URL } = import.meta.env;
 
 const ProductScroller = ({
   deals,
