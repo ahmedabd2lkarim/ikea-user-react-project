@@ -3,9 +3,14 @@ import { Box, Tooltip, IconButton, Divider, Typography, CircularProgress } from 
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { useNavigate } from "react-router-dom";
+
 const ImageWithHotspots = ({ image, hotspots = [], language = 'en', assignedProductIds = [] }) => {
   const [productData, setProductData] = useState({});
   const [loading, setLoading] = useState({});
+  const navigate = useNavigate();
+
+
 
   const handleHotspotHover = async (productId) => {
     if (!productId || productData[productId]) return;
@@ -19,6 +24,11 @@ const ImageWithHotspots = ({ image, hotspots = [], language = 'en', assignedProd
       console.error("Error fetching product:", error);
     } finally {
       setLoading((prev) => ({ ...prev, [productId]: false }));
+    }
+  };
+  const handleHotspotClick = (productId) => {
+    if (productId) {
+      navigate(`/productDetails/${productId}`);
     }
   };
 
@@ -75,6 +85,8 @@ const ImageWithHotspots = ({ image, hotspots = [], language = 'en', assignedProd
           >
             <IconButton
               onMouseEnter={() => handleHotspotHover(productId)}
+              onClick={() => handleHotspotClick(productId)}
+
               sx={{
                 position: 'absolute',
                 top: hotspot.top,

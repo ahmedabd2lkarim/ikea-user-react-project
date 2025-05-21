@@ -6,7 +6,7 @@ import {
   FavoriteBorderIcon,
   ThreeSixtyIcon,
 } from "../../../common/mui-icons/index";
-import Button from "@mui/joy/Button";
+import { Button } from "../../../common/mui/index";
 import "./PrdImgsCrsl.css";
 export default function PrdImgsCrsl({ handleOpenModel, allImgsRef, imgsUrl }) {
   const slideCount = imgsUrl.length;

@@ -9,10 +9,7 @@ import Cart from "./Pages/Cart/Cart";
 import Favourite from "./Pages/Favourite/Favourite";
 import Profile from "./Pages/Profile/Profile";
 import Category from "./Pages/Category/Category";
-import ProfileDetails from "./Components/ProfilePages/ProfileDetails";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
 import store from "./Store/store";
 
 const router = createBrowserRouter([

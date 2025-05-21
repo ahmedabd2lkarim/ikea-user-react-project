@@ -25,19 +25,14 @@ const formatMeasurement = (measurement) => {
 
   const { width, length, depth, height, unit = "cm" } = measurement;
 
-  // Only length
   if (length && !width && !height && !depth) return `${length} ${unit}`;
 
-  // Width + Height
   if (width && height && !length && !depth) return `${width}x${height} ${unit}`;
 
-  // Width + Length + Height
   if (width && length && height) return `${width}x${length}x${height} ${unit}`;
 
-  // Width + Depth + Height
   if (width && depth && height) return `${width}x${depth}x${height} ${unit}`;
 
-  // Other combinations (fallback)
   return `${width || ""}${width ? "x" : ""}${depth || length || ""}${
     depth || length ? "x" : ""
   }${height || ""} ${unit}`;
@@ -111,6 +106,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
   
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
+    ref.current?.handleClose();
   };
   const viewWidth = useViewport();
   const viewCount = useProductViews(currentProduct.id);
