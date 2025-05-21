@@ -1,8 +1,5 @@
 {
-<<<<<<< HEAD
-=======
   "test": "It work",
->>>>>>> origin
   "welcome": "Welcome to IKEA Egypt",
   "offerTitle": "Enjoy 15% Off On All Kitchens",
   "offerText": "Shop & Enjoy Savings 15% Off On All Kitchens, Limited Offer For Kitchens Only",
@@ -16,11 +13,6 @@
     "bestSellers": "Best Sellers",
     "familyOffer": "IKEA FAMILY OFFER"
   },
-<<<<<<< HEAD
-  
-  "moreTips": "More tips and ideas"
-}
-=======
   "profile": {
     "greetingProfileUserName": "Hej {{name}}!",
     "welcomeIKEA": "Welcome home to your IKEA account",
@@ -312,4 +304,3 @@
     "removed":"was removed from your bag"
   }
 }
->>>>>>> origin

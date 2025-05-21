@@ -24,6 +24,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "swiper/css";
 import "swiper/css/navigation";
 import FavouriteManager from "./FavouriteOffcanvaceCarousal/FavouriteManager";
+const {VITE_API_URL} = import.meta.env;
 
 function TopSellerCarousel() {
   const [products, setProducts] = useState([]);
@@ -40,11 +41,10 @@ function TopSellerCarousel() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const apiUrl = "http://localhost:3000";
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/topSellerProducts`);
+        const response = await axios.get(`${VITE_API_URL}/topSellerProducts`);
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -91,7 +91,7 @@ function TopSellerCarousel() {
      console.log("Adding product to cart:", product.id);
 
      // Use query param to check if product is already in cart
-     const response = await axios.get(`${apiUrl}/cart`, {
+     const response = await axios.get(`${VITE_API_URL}/cart`, {
        params: { id: product.id },
      });
 
@@ -100,7 +100,7 @@ function TopSellerCarousel() {
        setAlertSeverity("error");
      } else {
        // Add the full product to cart
-       await axios.post(`${apiUrl}/cart`, {
+       await axios.post(`${VITE_API_URL}/cart`, {
          ...product,
          quantity: 1, // Add default quantity
        });

@@ -4,7 +4,7 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from "react-router-dom";
-
+const {VITE_API_URL} = import.meta.env;
 const ImageWithHotspots = ({ image, hotspots = [], language = 'en', assignedProductIds = [] }) => {
   const [productData, setProductData] = useState({});
   const [loading, setLoading] = useState({});

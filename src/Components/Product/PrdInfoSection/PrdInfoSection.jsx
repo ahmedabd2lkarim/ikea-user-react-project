@@ -18,7 +18,8 @@ import { forwardRef, useRef, useState, useEffect } from "react";
 import CollapsibleSection from "./../../CollapsibleSection/CollapsibleSection";
 import ProductRating from "../../ProductRating/ProductRating";
 import styles from "./prdInfoSection.module.css";
-
+import FavouriteManager from "../../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
+const {VITE_API_URL} = import.meta.env;
 const formatMeasurement = (measurement) => {
   if (!measurement) return "";
 
@@ -47,6 +48,8 @@ const formatPrice = (price) => {
 };
 
 const PrdInfoSection = forwardRef((props, ref) => {
+    const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+
   const {
     mainProduct,
     currentProduct,
@@ -97,7 +100,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
           return { prdID: item.id, quantity: item.quantity };
         });
 
-        await fetch(`http://localhost:5000/api/cart/newOrder`, {
+        await fetch(`${VITE_API_URL}/api/cart/newOrder`, {
           method: "POST",
           body: JSON.stringify({ orderItems: updatedCart }),
           headers: {
@@ -113,7 +116,6 @@ const PrdInfoSection = forwardRef((props, ref) => {
 
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
-    ref.current?.handleClose();
   };
   const viewWidth = useViewport();
   const viewCount = useProductViews(currentProduct.id);
@@ -277,9 +279,10 @@ const PrdInfoSection = forwardRef((props, ref) => {
           </div>
 
           <div>
-            <IconButton className="favIcon">
-              <FavoriteBorderIcon />
-            </IconButton>
+            <FavouriteManager
+            product={currentProduct}
+            onOffcanvasToggle={setIsOffcanvasOpen}
+          />
           </div>
         </div>
       </div>

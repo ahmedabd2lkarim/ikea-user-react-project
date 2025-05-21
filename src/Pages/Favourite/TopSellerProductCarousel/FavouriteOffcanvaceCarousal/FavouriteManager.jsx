@@ -21,7 +21,7 @@ function FavouriteManager({ product, onOffcanvasToggle }) {
             Authorization: `${token}`,
           },
         });
-        console.log("response is: ",response)
+        // console.log("response is: ",response)
 
         const lists = response.data.lists || response.data;
         setFavourites(lists);
