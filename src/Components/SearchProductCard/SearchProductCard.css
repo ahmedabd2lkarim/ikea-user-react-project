@@ -1,0 +1,64 @@
+.product-card,
+.product-card *,
+.product-image-container,
+.product-image,
+.product-title,
+.product-type,
+.product-measurements,
+.product-price,
+.product-actions,
+.product-actions button,
+.favorite-button,
+.add-to-cart-button,
+button,
+[role="button"],
+a {
+    cursor: pointer !important;
+}
+
+.product-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-button {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    padding: 8px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.favorite-button:hover {
+    background-color: white !important;
+}
+
+.add-to-cart-button {
+    background-color: #f5f5f5 !important;
+    padding: 8px !important;
+    border-radius: 50% !important;
+}
+
+.add-to-cart-button:hover {
+    background-color: #e0e0e0 !important;
+}
+
+/* RTL Support */
+[dir="rtl"] .favorite-button {
+    right: auto !important;
+    left: 8px !important;
+}
+
+[dir="rtl"] .product-actions {
+    justify-content: flex-start;
+} 

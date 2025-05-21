@@ -51,7 +51,7 @@ const ProductDetails = () => {
       try {
         setIsLoading(true);
         const productRes = await fetch(
-          `http://127.0.0.1:5000/api/products/${id}`
+          `${VITE_API_URL}/api/products/${id}`
         );
         const productData = await productRes.json();
         setProduct(productData);
@@ -60,7 +60,7 @@ const ProductDetails = () => {
           setImageUrl(productData.images[0]);
         }
 
-        const relatedRes = await fetch("http://127.0.0.1:5000/api/products");
+        const relatedRes = await fetch(`${VITE_API_URL}/api/products`);
         const relatedData = await relatedRes.json();
         const { data: productsData } = relatedData;
         setProducts(productsData);
@@ -181,7 +181,7 @@ const ProductDetails = () => {
         )}
         <OffCanvas
           content={
-            <AddToBag currentProduct={currentProduct} products={products} />
+            <AddToBag currentProduct={currentProduct} products={products} addToBagRef={addToBag} />
           }
           title={
             <div
@@ -242,7 +242,7 @@ const ProductDetails = () => {
             <div className="btnsOnimgs">
               <Button
                 onClick={() => openModel(allImgsRef)}
-                sx={{ fontSize: 12, marginRight: "8px" }}
+                sx={{ fontSize: 12, marginRight: "8px", color: "white" }}
                 className=" rounded-pill Btn3d px-3 py-1"
               >
                 <PhotoLibraryIcon
@@ -253,7 +253,7 @@ const ProductDetails = () => {
               </Button>
               <Model content={content} title={"All media"} ref={allImgsRef} />
               <Button
-                sx={{ fontSize: 12 }}
+                sx={{ fontSize: 12, color: "white" }}
                 className=" rounded-pill Btn3d px-3 py-1"
               >
                 <ThreeSixtyIcon

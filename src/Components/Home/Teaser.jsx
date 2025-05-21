@@ -1,41 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Box, Grid, Typography } from '@mui/material';
 import ImageWithHotspots from './ImageWithHotspots';
 
-const Teaser = ({ title, content, promoImage, promoHotspots = [], rightImages = [], language = 'en' ,categoryId = '',}) => {
-  const [_, setProductList] = useState([]);
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRandomProductsByCategory } from '../../Store/Slices/productSlice';
+
+const Teaser = ({ title, content, promoImage, promoHotspots = [], rightImages = [], language = 'en', categoryId = '' }) => {
+  const dispatch = useDispatch();
+
+  const categoryProducts = useSelector(state => state.products.categoryProducts[categoryId] || []);
+  const loadingCategory = useSelector(state => state.products.loadingCategory);
+
+  // Prepare hotspot product ID chunks based on fetched products and hotspot counts
   const [hotspotChunks, setHotspotChunks] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      if (!categoryId) return;
-      try {
-        const res = await axios.get(`http://localhost:5000/api/promos/products/${categoryId}`);
-        const allProducts = res.data;
+    if (categoryId) {
+      dispatch(fetchRandomProductsByCategory({ categoryId, count: 50 }));
+    }
+  }, [categoryId, dispatch]);
 
-        setProductList(allProducts);
+  useEffect(() => {
+    // When categoryProducts or hotspots change, split product IDs into chunks matching hotspot arrays lengths
+    if (categoryProducts.length === 0) return;
 
-        // Combine all hotspot arrays
-        const allHotspots = [promoHotspots, ...rightImages.map(img => img.hotspots || [])];
-        let flatIndex = 0;
+    const allHotspots = [promoHotspots, ...rightImages.map(img => img.hotspots || [])];
+    let flatIndex = 0;
 
-        const chunks = allHotspots.map(hotspots => {
-          const chunk = allProducts.slice(flatIndex, flatIndex + hotspots.length);
-          flatIndex += hotspots.length;
-          return chunk.map(p => p?._id || null);
-        });
+    const chunks = allHotspots.map(hotspots => {
+      const chunk = categoryProducts.slice(flatIndex, flatIndex + hotspots.length);
+      flatIndex += hotspots.length;
+      return chunk.map(p => p?._id || null);
+    });
 
-        setHotspotChunks(chunks);
-      } catch (err) {
-        console.error('Failed to fetch products:', err);
-      }
-    };
+    setHotspotChunks(chunks);
+  }, [categoryProducts, promoHotspots, rightImages]);
 
-    fetchProducts();
-  }, [promoHotspots, rightImages,categoryId]);
-
-  const selectedPromoImage = promoImage?.[language] || promoImage.en;
+  const selectedPromoImage = promoImage?.[language] || promoImage?.en;
   const leftColumn = rightImages.slice(0, 2);
   const rightColumn = rightImages.slice(2, 4);
   const rightImageMdSize = rightImages.length > 1 ? 5.5 : 6;

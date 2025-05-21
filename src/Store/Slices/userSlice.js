@@ -48,11 +48,20 @@ export const editUserProfile = createAsyncThunk('users/editUser', async ({ updat
 });
 
 // Delete user
-export const deleteUserFromDB = createAsyncThunk('users/deleteUser', async (id) => {
-    await fetch(`http://localhost:3000/users/${id}`, { method: 'DELETE' });
-    return id;
-});
-
+export const deleteUserAccount = createAsyncThunk('users/deleteUser', async (id) => {
+    const res = await fetch(`http://localhost:5000/api/admin/delete-user/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    if (!res.ok) {
+        throw new Error('Failed to delete user');
+    }
+    const data = await res.json();
+    return data;
+}); 
 // Login user
 export const loginUser = createAsyncThunk('users/login', async (credentials) => {
     console.log(credentials)
@@ -105,7 +114,7 @@ const userSlice = createSlice({
             .addCase(fetchProfile.pending, (state) => {
                 state.isloading = true;
             })
-            .addCase(deleteUserFromDB.fulfilled, (state, action) => {
+            .addCase(deleteUserAccount.fulfilled, (state, action) => {
                 const id = action.payload;
                 state.items = state.items.filter(user => user.id !== id);
             })

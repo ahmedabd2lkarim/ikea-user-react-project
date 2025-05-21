@@ -110,7 +110,7 @@ function Home() {
           rightImages={firstTeaser.rightImages}
           height={firstTeaser.height}
           language={language}
-          categoryId="67b724ef9379cb0ddd1b0972"
+          categoryId="67b724ef9379cb0ddd1b0962"
         />
       ) : null}
 
@@ -146,11 +146,12 @@ function Home() {
           rightImages={secondTeaser.rightImages}
           height={secondTeaser.height}
           language={language}
-          categoryId="67b724ef9379cb0ddd1b0972"
+          categoryId="67b724ef9379cb0ddd1b0960"
         />
       ) : null}
 
       <PromoScroller title={t("nowInIKEA")} />
+      
 
       <Createspace />
       <ShopbyRoom />
@@ -167,8 +168,7 @@ function Home() {
       <IKEAFood />
       <Tipsandideas />
 
-      <Button onClick={() => i18n.changeLanguage('en')}>English</Button>
-      <Button onClick={() => i18n.changeLanguage('ar')}>العربية</Button>
+      
     </Grid>
   );
 }

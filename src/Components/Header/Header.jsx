@@ -31,93 +31,42 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import RoomIcon from "@mui/icons-material/Room";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate ,useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 // Tabs list
-const tabs = [
-  "Products",
-  "Rooms",
-  "Tips & Ideas",
-  "Offers & Campaigns",
-  "More",
-];
-
-// Utility: Split array into chunks
-const chunkArray = (array, size) => {
-  const result = [];
-  for (let i = 0; i < array.length; i += size) {
-    result.push(array.slice(i, i + size));
-  }
-  return result;
-};
-
-
-// Custom Scroll Arrows
-const LeftArrow = () => {
-  const { scrollPrev } = useContext(VisibilityContext);
-  return (
-    <IconButton
-      onClick={() => {
-        console.log("Left button clicked");
-        scrollPrev();
-      }}
-      className="slider-button"
-      sx={{
-        bgcolor: "#fff",
-        border: "1px solid #ccc",
-        boxShadow: 1,
-        width: 36,
-        height: 36,
-        borderRadius: "50%",
-        position: "absolute",
-        top: "50%",
-        left: 0,
-        transform: "translateY(-50%)",
-        zIndex: 2,
-        "&:hover": {
-          bgcolor: "#f5f5f5",
-        },
-      }}
-    >
-      <ArrowBackIos fontSize="small" />
-    </IconButton>
-  );
-};
-
-const RightArrow = () => {
-  const { scrollNext } = useContext(VisibilityContext);
-  return (
-    <IconButton
-      onClick={() => {
-        console.log("Right button clicked");
-        scrollNext();
-      }}
-      className="slider-button"
-      sx={{
-        bgcolor: "#fff",
-        border: "1px solid #ccc",
-        boxShadow: 1,
-        width: 36,
-        height: 36,
-        borderRadius: "50%",
-        position: "absolute",
-        top: "50%",
-        right: 0,
-        transform: "translateY(-50%)",
-        zIndex: 2,
-        "&:hover": {
-          bgcolor: "#f5f5f5",
-        },
-      }}
-    >
-      <ArrowForwardIos fontSize="small" />
-    </IconButton>
-  );
-};
 
 // Main Header component
 export const Header = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get('search');
+  const [searchValue, setSearchValue] = useState('');
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      navigate(`/search?search=${encodeURIComponent(searchValue.trim())}`);
+      setSearchValue(''); // Clear the search input after navigation
+    }
+
+    if (!searchValue.length) {
+      navigate(`/search`);
+    }
+
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
+
+  const handleClick = () => {
+    navigate('/favourite-lists');
+  };
+
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false); // Move this inside the component
@@ -127,7 +76,7 @@ export const Header = () => {
 
   const [open2, setOpen2] = useState(false); // State for the first drawer
   const [openStoreDrawer, setOpenStoreDrawer] = useState(false); // State for the second drawer
-  const [selectedStore, setSelectedStore] = useState("Select store"); // State for the selected store
+  const [selectedStore, setSelectedStore] = useState(t("selectedStore")); // State for the selected store
 
   const toggleDrawer2 = (newOpen2) => () => {
     setOpen2(newOpen2);
@@ -150,9 +99,92 @@ export const Header = () => {
     setOpenStoreDrawer(newOpen);
   };
 
+  const tabs = [
+    t("Products"),
+    // t("Rooms"),
+    // t("Tips&Ideas"),
+    t("Offers&Campaigns"),
+    t("More"),
+  ];
+
+  // Utility: Split array into chunks
+  const chunkArray = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  };
+
+  // Custom Scroll Arrows
+  const LeftArrow = () => {
+    const { scrollPrev } = useContext(VisibilityContext);
+    return (
+      <IconButton
+        onClick={() => {
+          console.log("Left button clicked");
+          scrollPrev();
+        }}
+        className="slider-button"
+        sx={{
+          bgcolor: "#fff",
+          border: "1px solid #ccc",
+          boxShadow: 1,
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          position: "absolute",
+          top: "50%",
+          left: 0,
+          transform: "translateY(-50%)",
+          zIndex: 2,
+          "&:hover": {
+            bgcolor: "#f5f5f5",
+          },
+        }}
+      >
+        <ArrowBackIos fontSize="small" />
+      </IconButton>
+    );
+  };
+
+  const RightArrow = () => {
+    const { scrollNext } = useContext(VisibilityContext);
+    return (
+      <IconButton
+        onClick={() => {
+          console.log("Right button clicked");
+          scrollNext();
+        }}
+        className="slider-button"
+        sx={{
+          bgcolor: "#fff",
+          border: "1px solid #ccc",
+          boxShadow: 1,
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          position: "absolute",
+          top: "50%",
+          right: 0,
+          transform: "translateY(-50%)",
+          zIndex: 2,
+          "&:hover": {
+            bgcolor: "#f5f5f5",
+          },
+        }}
+      >
+        <ArrowForwardIos fontSize="small" />
+      </IconButton>
+    );
+  };
+
   const [products, setProducts] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
+  const userProfile = useSelector((state) => state.user.items).user;
+  // console.log(userProfile);
+  const userName = userProfile?.name.split(" ")[0] || "";
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -161,71 +193,107 @@ export const Header = () => {
       setProducts(data);
     };
     fetchProducts();
-  }, []);
+  }, [userProfile]);
 
-  useEffect(() => {
-    const fetchRooms = async () => {
-      const res = await fetch("http://localhost:5000/api/categories");
-      const data = await res.json();
-      setRooms(data);
-    };
-    fetchRooms();
-  }, []);
+  // useEffect(() => {
+  //   const fetchRooms = async () => {
+  //     const res = await fetch("http://localhost:5000/api/categories");
+  //     const data = await res.json();
+  //     setRooms(data);
+  //   };
+  //   fetchRooms();
+  // }, []);
 
   const isCarouselTab =
-    tabs[activeTab] === "Products" || tabs[activeTab] === "Rooms";
+    tabs[activeTab] === "Products" ||
+    tabs[activeTab] === "المنتجات" ||
+    tabs[activeTab] === "Rooms" ||
+    tabs[activeTab] === "الغرف";
 
   const getTabData = () => {
     switch (tabs[activeTab]) {
       case "Products":
+      case "المنتجات":
         return products;
       case "Rooms":
+      case "الغرف":
         return rooms;
-      case "Tips & Ideas":
-        return [
-          { _id: 1, name: "See all in Tips & ideas", image: "/tip1.png" },
-          { _id: 2, name: "Affordable essentials", image: "/tip2.png" },
-          { _id: 3, name: "Our lowest price", image: "/tip2.png" },
-          { _id: 4, name: "Limited editions", image: "/tip2.png" },
-          {
-            _id: 5,
-            name: "Small furniture value for money",
-            image: "/tip2.png",
-          },
-          { _id: 6, name: "Ideas", image: "/tip2.png" },
-          { _id: 7, name: "Inspiration", image: "/tip2.png" },
-          { _id: 8, name: "Brochures", image: "/tip2.png" },
-        ];
+      // case "Tips & Ideas":
+      // case "الافكار والالهام":
+      //   return [
+      //     { _id: 1, name: t("tipsIdeas.seeAll"), image: "/tip1.png" },
+      //     { _id: 2, name: t("tipsIdeas.essentials"), image: "/tip2.png" },
+      //     { _id: 3, name: t("tipsIdeas.lowestPrice"), image: "/tip2.png" },
+      //     { _id: 4, name: t("tipsIdeas.limitedEditions"), image: "/tip2.png" },
+      //     { _id: 5, name: t("tipsIdeas.valueFurniture"), image: "/tip2.png" },
+      //     { _id: 6, name: t("tipsIdeas.ideas"), image: "/tip2.png" },
+      //     { _id: 7, name: t("tipsIdeas.inspiration"), image: "/tip2.png" },
+      //     { _id: 8, name: t("tipsIdeas.brochures"), image: "/tip2.png" },
+      //   ];
+
       case "Offers & Campaigns":
+      case "العروض والفعاليات":
         return [
+          { _id: 9, name: t("offersCampaigns.seeAll"), image: "/offer-a.png" },
           {
-            _id: 9,
-            name: "See all in Offers & Campaigns",
-            image: "/offer-a.png",
+            _id: 10,
+            name: t("offersCampaigns.familyOffers"),
+            image: "/campaign-b.png",
           },
-          { _id: 10, name: "IKEA Family offers", image: "/campaign-b.png" },
-          { _id: 11, name: "Trending this season", image: "/campaign-b.png" },
-          { _id: 12, name: "Top sellers", image: "/campaign-b.png" },
-          { _id: 13, name: "New lower price", image: "/campaign-b.png" },
+          {
+            _id: 11,
+            name: t("offersCampaigns.trending"),
+            image: "/campaign-b.png",
+          },
+          {
+            _id: 12,
+            name: t("offersCampaigns.topSellers"),
+            image: "/campaign-b.png",
+          },
         ];
+
       case "More":
+      case "المزيد":
         return [
-          { _id: 14, name: "New products", image: "/more1.png" },
-          { _id: 15, name: "Last chance", image: "/more1.png" },
-          { _id: 16, name: "Food", image: "/more1.png" },
-          { _id: 17, name: "IKEA for business", image: "/more1.png" },
-          { _id: 18, name: "Join IKEA Family", image: "/more1.png" },
-          { _id: 19, name: "Customer Service", image: "/more1.png" },
-          { _id: 20, name: "Gift card balance", image: "/more1.png" },
-          { _id: 21, name: "Contact us", image: "/more1.png" },
-          { _id: 22, name: "Stores", image: "/more1.png" },
-          { _id: 23, name: "About IKEA", image: "/more1.png" },
-          { _id: 24, name: "Interior design services", image: "/more1.png" },
+          { _id: 13, name: t("more.newProducts"), image: "/more1.png" },
+          { _id: 14, name: t("more.lastChance"), image: "/more1.png" },
+          { _id: 15, name: t("more.food"), image: "/more1.png" },
+          { _id: 16, name: t("more.business"), image: "/more1.png" },
+          { _id: 17, name: t("more.joinFamily"), image: "/more1.png" },
+          { _id: 18, name: t("more.customerService"), image: "/more1.png" },
+          { _id: 19, name: t("more.giftCardBalance"), image: "/more1.png" },
+          { _id: 20, name: t("more.contactUs"), image: "/more1.png" },
+          { _id: 21, name: t("more.stores"), image: "/more1.png" },
+          { _id: 22, name: t("more.about"), image: "/more1.png" },
+          { _id: 23, name: t("more.designServices"), image: "/more1.png" },
         ];
+
       default:
         return [];
     }
   };
+
+  const customOrder = [
+    "Storage & organisation",
+    "Textiles",
+    "Decoration",
+    "Kitchenware & tableware",
+    "Rugs, mats & flooring",
+    "Pet products",
+    "Winter Collections",
+    "Tables & chairs",
+    "Laundry & cleaning",
+    "Kitchen & appliances",
+    "Beds & mattresses",
+    "Desk & desk chairs",
+    "Lighting",
+    "Outdoor products",
+    "Pots & plants",
+    "Smart home",
+    "Home electronics",
+    "Bathroom products",
+    "New",
+  ];
 
   return (
     <Box>
@@ -257,7 +325,7 @@ export const Header = () => {
               flexDirection={"row"}
             >
               <LanguageIcon sx={{ color: "white" }} />
-              <Typography>EN</Typography>
+              <Typography>EG</Typography>
               <Divider
                 orientation="vertical"
                 variant="middle"
@@ -283,7 +351,7 @@ export const Header = () => {
                   },
                 }}
               >
-                English
+                {t("languageFull")}
               </Typography>
             </Box>
           </Box>
@@ -317,7 +385,7 @@ export const Header = () => {
                 </Box>
 
                 <Typography marginTop={3} fontSize={24} fontWeight={700}>
-                  Select your preferred language
+                  {t("selectLanguage")}
                 </Typography>
 
                 <Box
@@ -339,12 +407,22 @@ export const Header = () => {
                     },
                   }}
                 >
-                  <Button disabled>English</Button>
-                  <Button>العربية</Button>
+                  <Button
+                    disabled={i18n.language === "en"}
+                    onClick={() => i18n.changeLanguage("en")}
+                  >
+                    {t("english")}
+                  </Button>
+                  <Button
+                    disabled={i18n.language === "ar"}
+                    onClick={() => i18n.changeLanguage("ar")}
+                  >
+                    {t("arabic")}
+                  </Button>
                 </Box>
 
                 <Typography marginTop={5} fontSize={16} fontWeight={700}>
-                  You're in the Egypt online store
+                  {t("youAreInEgypt")}
                 </Typography>
 
                 <Link
@@ -360,7 +438,7 @@ export const Header = () => {
                   }}
                 >
                   <LanguageIcon sx={{ marginRight: "8px", color: "black" }} />
-                  Change country/region
+                  {t("changeCountry")}
                 </Link>
 
                 <Typography
@@ -369,8 +447,7 @@ export const Header = () => {
                   fontWeight={400}
                   color="rgb(118, 118, 118)"
                 >
-                  Be aware your shopping cart will be emptied when you change
-                  your online store.
+                  {t("cartEmptiedWarning")}
                 </Typography>
               </List>
 
@@ -424,7 +501,7 @@ export const Header = () => {
             flexDirection={"row"}
           >
             <PhoneIphoneIcon sx={{ marginRight: "8px", color: "white" }} />
-            <Typography>IKEA Shopping App</Typography>
+            <Typography>{t("shoppingApp")}</Typography>
           </Box>
         </Box>
 
@@ -490,12 +567,12 @@ export const Header = () => {
                   </IconButton>
                 </Box>
                 <Typography marginTop={3} fontSize={24} fontWeight={700}>
-                  Select store
+                  {t("selectStore")}
                 </Typography>
 
                 <TextField
                   variant="outlined"
-                  placeholder="Search by location"
+                  placeholder={t("searchByLocation")}
                   fullWidth
                   sx={{
                     marginTop: "15px",
@@ -549,14 +626,14 @@ export const Header = () => {
                   }}
                 >
                   <Typography fontSize={14} fontWeight={700}>
-                    Cairo Festival City
+                    {t("CairoFestivalCity")}
                   </Typography>
                   <Typography
                     fontSize={14}
                     fontWeight={400}
                     color="rgb(72, 72, 72)"
                   >
-                    Ring Road, 5th settlement, P.O. Box 11835, Cairo
+                    {t("RingRoad")}
                   </Typography>
                 </ButtonBase>
 
@@ -577,15 +654,14 @@ export const Header = () => {
                   }}
                 >
                   <Typography fontSize={14} fontWeight={700}>
-                    Mall of Arabia
+                    {t("MallOfArabia")}
                   </Typography>
                   <Typography
                     fontSize={14}
                     fontWeight={400}
                     color="rgb(72, 72, 72)"
                   >
-                    Mall of Arabia, Expansion phase Gate 17 - 6th of October
-                    City, Giza
+                    {t("mallOfArabiaAddress")}
                   </Typography>
                 </ButtonBase>
               </Box>
@@ -625,7 +701,7 @@ export const Header = () => {
                 </Box>
 
                 <Typography marginTop={3} fontSize={24} fontWeight={700}>
-                  {selectedStore}
+                  {t(selectedStore)}
                 </Typography>
 
                 <Typography
@@ -636,7 +712,7 @@ export const Header = () => {
                     color: "rgb(72, 72, 72)",
                   }}
                 >
-                  {selectedStore === "Cairo Festival City"
+                  {selectedStore === t("CairoFestivalCity")
                     ? "Open until 11:00 PM"
                     : "Open until 11:00 PM"}
                 </Typography>
@@ -670,11 +746,11 @@ export const Header = () => {
                   }}
                 >
                   <RoomIcon />
-                  Get directions
+                  {t("getDirections")}
                 </Button>
 
                 <Typography marginTop={4} fontSize={14} fontWeight={700}>
-                  Normal opening hours
+                  {t("normalOpeningHours")}
                 </Typography>
 
                 <Stack
@@ -690,12 +766,12 @@ export const Header = () => {
                   marginTop={1}
                 >
                   <Box>
-                    <Typography>Sat - Wed</Typography>
-                    <Typography>Thu - Fri</Typography>
+                    <Typography>{t("satWed")}</Typography>
+                    <Typography>{t("thuFri")}</Typography>
                   </Box>
                   <Box>
-                    <Typography>10:00 AM - 11:00 PM</Typography>
-                    <Typography>10:00 AM - 12:00 AM</Typography>
+                    <Typography>{t("openingHours1")}</Typography>
+                    <Typography>{t("openingHours2")}</Typography>
                   </Box>
                 </Stack>
               </List>
@@ -725,7 +801,7 @@ export const Header = () => {
                     },
                   }}
                 >
-                  Choose a different store
+                  {t("chooseDifferentStore")}
                 </Button>
 
                 <Button
@@ -750,7 +826,7 @@ export const Header = () => {
                     },
                   }}
                 >
-                  Visit store page
+                  {t("visitStorePage")}
                 </Button>
               </Box>
             </Box>
@@ -775,12 +851,14 @@ export const Header = () => {
           mt={{ xs: "-20px", sm: "10px" }} // Adjust margin for xs
         >
           <Box
+            onClick={() => navigate("/")}
             component="img"
             src="https://www.ikea.com/global/assets/logos/brand/ikea.svg"
             width="90px"
             sx={{
               // display: { xs: "block", sm: "block" }, // Visible on all breakpoints
               transform: { xs: "translateY(40px)", sm: "translateY(0)" },
+              cursor: "pointer",
             }}
           />
 
@@ -794,6 +872,9 @@ export const Header = () => {
             <TextField
               variant="outlined"
               placeholder="What are you looking for"
+              value={searchValue || search}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyPress={handleKeyPress}
               sx={{
                 width: { xs: "100%", sm: "90%", md: "90%", lg: "60%" },
                 "& .MuiOutlinedInput-root": {
@@ -808,7 +889,15 @@ export const Header = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon
+                      onClick={handleSearch}
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          cursor: 'pointer'
+                        }
+                      }}
+                    />
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -842,21 +931,33 @@ export const Header = () => {
                 cursor: "pointer",
               },
             }}
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (token) {
+                navigate("/profile"); // Navigate to profile if token exists
+              } else {
+                navigate("/login"); // Navigate to login if no token
+              }
+            }}
           >
             <PermIdentityIcon />
             <Box
               ml={1}
               display={{ xs: "none", sm: "none", md: "none", lg: "block" }}
             >
-              Hej! Log in or sign up
+              {localStorage.getItem("token")
+                ? `${t("hello")} ${userName}`
+                : t("loginOrSignup")
+              }
             </Box>
           </Button>
 
-          <IconButton>
+
+          <IconButton onClick={handleClick}>
             <FavoriteBorderIcon sx={{ color: "black", fontSize: 20 }} />
           </IconButton>
 
-          <IconButton>
+          <IconButton onClick={() => navigate("/cart")}>
             <ShoppingBasketOutlinedIcon sx={{ color: "black", fontSize: 20 }} />
           </IconButton>
         </Box>
@@ -872,6 +973,9 @@ export const Header = () => {
             variant="outlined"
             fullWidth
             placeholder="What are you looking for"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyPress={handleKeyPress}
             sx={{
               "& .MuiOutlinedInput-root": {
                 backgroundColor: "#f5f5f5",
@@ -885,7 +989,15 @@ export const Header = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon
+                    onClick={handleSearch}
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                  />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -970,38 +1082,46 @@ export const Header = () => {
                   </Box>
                 )}
               >
-                {getTabData().map((cat) => (
-                  <Box
-                    key={cat._id}
-                    itemID={cat._id}
-                    onClick={() => navigate(`/category/${cat._id}`)}
-                    sx={{
-                      mx: 1,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      textAlign: "center",
-                      minWidth: 80,
-                      cursor: "pointer",
-                    }}
-                  >
+                {getTabData()
+                  .sort((a, b) => {
+                    const indexA = customOrder.indexOf(a.name);
+                    const indexB = customOrder.indexOf(b.name);
+                    return (
+                      (indexA === -1 ? Infinity : indexA) -
+                      (indexB === -1 ? Infinity : indexB)
+                    );
+                  })
+                  .map((cat) => (
                     <Box
-                      component="img"
-                      src={cat.image}
-                      alt={cat.name}
+                      key={cat._id}
+                      itemID={cat._id}
+                      onClick={() => navigate(`/category/${cat._id}`)}
                       sx={{
-                        width: 64,
-                        height: 64,
-                        objectFit: "contain",
-                        mb: 1,
+                        mx: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        textAlign: "center",
+                        minWidth: 80,
+                        cursor: "pointer",
                       }}
-                    />
-                    <Typography variant="caption" sx={{ fontSize: "13px" }}>
-                      {cat.name}
-                    </Typography>
-                  </Box>
-                ))}
-
+                    >
+                      <Box
+                        component="img"
+                        src={cat.image}
+                        alt={cat.name}
+                        sx={{
+                          width: 64,
+                          height: 64,
+                          objectFit: "contain",
+                          mb: 1,
+                        }}
+                      />
+                      <Typography variant="caption" sx={{ fontSize: "13px" }}>
+                        {cat.name}
+                      </Typography>
+                    </Box>
+                  ))}
               </ScrollMenu>
             </Box>
           ) : (

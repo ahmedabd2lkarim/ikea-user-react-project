@@ -5,58 +5,8 @@ import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 import "react-horizontal-scrolling-menu/dist/styles.css";
 import "./ShopbyRoom.css"; // Include scrollbar styles
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useTranslation } from "react-i18next";
 
-const categories = [
-  {
-    id: 1,
-    title: "Bedroom",
-    image:
-      "https://www.ikea.com/ext/ingkadam/m/79f6bd6ca25391f7/original/PH179171.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/bedroom/",
-  },
-  {
-    id: 2,
-    title: "Living",
-    image:
-      "https://www.ikea.com/ext/ingkadam/m/10e1d5a52c9750b5/original/PH152874-crop004.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/living-room/",
-  },
-  {
-    id: 3,
-    title: "Garden & Balcony",
-    image:
-      "https://www.ikea.com/ext/ingkadam/m/19ec2eb44a0ef324/original/PH184302.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/outdoor/",
-  },
-  {
-    id: 4,
-    title: "Dining",
-    image:
-      "https://www.ikea.com/ext/ingkadam/m/73f850e757fef06b/original/PH172954-crop002.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/dining/",
-  },
-  {
-    id: 5,
-    title: "Children's room",
-    image:
-      "https://www.ikea.com/ext/ingkadam/m/a803821e8ce7211/original/PH188366.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/childrens-room/",
-  },
-  {
-    id: 6,
-    title: "Home office",
-    image:
-      "https://www.ikea.com/ext/ingkadam/m/7177f14ce69caa70/original/PH178283.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/home-office/",
-  },
-  {
-    id: 7,
-    title: "See all rooms",
-    // image:
-    //   "https://www.ikea.com/ext/ingkadam/m/6458a8d8bbbd7378/original/PH186636.jpg?f=xxs",
-    link: "https://www.ikea.com/eg/en/rooms/",
-  },
-];
 
 const LeftArrow = () => {
   const { scrollPrev } = React.useContext(VisibilityContext);
@@ -113,13 +63,61 @@ const RightArrow = () => {
 };
 
 export const ShopbyRoom = () => {
+
+    const { t } = useTranslation(); 
+  
+  const categories = [
+  {
+    id: 1,
+    title: t("rooms.bedroom"),
+    image: "https://www.ikea.com/ext/ingkadam/m/79f6bd6ca25391f7/original/PH179171.jpg?f=xxs",
+    link: "https://www.ikea.com/eg/en/rooms/bedroom/",
+  },
+  {
+    id: 2,
+    title: t("rooms.living"),
+    image: "https://www.ikea.com/ext/ingkadam/m/10e1d5a52c9750b5/original/PH152874-crop004.jpg?f=xxs",
+    link: "https://www.ikea.com/eg/en/rooms/living-room/",
+  },
+  {
+    id: 3,
+    title: t("rooms.gardenBalcony"),
+    image: "https://www.ikea.com/ext/ingkadam/m/19ec2eb44a0ef324/original/PH184302.jpg?f=xxs",
+    link: "https://www.ikea.com/eg/en/rooms/outdoor/",
+  },
+  {
+    id: 4,
+    title: t("rooms.dining"),
+    image: "https://www.ikea.com/ext/ingkadam/m/73f850e757fef06b/original/PH172954-crop002.jpg?f=xxs",
+    link: "https://www.ikea.com/eg/en/rooms/dining/",
+  },
+  {
+    id: 5,
+    title: t("rooms.children"),
+    image: "https://www.ikea.com/ext/ingkadam/m/a803821e8ce7211/original/PH188366.jpg?f=xxs",
+    link: "https://www.ikea.com/eg/en/rooms/childrens-room/",
+  },
+  {
+    id: 6,
+    title: t("rooms.office"),
+    image: "https://www.ikea.com/ext/ingkadam/m/7177f14ce69caa70/original/PH178283.jpg?f=xxs",
+    link: "https://www.ikea.com/eg/en/rooms/home-office/",
+  },
+  {
+    id: 7,
+    title: t("rooms.allRooms"),
+    link: "https://www.ikea.com/eg/en/rooms/",
+  },
+];
+
   return (
     <Box
       sx={{ px: 3, py: 3, position: "relative" }}
       className="slider-container" // Add a class for hover effect
     >
       <Typography fontSize={24} fontWeight={700} m={2}>
-        Shop by Room
+        {t("ShopbyRoom")}
+        
       </Typography>
       <ScrollMenu LeftArrow={<LeftArrow />} RightArrow={<RightArrow />}>
         {categories.map((cat) => {

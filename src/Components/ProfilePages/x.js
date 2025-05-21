@@ -1,244 +1,267 @@
-// import React, { useState } from "react";
-import {
-  InputLabel,
-  FormControl,
-  Typography,Select,MenuItem,
-} from "@mui/material";
+import { Button, FormControl, Grid, InputLabel, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import InfoIcon from "@mui/icons-material/Info";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import "../../Pages/UserForms/UserForms.css";
-import { useForm } from "react-hook-form";
-import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
-import Grid from "@mui/material/Grid";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import CheckIcon from '@mui/icons-material/Check';
+import { toast } from 'react-toastify';
+const ChangePassword = () => {
+    const { t } = useTranslation();
 
-const EditModel = ({firstName , lastName ,setIsModalOpen }) => {
-  const {
-    register,
-    handleSubmit,setValue,
-    watch,
-    formState: { errors, touchedFields, dirtyFields },
-  } = useForm({
-    defaultValues: {
-      firstName:firstName,  
-      lastName: lastName || "", // initial value
-    },
-  });
+      const {
+        register,
+        watch,
+        getValues,
+        handleSubmit,
+        formState: { errors, touchedFields, dirtyFields },
+      } = useForm();
+      const [isFocused, setIsFocused] = useState(false);
 
-  const isTouchedOrDirty = (name) => touchedFields[name] || dirtyFields[name];
-  const isTouchedAndDirty = (name) => touchedFields[name] && dirtyFields[name];
-  const dispatch = useDispatch();
-  const onSubmit = async (data) => {
-    try {
-      const updatedUser = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        // Add other fields if needed
-      };
-  
-      // Assuming `userId` is available from props or state
-      await dispatch(editUserInDB({ updatedUser })).unwrap();
-  
-      console.log("User updated successfully:", updatedUser);
-      setIsModalOpen(false); // Close modal on success
-    } catch (error) {
-      console.error("Failed to update user:", error);
-      alert("Failed to save changes. Please try again.");
-    }
+  const getPasswordValidationStatus = () => {
+    const password = watch("Password") || "";
+    return {
+      hasLowercase: {
+          iconVisible: /[a-z]/.test(password), 
+          textColor: password === "" ? "black" : (/[a-z]/.test(password) ? "blue" : "red"),
+      },
+      hasUppercase: {
+          iconVisible: /[A-Z]/.test(password),
+          textColor: password === "" ? "black" : (/[A-Z]/.test(password) ? "blue" : "red"),
+      },
+      hasLength: {
+          iconVisible: password.length >= 8 && password.length <= 20,
+          textColor: password === "" ? "black" : (password.length >= 8 && password.length <= 20 ? "blue" : "red"),
+      },
+      hasSpecial: {
+          iconVisible: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+          textColor: password === "" ? "black" : (/[!@#$%^&*(),.?":{}|<>]/.test(password) ? "blue" : "red"),
+      },
+      hasNumber: {
+          iconVisible: /\d/.test(password),
+          textColor: password === "" ? "black" : (/\d/.test(password) ? "blue" : "red"),
+      },
   };
-
-  const handleCancelClick = () => {
-    setIsModalOpen(false); // Close modal on cancel
-  };
-
-
-useEffect(() => {
-    setValue("lastName", lastName || "");
-    setValue("firstName", firstName || "");
-  }, [firstName,lastName, setValue]);
-
-  const selectedGender = watch("gender", "");
-  return (
-    <div className="modal" style={{borderRadius:"7px 0 7px 0",backgroundColor:"[rgba(0,0,0,0.2)"}}>
-      <div className="modal-content">
-        <div
-          className="modal-header"
-          style={{
-            display: "flex",
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-        >
-          <h5>Edit personal information</h5>
-        </div>
-        <form size={{ md: 10 }} onSubmit={handleSubmit(onSubmit)} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          {/* First Name */}
-          <InputLabel htmlFor="firstName" style={{fontSize:".7rem"}} className="label">First Name</InputLabel>
-          <FormControl fullWidth style={{ marginBottom: "20px" }}>
-            <input
-              id="firstName"
-              type="text"
-              required
-              {...register("firstName", {
-                required: {
-                  value: true,
-                  message: "The first name field cannot be left empty",
-                },
-              })}
-              style={{
-                height: "32px",
-                paddingLeft: "8px",
-                borderColor: isTouchedOrDirty("firstName")
-                  ? errors.firstName
-                    ? "red"
-                    : "green"
-                  : "inherit",
-              }}
-            />
-            {isTouchedOrDirty("firstName") && errors.firstName && (
-              <Typography color="#ff1744" fontSize="12px">
-                <InfoIcon fontSize="small" /> {errors.firstName.message}
-              </Typography>
-            )}
-            {isTouchedAndDirty("firstName") && !errors.firstName && (
-              <div style={{ display: "flex", alignItems: "center", color: "green" }}>
-                <CheckCircleIcon fontSize="small" />
-                <Typography fontSize="12px" marginLeft="2px">Approved!</Typography>
-              </div>
-            )}
-          </FormControl>
-          {/* Last Name */}
-          <InputLabel htmlFor="lastName" style={{fontSize:".7rem"}} className="label">Last Name</InputLabel>
-          <FormControl fullWidth style={{ marginBottom: "20px" }}>
-            <input
-              id="lastName"
-              type="text"
-              required
-              {...register("lastName", {
-                required: {
-                  value: true,
-                  message: "The last name field cannot be left empty",
-                },
-              })}
-              style={{
-                height: "32px",
-                paddingLeft: "8px",
-                borderColor: isTouchedOrDirty("lastName")
-                  ? errors.lastName
-                    ? "red"
-                    : "green"
-                  : "inherit",
-              }}
-            />
-            {isTouchedOrDirty("lastName") && errors.lastName && (
-              <Typography color="#ff1744" fontSize="12px">
-                <InfoIcon fontSize="small" /> {errors.lastName.message}
-              </Typography>
-            )}
-            {isTouchedAndDirty("lastName") && !errors.lastName && (
-              <div style={{ display: "flex", alignItems: "center", color: "green" }}>
-                <CheckCircleIcon fontSize="small" />
-                <Typography fontSize="12px" marginLeft="2px">Approved!</Typography>
-              </div>
-            )}
-          </FormControl>
-
-          <InputLabel htmlFor="gender" style={{fontSize:".7rem"}} className="label">
-            Gender
-          </InputLabel>
-          <FormControl fullWidth style={{ marginBottom: "50px" }}>
-            <Select
-              id="gender"
-              value={selectedGender}
-              onChange={(e) => setValue("gender", e.target.value)}
-              displayEmpty
-              style={{
-                height: "32px",
-                paddingLeft: "8px",
-                fontSize:".8rem",
-                border: ".5px solid rgb(43, 43, 43)",
-                borderColor: isTouchedOrDirty("gender")
-                  ? errors.gender
-                    ? "red"
-                    : "green"
-                  : "inherit",
-              }}
-            >
-              <MenuItem style={{fontSize:".8rem"}} value="" disabled>
-                Choose an option
-              </MenuItem>
-              <MenuItem style={{fontSize:".8rem"}} value="male">Prefer not to say</MenuItem>
-              <MenuItem style={{fontSize:".8rem"}} value="male">Male</MenuItem>
-              <MenuItem style={{fontSize:".8rem"}} value="female">Female</MenuItem>
-              <MenuItem style={{fontSize:".8rem"}} value="other">Other</MenuItem>
-            </Select>
-           
-          </FormControl>
-
-          <div style={{ borderTop: ".5px solid rgb(212, 211, 211)", paddingTop: "10px" }}>
-            <Grid className="login-form-page" marginTop={2} container>
-              <Grid size={{ xs: 12, md: 1 }}>
-                <InfoOutlineIcon style={{ fontSize: "18px", color: "rgb(2, 107, 173)" }} />
-              </Grid>
-              <Grid size={{ xs: 12, md: 11 }} style={{ fontSize: ".7rem" }}>
-                The information below is linked to your account and, for security reasons, cannot be changed.
-              </Grid>
-            </Grid>
-            <div style={{ marginTop: "20px", backgroundColor: "rgb(238, 238, 238)", padding: "6px", borderRadius: "5px" }}>
-              <label style={{ fontSize: ".8rem", marginLeft: "5px", color: "rgb(77, 77, 77)" }}>sohagamal@gmail.com</label>
-            </div>
-          </div>
-
-          {/* Action Buttonsstyle={{ borderTop: ".5px solid rgb(212, 211, 211)", paddingTop: "10px" }} */}
-       
-          <Grid className="login-form-page" spacing={3} marginTop={2} container 
-          style={{borderTop: ".5px solid rgb(212, 211, 211)", paddingTop: "10px" , marginTop: "auto", display: "flex", justifyContent: "space-between" }}>
-              <Grid size={{ xs: 12, md: 6 }}>
-              <button
-              type="submit" 
-            //   className="modal-edit-btn"
-            //   onClick={handleSubmit(onSubmit)}
-              style={{
-                backgroundColor:"black",
-                color:"white",
-                fontSize:".7rem",
-                fontWeight:"bold",
-                borderRadius:"60px",
-                padding: "15px 20px",
-                border: "none",
-                cursor: "pointer",
-                width: "100%",
-              }}
-            >
-              Save
-            </button>
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }} style={{ fontSize: ".7rem" }}>
-              <button
-              onClick={handleCancelClick}
-              style={{
-                backgroundColor:"white",
-                
-                fontSize:".7rem",
-                fontWeight:"bold",
-                borderRadius:"60px",
-                padding: "15px 20px",
-                border: "1px solid black",
-                cursor: "pointer",
-                width: "100%",
-              }}
-            >
-              Cancel
-            </button>
-              </Grid>
-            </Grid>
-       
-         
-        </form>
-      </div>
-    </div>
-  );
 };
 
-export default EditModel;
+const validationStatus = getPasswordValidationStatus();
+
+
+
+      const [errorMsg, seterrorMsg] = useState(false)
+    const dispatch = useDispatch();
+  const navigate = useNavigate();  
+  const userProfile = useSelector((state) => state.user.items).user;
+  console.log(userProfile);
+
+      const onSubmit = async (data,e) => {
+        e.preventDefault();
+        const changedData = {
+                  oldPassword: data.OldPassword,
+                  password: data.Password
+              };
+      console.log(changedData);
+        try {
+          toast.success(t("Login.loggedin_Successfyly"), {
+                  position: 'top-right',
+                  autoClose: 3000,
+                });
+          // const res = await dispatch(changePassword(changedData)).unwrap();
+          // localStorage.setItem('token', res.token);
+        } catch {
+          toast.error("error", {
+            position: 'top-right',
+            autoClose: 3000,
+          });
+        }
+      };
+      const watchPWD = watch("confirmPassword");
+      const isTouchedAndDirty = (name) => touchedFields[name] && dirtyFields[name];
+    const isTouchedOrDirty = (name) => touchedFields[name] || dirtyFields[name];
+  return (
+    <div className='delete-profile'>
+        <h1 className='Content-Profile-Page' style={{fontSize:"1.2rem"}}>Change password</h1>
+        <Grid className="login-form-page" marginTop={2} container spacing={5}>
+        <Grid className="Content-Profile-Page delete-info" size={{ xs: 12, md: 6 }}>
+        <p style={{marginBottom: ".75rem"}} >It's a good idea to update your password regularly and to make sure it's unique from other passwords you use.</p>
+       <form onSubmit={handleSubmit(onSubmit)}>
+       <InputLabel className="label">Current password</InputLabel>
+            <FormControl fullWidth style={{ marginBottom: "10px" }}>
+              <input
+                style={{
+                  height: "32px",
+                  paddingLeft: "8px",
+                  borderColor: isTouchedOrDirty("OldPassword")
+                    ? errors.Password
+                      ? "red"
+                      : "black"
+                    : "inherit",
+                }}
+                id="OldPassword"
+                type="password"
+                {...register("OldPassword", {
+                  required: {
+                    value: true,
+                    message: t("Login.PasswordEmpty"),
+                  },
+                })}
+              />
+
+              {isTouchedOrDirty("OldPassword") && errors.OldPassword && (
+                <div style={{ marginTop:"3px",display: "flex", color: "#ff1744" }}>
+                  <InfoIcon fontSize="12px" />
+                  <Typography fontSize="12px">
+                    {errors.OldPassword.message}
+                  </Typography>
+                </div>
+              )}
+              </FormControl> 
+
+              <InputLabel className="label" htmlFor="username">
+              New password
+            </InputLabel>
+            <FormControl fullWidth>
+              <input
+                style={{ height: "32px", marginBottom: "13px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("Password")
+                  ? errors.Password
+                    ? "red"
+                    : "green"
+                  : "inherit"}}
+                id="Newpassword"
+                type="password"
+                {...register("Password", {
+                  required: {
+                    value: true,
+                    message: t("Register.password_empty"),
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/,
+                    message: t("Register.password_valid"),
+                },
+                minLength: {
+                    value: 8,
+                    message: t("Register.password_minlen"),
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: t("Register.password_maxlen"),
+                  },
+                })}
+              onFocus={() => setIsFocused(true)}
+              />
+              {isTouchedOrDirty("Password") &&  errors.Password &&(
+                
+                <Typography color="#ff1744" fontSize="12px" marginTop={"3px"}>
+                  <InfoIcon fontSize="12px" />
+                  {errors.Password.message}
+                </Typography>
+              )}
+              
+              {isTouchedAndDirty("Password") &&  !errors.Password  &&(
+                <div
+                  color="green"
+                  style={{color:"green",display: "flex",alignItems: "center" , marginTop:"3px"}}
+                >
+                  <CheckCircleIcon fontSize="6px" />
+                  <Typography fontSize="12px" marginLeft="2px">
+                  {t("Register.accept")}
+                  </Typography>
+                </div>
+              )} 
+            </FormControl>
+           {isFocused && (
+                <div className="Error-Message">
+                    <Typography fontSize={12} marginTop={2}>{t("Register.password_Contain")}</Typography>
+                    <Typography fontSize={12} color={validationStatus.hasLowercase.textColor} marginTop={2}>
+                        {validationStatus.hasLowercase.iconVisible && <CheckIcon fontSize="12px" color="green" />}
+                        {t("Register.lowercase")}
+                    </Typography>
+                    <Typography fontSize={12} color={validationStatus.hasUppercase.textColor} marginTop={2}>
+                        {validationStatus.hasUppercase.iconVisible && <CheckIcon fontSize="12px" color="green" />}
+                        {t("Register.uppercase")}
+                    </Typography>
+                    <Typography fontSize={12} color={validationStatus.hasLength.textColor} marginTop={2}>
+                        {validationStatus.hasLength.iconVisible && <CheckIcon fontSize="12px" color="green" />}
+                        {t("Register.8characters")}
+                    </Typography>
+                    <Typography fontSize={12} color={validationStatus.hasSpecial.textColor} marginTop={2}>
+                        {validationStatus.hasSpecial.iconVisible && <CheckIcon fontSize="12px" color="green" />}
+                        {t("Register.Special_character")}
+                    </Typography>
+                    <Typography fontSize={12} color={validationStatus.hasNumber.textColor} marginTop={2}>
+                        {validationStatus.hasNumber.iconVisible && <CheckIcon fontSize="12px" color="green" />}
+                        {t("Register.number")}
+                    </Typography>
+                </div>
+            )}
+
+<InputLabel className="label">Confirm new password</InputLabel>
+            <FormControl fullWidth style={{ marginBottom: "10px" }}>
+              <input
+                style={{
+                  height: "32px",
+                  paddingLeft: "8px",
+                  borderColor: isTouchedOrDirty("Password")
+                    ? errors.Password
+                      ? "red"
+                      : "black"
+                    : "inherit",
+                }}
+                id="confirmPassword"
+                type="password"
+                {...register("confirmPassword", {
+                  required: {
+                    value: true,
+                    message: "Confirm Password is required",
+                  },
+                  validate: (value) => value == watchPWD || " Passwords do not match",
+                })}
+              />
+              {isTouchedOrDirty("confirmPassword") && errors.confirmPassword && (
+                <div style={{ marginTop:"3px",display: "flex", color: "#ff1744" }}>
+                  <InfoIcon fontSize="12px" />
+                  <Typography fontSize="12px">
+                    {errors.confirmPassword.message}
+                  </Typography>
+                </div>
+              )}
+              {
+        isTouchedOrDirty("confirmPassword") && getValues('confirmPassword')!=getValues('Password') && (
+          <div style={{ marginTop:"3px",display: "flex", color: "#ff1744" }}>
+            <InfoIcon fontSize="12px" />
+            <Typography fontSize="12px">
+              Passwords do not match
+            </Typography>
+          </div>
+        ) }
+              </FormControl>
+
+              <div>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{
+                  marginTop: "18px",
+                  backgroundColor: "black",
+                  fontSize: "12px",
+                  fontWeight: 660,
+                  borderRadius: "20px",
+                  padding: "12px ",
+                  textTransform: "capitalize",
+                  marginBottom: "20px",
+                }}
+              >
+               change password
+              </Button>
+            </div>
+       </form>
+        </Grid>
+        </Grid>
+    </div>
+  )
+}
+
+export default ChangePassword

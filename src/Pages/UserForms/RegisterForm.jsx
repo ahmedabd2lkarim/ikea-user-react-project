@@ -134,7 +134,7 @@ const validationStatus = getPasswordValidationStatus();
             <InputLabel className="label">{t("Register.First_name")}</InputLabel>
             <FormControl fullWidth style={{ marginBottom: "20px" }}>
               <input
-                style={{ height: "32px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("firstName")
+                style={{ height: "32px",fontSize:"14px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("firstName")
                   ? errors.firstName
                     ? "red"
                     : "green"
@@ -174,7 +174,7 @@ const validationStatus = getPasswordValidationStatus();
             <InputLabel className="label">{t("Register.Last_name")}</InputLabel>
             <FormControl fullWidth style={{ marginBottom: "20px" }}>
               <input
-               style={{ height: "32px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("lastName")
+               style={{ height: "32px",fontSize:"14px" ,paddingLeft:"8px" ,borderColor: isTouchedOrDirty("lastName")
                 ? errors.lastName
                   ? "red"
                   : "green"
@@ -217,7 +217,7 @@ const validationStatus = getPasswordValidationStatus();
             </InputLabel>
             <FormControl fullWidth style={{ marginBottom: "20px" }}>
               <input
-               style={{ height: "32px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("Email")
+               style={{ height: "32px",fontSize:"14px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("Email")
                 ? errors.Email
                   ? "red"
                   : "green"
@@ -260,7 +260,7 @@ const validationStatus = getPasswordValidationStatus();
             </InputLabel>
             <FormControl fullWidth>
               <input
-                style={{ height: "32px", marginBottom: "13px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("Password")
+                style={{ height: "32px" ,fontSize:"14px", marginBottom: "13px",paddingLeft:"8px" ,borderColor: isTouchedOrDirty("Password")
                   ? errors.Password
                     ? "red"
                     : "green"

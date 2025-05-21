@@ -5,12 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProductRating from "../../ProductRating/ProductRating";
 
-export default function AddToBag({ currentProduct, products }) {
+export default function AddToBag({ currentProduct, products ,addToBagRef}) {
   const relatedProducts = [];
-  products.filter((product) => {
+  products.filter((product) => {   
     if (
-      currentProduct._id !== product._id &&
-      currentProduct.typeName.en === product.typeName.en
+      currentProduct._id !== product._id
     ) {
       relatedProducts.push(product);
     }
@@ -27,6 +26,10 @@ export default function AddToBag({ currentProduct, products }) {
     setHoveredId(null);
   };
 
+  const closeOffCanvas = (ref) => {
+    ref.current?.handleClose();
+  };
+
   return (
     <div className="d-flex flex-column justify-content-center h-100">
       <div className={` ${styles.addedCardPrd} mb-3`}>
@@ -40,14 +43,14 @@ export default function AddToBag({ currentProduct, products }) {
           <p className="m-0 " style={{ fontSize: "15px" }}>
             <b className="d-block ">{currentProduct.name}</b>
             {currentProduct.typeName.en + ", "}
-            {`${currentProduct.measurement.width}x${
-              currentProduct.measurement.depth
-                ? currentProduct.measurement.depth + "x"
+            {`${currentProduct.measurement?.width}x${
+              currentProduct.measurement?.depth
+                ? currentProduct.measurement?.depth + "x"
                 : ""
             }${
-              currentProduct.measurement.height ||
-              currentProduct.measurement.length
-            } ${currentProduct.measurement.unit || "cm"}`}
+              currentProduct.measurement?.height ||
+              currentProduct.measurement?.length
+            } ${currentProduct.measurement?.unit || "cm"}`}
           </p>
           <p>
             <span
@@ -74,7 +77,7 @@ export default function AddToBag({ currentProduct, products }) {
         className=" overflow-auto "
       >
         <h3 className="m-3 mb-5 fw-bold">Complement your order</h3>
-
+        
         {relatedProducts.map((prd) => {
           return (
             <div className="d-flex" key={prd.id}>
@@ -151,8 +154,9 @@ export default function AddToBag({ currentProduct, products }) {
           );
         })}
       </div>
-      <div className="d-flex justify-content-around flex-wrap py-4">
+      <div className="d-flex justify-content-around py-4 gap-3">
         <Button
+          onClick={() => closeOffCanvas(addToBagRef)}
           className="rounded-pill"
           sx={{
             border: "1px black solid",
@@ -165,6 +169,7 @@ export default function AddToBag({ currentProduct, products }) {
           Continue shopping
         </Button>
         <Button
+          onClick={() => navigate("/cart")}
           className="rounded-pill"
           sx={{
             background: "black",

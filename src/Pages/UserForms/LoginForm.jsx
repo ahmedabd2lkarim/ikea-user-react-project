@@ -55,7 +55,7 @@ const LoginForm = () => {
   const Label = "Email address or phone number";
   return (
     <div>
-      <Grid className="login-form-page" marginTop={5} container spacing={2}>
+      <Grid className="login-form-page"  marginTop={5} container spacing={2}>
         <Grid className="Content-login-Page" size={{ xs: 12, md: 5 }}>
           <h2>{t("Login.LoginAccount")}</h2>
           <Grid container className="Login-Link d-flex">
@@ -97,6 +97,7 @@ const LoginForm = () => {
                 style={{
                   height: "32px",
                   paddingLeft: "8px",
+                  fontSize:"14px",
                   borderColor: isTouchedOrDirty("Email")
                     ? errors.Email
                       ? "red"
@@ -147,6 +148,7 @@ const LoginForm = () => {
                 style={{
                   height: "32px",
                   paddingLeft: "8px",
+                  fontSize:"14px",
                   borderColor: isTouchedOrDirty("Password")
                     ? errors.Password
                       ? "red"
@@ -171,23 +173,8 @@ const LoginForm = () => {
                   </Typography>
                 </div>
               )}
-              {/* {isTouchedAndDirty("Password") && !errors.Password && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                     color:"green",
-
-                  }}
-                >
-                  <CheckCircleIcon fontSize="6px" margin="0px" />
-                  <Typography fontSize="12px" color="green" marginLeft="2px">
-                  {t("Login.PasswordAccept")}
-                  </Typography>
-                </div>
-              )} */}
             </FormControl>
-            <a> {t("Login.Forget_password?")}</a>
+            <a style={{color:"rgb(74, 74, 74)",textDecoration:"underline" ,fontSize:"12px"}}> {t("Login.Forget_password?")}</a>
             <div>
               <Button
                 type="submit"

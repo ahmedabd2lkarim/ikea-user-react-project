@@ -3,12 +3,15 @@ import {
   HiOutlineBuildingStorefront,
   GrDeliver,
 } from "../../../common/react-icons/index";
-import { Button } from "../../../common/mui/index";
+// import { Button } from "../../../common/mui/index";
+import { Button } from "@mui/material";
+
 import {
   FavoriteBorderIcon,
   NavigateNextIcon,
 } from "../../../common/mui-icons/index";
-import { IconButton } from "../../../common/mui/index";
+// import { IconButton } from "../../../common/mui/index";
+import { IconButton } from "@mui/material";
 import OffCanvas from "../../OffCanvas/OffCanvas";
 import VariantSelector from "../VariantSelector/VariantSelector";
 import useViewport from "../../../hooks/useViewport";
@@ -69,35 +72,44 @@ const PrdInfoSection = forwardRef((props, ref) => {
       };
     }
   }, [ref]);
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")));
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart"))||[]);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart])
-  const addToCart = async (prdID, quantity) => {
+  const addToCart = async (prd, quantity) => {
     
     try {
-      const existingItem = cart.find(item => item.prdID === prdID);
+      const existingItem = cart.find(item => item.id === prd.id);
       let updatedCart;
       if (existingItem) {
          updatedCart = cart.map(item => {
-          if (item.prdID === prdID) {
+          if (item.id === prd.id) {
+            
             return { ...item, quantity: item.quantity + quantity };
           }
           return item;
         });
       } else {
-        updatedCart = [...cart, { prdID, quantity }];
-      }
+        updatedCart = [...cart, { ...prd, quantity: quantity }];
+      }      
       setCart(updatedCart);
-      await fetch(`http://localhost:5000/api/cart/newOrder`, {
-        method: 'POST',
-        body: JSON.stringify({ orderItems: updatedCart }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_APP_TOKEN}`
-        }
-      })
+      console.log(localStorage.getItem('token'));
+      
+      if (localStorage.getItem('token')) {
+        updatedCart = updatedCart.map(item => {
+          return {prdID: item.id, quantity: item.quantity}
+        })
+        
+        await fetch(`http://localhost:5000/api/cart/newOrder`, {
+          method: 'POST',
+          body: JSON.stringify({ orderItems: updatedCart }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+      }
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
@@ -366,8 +378,9 @@ const PrdInfoSection = forwardRef((props, ref) => {
           </IconButton>
         </div>
         <Button
-          onClick={() => { openOffCanvas(addToBagRef); addToCart(currentProduct.id, addToBag) }}
+          onClick={() => { openOffCanvas(addToBagRef); addToCart(currentProduct, addToBag) }}
           className={styles.addButton + " rounded-pill  py-3 my-4"}
+          style={{ backgroundColor: "#0058A3", color: "white" }}
         >
           {addToBag === 1 ? "Add to bag" : `Add ${addToBag} items to cart`}
         </Button>

@@ -1,35 +1,36 @@
 import { Box, Button, ButtonBase, Stack, Typography } from "@mui/material";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-const categories = [
+
+export const IKEAFood = () => {
+  const { t } = useTranslation(); 
+
+  const categories = [
   {
     id: 1,
-    title: "IKEA Restaurant",
-    image:
-      "https://www.ikea.com/images/man-and-women-sat-in-an-ikea-restaurant-cb50c6f55d0aabb1c16facac3016c927.jpg?f=xs",
+    title: t("food.restaurant"),
+    image: "https://www.ikea.com/images/man-and-women-sat-in-an-ikea-restaurant-cb50c6f55d0aabb1c16facac3016c927.jpg?f=xs",
     link: "https://www.ikea.com/eg/en/stores/restaurant/",
   },
   {
     id: 2,
-    title: "IKEA Swedish food market",
-    image:
-      "https://www.ikea.com/images/a-table-with-ikea-ost-herrgard-cheese-platter-ikea-knaeckebr-fbb2fbf475e937e55df2898294ded649.jpg?f=xs",
+    title: t("food.swedishMarket"),
+    image: "https://www.ikea.com/images/a-table-with-ikea-ost-herrgard-cheese-platter-ikea-knaeckebr-fbb2fbf475e937e55df2898294ded649.jpg?f=xs",
     link: "https://www.ikea.com/eg/en/stores/restaurant/ikea-swedish-food-market-pub16e62001/",
   },
   {
     id: 3,
-    title: "IKEA Bistro",
-    image:
-      "https://www.ikea.com/images/three-children-getting-veggie-hot-dogs-at-ikea-bistro-counte-a394ede5dcf61fffc8ab48466c8a3bdc.jpg?f=xs",
+    title: t("food.bistro"),
+    image: "https://www.ikea.com/images/three-children-getting-veggie-hot-dogs-at-ikea-bistro-counte-a394ede5dcf61fffc8ab48466c8a3bdc.jpg?f=xs",
     link: "https://www.ikea.com/eg/en/campaigns/ikea-bistro-pubd2049450/",
   },
 ];
 
-export const IKEAFood = () => {
   return (
     <Box>
       <Typography fontSize={24} fontWeight={700} m="20px 0 40px 30px">
-        IKEA Food
+        {t("IKEAFood")}
       </Typography>
       <Stack
         display={"flex"}
