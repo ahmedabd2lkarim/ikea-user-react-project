@@ -148,7 +148,7 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
 
-    const cartItem = {
+    let cartItem = {
       prdID: product._id,
       quantity: 1,
     };
@@ -210,9 +210,9 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
       }
     } else {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
+      cartItem = {...product, quantity: 1 };
       const productIndex = cart.findIndex(
-        (item) => item.prdID === cartItem.prdID
+        (item) => item.id === cartItem.id
       );
 
       if (productIndex !== -1) {
