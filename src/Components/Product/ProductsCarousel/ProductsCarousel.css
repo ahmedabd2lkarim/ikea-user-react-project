@@ -6,41 +6,24 @@
 .productsCarousel {
     display: flex;
     overflow-x: auto;
-    scroll-behavior: smooth;
     white-space: nowrap;
-    padding: 12px 0;
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
+   
+    
 }
 
-/* Chrome, Edge, Safari custom scrollbar */
-.productsCarousel::-webkit-scrollbar {
-    height: 6px;
-    transition: height 0.3s ease;
+
+
+.img-card {
+    transition: all 1s linear;
+    opacity: 1;
 }
 
-.productsCarousel::-webkit-scrollbar-track {
-    background: transparent;
+
+.img-card.switching {
+    opacity: 0.8;
+    transition: opacity 0.7s linear;
 }
 
-.productsCarousel::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 0;
-}
-
-.productsCarousel:hover::-webkit-scrollbar {
-    height: 12px;
-}
-
-.productsCarousel:hover::-webkit-scrollbar-thumb {
-    background-color: #888;
-}
-
-.productsCarousel::-webkit-scrollbar-button {
-    display: none;
-}
-
-/* Circular arrow controls */
 .carouselControl {
     position: absolute;
     top: 50%;

@@ -22,7 +22,7 @@ const OffCanvas = forwardRef(({ content, title, ...props }, ref) => {
         placement={width < 600 ? "bottom" : "end"}
         {...props}
       >
-        <Offcanvas.Header className="pe-4 pt-4" closeButton>
+        <Offcanvas.Header className=" pt-3 " closeButton>
           <h6>{title}</h6>
         </Offcanvas.Header>
         <Offcanvas.Body className="p-3" style={{ padding: "0" }}>

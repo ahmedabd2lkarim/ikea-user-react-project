@@ -4,13 +4,35 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProductRating from "../../ProductRating/ProductRating";
 import { TbBasketPlus } from "../../../common/react-icons/index";
+import { useTranslation } from "react-i18next";
 
-export default function AddToBag({ currentProduct, products ,addToBagRef}) {
+const formatMeasurement = (measurement, language) => {
+  const cmAr = "سم";
+  if (!measurement) return "";
+
+  const { unit = "cm" } = measurement;
+  const unitLabel = language === "ar" ? cmAr : unit;
+
+  const fieldsOrder = ["width", "length", "depth", "height"];
+
+  const values = fieldsOrder
+    .map((key) => measurement[key])
+    .filter((val) => val !== undefined && val !== null && val !== "");
+
+  if (values.length === 0) return "";
+
+  return `${values.join("x")} ${unitLabel}`;
+};
+
+
+
+
+export default function AddToBag({ currentProduct, products, addToBagRef, formatPrice }) {
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
   const relatedProducts = [];
-  products.filter((product) => {   
-    if (
-      currentProduct._id !== product._id
-    ) {
+  products.filter((product) => {
+    if (currentProduct._id !== product._id) {
       relatedProducts.push(product);
     }
   });
@@ -36,36 +58,35 @@ export default function AddToBag({ currentProduct, products ,addToBagRef}) {
         <div>
           <img
             src={currentProduct.images[0]}
-            alt={currentProduct.imageAlt.en}
+            alt={currentProduct.imageAlt[language]}
           />
         </div>
         <div className={`${styles["added-card-product-info"]}`}>
           <p className="m-0 " style={{ fontSize: "15px" }}>
             <b className="d-block ">{currentProduct.name}</b>
-            {currentProduct.typeName.en + ", "}
-            {`${currentProduct.measurement?.width}x${
-              currentProduct.measurement?.depth
-                ? currentProduct.measurement?.depth + "x"
-                : ""
-            }${
-              currentProduct.measurement?.height ||
-              currentProduct.measurement?.length
-            } ${currentProduct.measurement?.unit || "cm"}`}
-          </p>
-          <p>
-            <span
-              style={{
-                fontSize: "12px",
-                verticalAlign: "top",
-                fontWeight: "bold",
-              }}
-            >
-              {currentProduct.price.currency}
+            <span style={{ color: "#484848" }}>
+              {currentProduct.typeName[language]}
+              {formatMeasurement(currentProduct.measurement, language) !== ""
+                ? ","
+                : ""}
+              <br />
+              {formatMeasurement(currentProduct.measurement, language)}
             </span>
-            <strong className="fs-3">
-              {currentProduct.price.currentPrice}
-            </strong>
           </p>
+          <div style={{ display: "flex" }}>
+            <p
+              className={language === "ar" ? "order-3" : ""}
+              style={{ fontWeight: "bold" }}
+            >
+              {" "}
+              {language === "ar"
+                ? t("cart.EGP")
+                : currentProduct.price.currency}
+            </p>
+            <b className="order-1 fs-2">
+              {formatPrice(currentProduct.price.currentPrice)}
+            </b>
+          </div>
         </div>
       </div>
       <div
@@ -76,11 +97,16 @@ export default function AddToBag({ currentProduct, products ,addToBagRef}) {
         }}
         className=" overflow-auto "
       >
-        <h3 className="m-3 mb-5 fw-bold">Complement your order</h3>
-        
+        <h5 className="m-3 mb-5 text-dark fw-bold">
+          {t("product.complementYourOrder")}
+        </h5>
+
         {relatedProducts.map((prd) => {
           return (
-            <div className="d-flex" key={prd.id}>
+            <div
+              className="d-flex justify-content-around align-items-baseline"
+              key={prd.id}
+            >
               <div
                 onClick={() => navigate(`/productDetails/${prd._id}`)}
                 className={styles.compeleteOrderProduct}
@@ -92,7 +118,7 @@ export default function AddToBag({ currentProduct, products ,addToBagRef}) {
                         ? prd.images[1]
                         : prd.images[0]
                     }
-                    alt="prd.imageAlt.en"
+                    alt={prd.imageAlt[language]}
                     onMouseEnter={() => handleMouseEnter(prd.id)}
                     onMouseLeave={handleMouseLeave}
                   />
@@ -106,29 +132,29 @@ export default function AddToBag({ currentProduct, products ,addToBagRef}) {
                     >
                       <p className="m-0 " style={{ fontSize: "15px" }}>
                         <b className="d-block ">{prd.name}</b>
-                        {prd.typeName.en + ", "}
-                        {`${prd.measurement?.width}x${
-                          prd.measurement?.depth
-                            ? prd.measurement?.depth + "x"
-                            : ""
-                        }${
-                          prd.measurement?.height || prd.measurement?.length
-                        } ${prd.measurement?.unit || "cm"}`}
-                      </p>
-                      <p className="m-0">
-                        <span
-                          style={{
-                            fontSize: "12px",
-                            verticalAlign: "top",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {prd.price.currency}
+                        <span style={{ color: "#484848" }}>
+                          {prd.typeName[language]}
+                          {formatMeasurement(prd.measurement, language) !== ""
+                            ? ","
+                            : ""}
+                          <br />
+                          {formatMeasurement(prd.measurement, language)}
                         </span>
-                        <strong className="fs-3">
-                          {prd.price.currentPrice}
-                        </strong>
                       </p>
+                      <div style={{ display: "flex" }}>
+                        <p
+                          className={language === "ar" ? "order-3" : ""}
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {" "}
+                          {language === "ar"
+                            ? t("cart.EGP")
+                            : prd.price.currency}
+                        </p>
+                        <b className="order-1 fs-2">
+                          {formatPrice(prd.price.currentPrice)}
+                        </b>
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -145,41 +171,33 @@ export default function AddToBag({ currentProduct, products ,addToBagRef}) {
                     width: 40,
                     height: 40,
                     padding: 0,
+                    backgroundColor: "#1976d2",
+                    marginInlineStart: "auto",
                   }}
                 >
-                  <TbBasketPlus fontSize={20} />
+                  <TbBasketPlus fontSize={20} color="white" />
                 </Button>
               </div>
             </div>
           );
         })}
       </div>
-      <div className="d-flex justify-content-around py-4 gap-3">
-        <Button
+      <div
+        style={{ paddingTop: "20px" }}
+        className="d-flex justify-content-around  h-25 gap-3"
+      >
+        <button
           onClick={() => closeOffCanvas(addToBagRef)}
-          className="rounded-pill"
-          sx={{
-            border: "1px black solid",
-            background: "white",
-            color: "black",
-            padding: "18px 36px ",
-            fontWeight: "bold",
-          }}
+          className={`rounded-pill ${styles.continueShoppingBtn}`}
         >
-          Continue shopping
-        </Button>
-        <Button
+          {t("product.continueShopping")}
+        </button>
+        <button
           onClick={() => navigate("/cart")}
-          className="rounded-pill"
-          sx={{
-            background: "black",
-            color: "white",
-            padding: "18px 36px ",
-            fontWeight: "bold",
-          }}
+          className={`rounded-pill ${styles.goShoppingBagBtn}`}
         >
-          Go to shopping bag
-        </Button>
+          {t("product.goToShoppingBag")}
+        </button>
       </div>
     </div>
   );

@@ -1,21 +1,8 @@
+import { useTranslation } from "react-i18next";
 import CollapsibleSection from "../../../Components/CollapsibleSection/CollapsibleSection";
 import styles from "./ProductDetailsOffcanvasContent.module.css";
 
-const GoodToKnow = ({ paragraphs }) => {
-  if (!paragraphs?.en) return null;
 
-  const lastTwoElements = paragraphs.en.slice(-2);
-
-  return (
-    <div>
-      {lastTwoElements.map((paragraph, index) => (
-        <p key={index} style={{ opacity: ".9", fontSize: "15px" }}>
-          {paragraph}
-        </p>
-      ))}
-    </div>
-  );
-};
 export default function ProductDetailsOffcanvasContent({ currentProduct }) {
   const {
     product_details: {
@@ -28,54 +15,53 @@ export default function ProductDetailsOffcanvasContent({ currentProduct }) {
       },
     },
   } = { ...currentProduct };
-
-  // Show all paragraphs except last two
-  const mainParagraphs = paragraphs?.en?.slice(0, -2) || [];
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
+  const mainParagraphs = paragraphs[language]?.slice(0, -2) || [];
 
   return (
     <>
       <div className={styles.OffcanvasBodyPrdDetails}>
-        <h3 className="fw-bold my-4">Product details</h3>
+        <h3 className="fw-bold my-4">{t("product.productDetails")}</h3>
         {mainParagraphs.map((paragraph, index) => (
           <p style={{ opacity: ".9", fontSize: "15px" }} key={index}>
             {paragraph}
           </p>
         ))}
-        {good_to_know?.en && (
+        {good_to_know[language] && (
           <div>
             <hr />
             <CollapsibleSection
-              title="Good to know"
-              children={good_to_know?.en}
+              title={t("product.goodToKnow")}
+              children={good_to_know[language]}
             />
             <hr />
           </div>
         )}
-        {materials_and_care.en && (
+        {materials_and_care[language] && (
           <div>
             <CollapsibleSection
-              title="Materials and care"
-              children={materials_and_care.en}
+              title={t("product.materialsAndCare")}
+              children={materials_and_care[language]}
             />
             <hr />
           </div>
         )}
 
-        {safety_and_compliance.en && (
+        {safety_and_compliance[language] && (
           <div>
             <CollapsibleSection
-              title="Sefety and compliance"
-              children={safety_and_compliance.en}
+              title={t("product.sefetyAndCompliance")}
+              children={safety_and_compliance[language]}
             />
+            <hr />
           </div>
         )}
-        {assembly_and_documents.en && (
+        {assembly_and_documents[language] && (
           <div>
-            <hr />
-
             <CollapsibleSection
-              title="Assembly and documents"
-              children={assembly_and_documents.en}
+              title={t("product.assemblyAndDocuments")}
+              children={assembly_and_documents[language]}
             />
           </div>
         )}

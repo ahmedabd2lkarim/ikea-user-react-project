@@ -1,3 +1,5 @@
+
+
 .carousel-container .carousel-inner {
   overflow-x: scroll;
   overflow-y: hidden;
@@ -23,10 +25,18 @@
 
 .favIcon {
   position: absolute;
-  top: 20px;
-  right: 30px;
+}
 
-  background-color: #fff !important;
-  padding-inline: 20px !important;
-  z-index: 2;
+.Btn3d{
+  position: absolute;
+  bottom: 1%;
+  right: 70%;
+  margin: 10px;
+}
+
+
+.prd-img{
+  
+  height:  100vw;
+  object-fit: cover;
 }

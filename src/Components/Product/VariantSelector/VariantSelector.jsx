@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { IoIosArrowForward } from "../../../common/react-icons/index";
 import useViewport from "../../../hooks/useViewport";
 import OffCanvas from "../../OffCanvas/OffCanvas";
@@ -10,6 +11,8 @@ const VariantSelector = ({
   onVariantSelect,
   onImageHover,
 }) => {
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
   const [hoveredColorName, setHoveredColorName] = useState(null);
   const viewWidth = useViewport();
   const offcanvasRef = useRef();
@@ -26,19 +29,12 @@ const VariantSelector = ({
     handleClose();
   };
 
-  const getColorName = (imageAlt) => {
-    const colorParts = imageAlt.split(",");
-    return colorParts.length > 1 ? colorParts[1].trim() : colorParts[0].trim();
-  };
-
   const handleMouseEnter = (variant) => {
     // Update preview image
     onImageHover(variant ? variant.images[0] : product.images[0]);
     // Update color name
     setHoveredColorName(
-      variant
-        ? getColorName(variant.imageAlt.en)
-        : getColorName(product.imageAlt.en)
+      variant ? variant.color[language] : product.color[language]
     );
   };
 
@@ -54,8 +50,8 @@ const VariantSelector = ({
   const displayedColorName =
     hoveredColorName ||
     (selectedVariant
-      ? getColorName(selectedVariant.imageAlt.en)
-      : getColorName(product.imageAlt.en));
+      ? selectedVariant.color[language]
+      : product.color[language]);
 
   return (
     <>
@@ -77,7 +73,7 @@ const VariantSelector = ({
                     : styles.colorPlacehodlderDisapled
                 }
               >
-                Choose Color
+                {t("product.chooseColor")}
                 {viewWidth < 900 ? `: ` : ""}
               </b>
             </span>
@@ -99,7 +95,7 @@ const VariantSelector = ({
                 selectedVariant?.id === variant.id ? styles.selectedVariant : ""
               }`}
               src={variant.images[0]}
-              alt={variant.imageAlt.en}
+              alt={variant.imageAlt[language]}
               onClick={() => handleSelection(variant)}
               onMouseEnter={() => handleMouseEnter(variant)}
               onMouseLeave={handleMouseLeave}
@@ -111,7 +107,7 @@ const VariantSelector = ({
               !selectedVariant ? styles.selectedVariant : ""
             }`}
             src={product.images[0]}
-            alt={product.imageAlt.en}
+            alt={product.imageAlt[language]}
             onClick={() => handleSelection(null)}
             onMouseEnter={() => handleMouseEnter(null)}
             onMouseLeave={handleMouseLeave}
@@ -122,7 +118,9 @@ const VariantSelector = ({
           ref={offcanvasRef}
           content={
             <div className="px-4">
-              <h3 className="fw-bold text-black mb-3 py-2 ">Choose color</h3>
+              <h3 className="fw-bold text-black mb-3 py-2 ">
+                {t("product.chooseColor")}
+              </h3>
               <div className="d-flex flex-column gap-3  align-items-center">
                 {product.variants.map((variant, idx) => (
                   <div
@@ -139,12 +137,10 @@ const VariantSelector = ({
                   >
                     <img
                       src={variant.images[0]}
-                      alt={variant.imageAlt.en}
+                      alt={variant.imageAlt[language]}
                       className="img-fluid"
                     />
-                    <p className="text-capitalize">
-                      {getColorName(variant.imageAlt.en)}
-                    </p>
+                    <p className="text-capitalize">{variant.color[language]}</p>
                   </div>
                 ))}
                 <div
@@ -158,12 +154,10 @@ const VariantSelector = ({
                 >
                   <img
                     src={product.images[0]}
-                    alt={product.imageAlt.en}
+                    alt={product.imageAlt[language]}
                     className="img-fluid"
                   />
-                  <p className="text-capitalize">
-                    {getColorName(product.imageAlt.en)}
-                  </p>
+                  <p className="text-capitalize">{product.color[language]}</p>
                 </div>
               </div>
             </div>

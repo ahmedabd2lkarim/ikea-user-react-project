@@ -131,7 +131,6 @@ function Home() {
           <ProductScroller categories={cp} />
         </>
       )}
-
       <CategoriesKitchen />
 
       {loadingHomeTeaser ? (
