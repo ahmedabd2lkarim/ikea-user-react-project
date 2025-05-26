@@ -16,16 +16,19 @@ import {
 import "./ProductDetails.css";
 import { Link, useParams } from "react-router-dom";
 import Model from "../../Components/Model/Model";
-
 import AddToBag from "../../Components/Product/AddToBag/AddToBag";
 import OffCanvas from "./../../Components/OffCanvas/OffCanvas";
 import PrdImgsCrsl from "./../../Components/Product/PrdImgsCrsl/PrdImgsCrsl";
 import ProductImageZoomInOut from "./../../Components/Product/ProductImageZoomInOut/ProductImageZoomInOut";
 import PrdInfoSection from "./../../Components/Product/PrdInfoSection/PrdInfoSection";
-import Recommendedproducts from "../../Components/Product/ProductsCarousel/ProductsCarousel";
 import Loading from "../../Components/Loading/Loading";
 import ProductDetailsOffcanvasContent from "./ProductDetailsOffcanvasContent/ProductDetailsOffcanvasContent";
 import useViewport from "../../hooks/useViewport";
+import ProductsCarousel from "../../Components/Product/ProductsCarousel/ProductsCarousel";
+import { useTranslation } from "react-i18next";
+import NotFound from "../../Components/NotFound/NotFound";
+import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
+import RecentlyViewedProducts from "../../Components/Product/RecentlyViewedProducts/RecentlyViewedProducts";
 
 function addDotEvery3Chars(str) {
   const num = str.replace(/\D/g, "");
@@ -38,7 +41,14 @@ const checkResponsive = (width) => {
   return false;
 };
 
+const formatPrice = (price) => {
+  return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 const ProductDetails = () => {
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
+  const [addToBagCounter, setAddToBagCounter] = useState(1);
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,25 +63,60 @@ const ProductDetails = () => {
   const prdInfoSectionRef = useRef();
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [relatedCategoryProducts, setRelatedCategoryProducts] = useState([]);
+
+  const { addRecentlyViewed } = useRecentlyViewed();
+  useEffect(() => {
+    if (currentProduct) {
+      addRecentlyViewed({
+        _id: currentProduct._id,
+        name: currentProduct.name,
+        price: currentProduct.price,
+        images: currentProduct.images,
+      });
+    }
+  }, [currentProduct]);
   useEffect(() => {
     const fetchProductAndRelated = async () => {
       try {
         setIsLoading(true);
         const productRes = await fetch(`${VITE_API_URL}/api/products/${id}`);
+
+        if (!productRes.ok) {
+          throw new Error("Product not found");
+        }
+
         const productData = await productRes.json();
+
+        if (!productData) {
+          throw new Error("Product not found");
+        }
+
         setProduct(productData);
         setCurrentProduct(productData);
         if (productData.images && productData.images.length > 0) {
           setImageUrl(productData.images[0]);
         }
 
+        const relatedCategoryRes = await fetch(
+          `${VITE_API_URL}/api/products/category/${productData.categoryId}`
+        );
+        const relatedCategoryprdsData = await relatedCategoryRes.json();
+
+        // const { data: categorysProductsData } = relatedCategoryprdsData; //i need to know why we did not desturcture data
+        // setRelatedCategoryProducts(relatedCategoryprdsData);
+
+        const filteredRelatedCatProd = relatedCategoryprdsData
+          .filter((p) => p._id !== id)
+          .slice(0, 11);
+        setRelatedCategoryProducts(filteredRelatedCatProd);
         const relatedRes = await fetch(`${VITE_API_URL}/api/products`);
         const relatedData = await relatedRes.json();
         const { data: productsData } = relatedData;
         setProducts(productsData);
         const filteredRelated = productsData
           .filter((p) => p._id !== id)
-          .slice(0, 5);
+          .slice(0, 11);
         setRelatedProducts(filteredRelated);
       } catch (err) {
         setError(err.message);
@@ -103,25 +148,28 @@ const ProductDetails = () => {
     setImageUrl(currentProduct?.images[prevIndex]);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY >= 1450 && window.screenX <= 900) {
-        setShowBtn(true);
-      } else {
-        setShowBtn(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (
+  //       window.scrollY >= 1400 &&
+  //       window.screenX <= 900
+  //     ) {
+  //       setShowBtn(true);
+  //     } else {
+  //       setShowBtn(false);
+  //     }
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
   const productDetailsRef = useRef();
   const allImgsRef = useRef();
   const openModel = (ref) => {
     ref.current?.handleShow();
   };
-  const content = (
+  const allMediaContentModel = (
     <>
       <div className={"d-flex flex-wrap justify-content-center gap-5 "}>
         {currentProduct?.images.map((img, index) => {
@@ -131,7 +179,7 @@ const ProductDetails = () => {
               className={checkResponsive(viewWidth) ? "img-fluid" : `w-100`}
               key={index}
               src={img}
-              alt={currentProduct.imageAlt.en}
+              alt={currentProduct.imageAlt[language]}
               draggable={false}
             />
           );
@@ -164,42 +212,59 @@ const ProductDetails = () => {
   };
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error: {error}</div>;
-  if (!product) return <div>No product found</div>;
+  if (error) return <NotFound />;
+  if (!product) return <NotFound />;
   return (
     <>
       <div className="freeDeliver hide hoverLink">
         <GrDeliver />
-        <Link>Free delivery</Link>
+        <Link className="link">{t("product.freeDelivery")}</Link>
       </div>
       {/* Carousel on small screens*/}
       <div style={{ position: "relative", overflow: "hidden" }}>
-        {showBtn && (
+        {/* {showBtn && (
           <Button
             ref={btnRef}
-            style={{ position: "fixed", bottom: "0", zIndex: 100 }}
+            style={{
+              position: "fixed",
+              bottom: "0",
+              zIndex: 100,
+              backgroundColor: "#0058A3",
+            }}
             onClick={() => openModel(addToBag)}
-            className="rounded-pill  hideBtn my-4 btn-floated   text-light py-2"
+            className="rounded-pill  hideBtn my-4 btn-floated text-light py-2"
           >
-            Add to bag
+            {addToBagCounter === 1
+              ? t("product.addToBag", { addToBag: "" })
+              : t("product.addToBag", { addToBag: addToBagCounter })}
           </Button>
-        )}
+        )} */}
         <OffCanvas
           content={
             <AddToBag
               currentProduct={currentProduct}
               products={products}
               addToBagRef={addToBag}
+              formatPrice={formatPrice}
             />
           }
           title={
             <div
-              style={{ padding: "6px 16px" }}
+              style={{
+                padding: "6px 16px",
+                marginInlineEnd: `${viewWidth > 900 ? "190px" : "320px"}`,
+              }}
               className="d-flex align-items-center gap-2"
             >
               <IoMdCheckmarkCircleOutline className="text-success fw-normal fs-4" />
-              <span style={{ fontSize: "14px", fontWeight: 300 }}>
-                Added to cart
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 300,
+                  marginInlineEnd: "20px",
+                }}
+              >
+                {t("product.addedToCart")}
               </span>
             </div>
           }
@@ -207,6 +272,7 @@ const ProductDetails = () => {
         />
         <PrdImgsCrsl
           allImgsRef={allImgsRef}
+          currentProduct={currentProduct}
           handleOpenModel={openModel}
           imgsUrl={currentProduct?.images || []}
         />
@@ -217,7 +283,12 @@ const ProductDetails = () => {
               return (
                 <img
                   className={index == 0 ? "borderInit" : "borderHover"}
-                  style={{ width: "6vw", marginBottom: "12px" }}
+                  style={{
+                    width: "6vw",
+                    height: "6vw",
+                    marginBottom: "12px",
+                    maxHeight: "6vw",
+                  }}
                   key={index}
                   src={img}
                   onMouseEnter={() => setImageUrl(img)}
@@ -255,21 +326,31 @@ const ProductDetails = () => {
                 className=" rounded-pill Btn3d px-3 py-1"
               >
                 <PhotoLibraryIcon
-                  sx={{ fontSize: 30, opacity: "1 !important" }}
-                  className="pe-2"
+                  sx={{
+                    fontSize: 30,
+                    opacity: "1 !important",
+                    paddingInlineEnd: "12px",
+                  }}
                 />
-                All media
+                {t("product.allMedia")}
               </Button>
-              <Model content={content} title={"All media"} ref={allImgsRef} />
+              <Model
+                content={allMediaContentModel}
+                title={t("product.allMedia")}
+                ref={allImgsRef}
+              />
               <Button
                 sx={{ fontSize: 12, color: "white" }}
                 className=" rounded-pill Btn3d px-3 py-1"
               >
                 <ThreeSixtyIcon
-                  sx={{ fontSize: 30, opacity: "1 !important" }}
-                  className="pe-2"
+                  sx={{
+                    fontSize: 30,
+                    opacity: "1 !important",
+                    paddingInlineEnd: "8px",
+                  }}
                 />
-                View in 3D
+                {t("product.viewIn3d")}
               </Button>
             </div>
           </div>
@@ -280,6 +361,9 @@ const ProductDetails = () => {
             onVariantSelect={handleVariantSelect}
             addToBagRef={addToBag}
             onImageHover={handleImageHover}
+            addToBagCounter={{ addToBagCounter, setAddToBagCounter }}
+            addDotEvery3Chars={addDotEvery3Chars}
+            formatPrice={formatPrice}
           />
           <div style={{ width: "94%" }}>
             <p
@@ -288,13 +372,13 @@ const ProductDetails = () => {
                 fontSize: "20px",
               }}
             >
-              {currentProduct.short_description.en}
+              {currentProduct.short_description[language]}
             </p>
             <div style={{ width: "100%", fontSize: "12px" }}>
-              <p className="m-0">Article number</p>
+              <p className="m-0">{t("product.articleNumber")}</p>
               <span
-                style={{ fontSize: "14px" }}
-                className=" text-light p-1 px-3 me-4 fw-bold bg-black"
+                style={{ fontSize: "14px", marginInlineEnd: "6px" }}
+                className=" text-light p-1 px-3 fw-bold bg-black"
               >
                 {addDotEvery3Chars(currentProduct._id)}
               </span>
@@ -303,7 +387,7 @@ const ProductDetails = () => {
                 style={{ fontSize: "16px" }}
               />
               <Link className=" hoverLink" href="#">
-                Locate product in store
+                {t("product.locateInStore")}
               </Link>
               <div>
                 <OffCanvas
@@ -321,9 +405,12 @@ const ProductDetails = () => {
                 >
                   <hr style={{ width: "100%" }} />
                   <h4 className="fw-bold my-3 productDetailsLabel">
-                    Product details
+                    {t("product.productDetails")}
                   </h4>
-                  <FaArrowRight style={{ fontSize: "24px" }} />
+                  <FaArrowRight
+                    className="arrowAr"
+                    style={{ fontSize: "24px" }}
+                  />
                   <hr style={{ width: "100%" }} />
                 </div>
                 <div
@@ -333,15 +420,25 @@ const ProductDetails = () => {
                   className="d-flex sections-info justify-content-between align-items-center flex-wrap  info-sections full-width-mobile"
                 >
                   <h4 className="fw-bold my-3 measurementsLabel ">
-                    Measurements
+                    {t("product.measurements")}
                   </h4>
-                  <FaArrowRight style={{ fontSize: "24px" }} />
+                  <FaArrowRight
+                    className="arrowAr"
+                    style={{ fontSize: "24px" }}
+                  />
                   <hr className="mb-5" style={{ width: "100%" }} />
                 </div>
-                <div className="my-5">
-                  <h3 className="fw-bold m-3">Related products</h3>
-                  <Recommendedproducts products={relatedProducts} />
-                </div>
+                {relatedProducts && (
+                  <div className="my-5">
+                    <h3 className="fw-bold m-3">
+                      {t("product.relatedProducts")}
+                    </h3>
+                    <ProductsCarousel
+                      products={relatedProducts}
+                      formatPrice={formatPrice}
+                    />
+                  </div>
+                )}
 
                 {currentProduct.short_description && (
                   <div className="mt-5 pt-5 ">
@@ -353,10 +450,12 @@ const ProductDetails = () => {
                       }}
                       className=" text-secondary fw-bold"
                     >
-                      Designer thoughts
+                      {t("product.designerThoughts")}
                     </p>
                     <div className="d-flex gap-5">
-                      <h3 className="fw-bolder w-50">Designer thoughts</h3>
+                      <h3 className="fw-bolder w-50">
+                        {t("product.designerThoughts")}
+                      </h3>
                       <p
                         style={{
                           width: "50%",
@@ -365,33 +464,42 @@ const ProductDetails = () => {
                           lineHeight: 1.6,
                         }}
                       >
-                        "{currentProduct.short_description.en}"
+                        "{currentProduct.short_description[language]}"
                         {/* <span className="mt-1 d-block text-capitalize">
                           {
                             currentProduct.short_description.en.match(
                               /designed by\s+([^,.]+)/i
-                            )[0]
-                          }
-                        </span> */}
+                              )[0]
+                              }
+                              </span> */}
                       </p>
                     </div>
                   </div>
                 )}
               </div>
               <hr />
-              <div>
+              {/* <div>
                 <h4>Get the look</h4>
                 <p className="text-secondary">
-                  Ideas based on your recently viewed products
+                Ideas based on your recently viewed products
                 </p>
-              </div>
+                </div> */}
 
-              <div>
-                <h4>Accessories for ÄSPINGE</h4>
-              </div>
+              {relatedCategoryProducts.length > 3 && (
+                <div className="my-5">
+                  <h3>
+                    {t("product.accessoriesFor")} {currentProduct.name}
+                  </h3>
+                  <ProductsCarousel
+                    products={relatedCategoryProducts}
+                    formatPrice={formatPrice}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
+        <RecentlyViewedProducts />
       </div>
     </>
   );
