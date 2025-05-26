@@ -9,12 +9,12 @@ const { VITE_API_URL } = import.meta.env;
 import { CircularProgress, Box, Button, Typography, Grid } from "@mui/material";
 import useFetchTeaser from "../../hooks/useFetchTeaser";
 
-import Createspace from "../../Components/Home/Header/Create space/Createspace";
-import ShopbyRoom from "../../Components/Home/Header/Shop by Room/ShopbyRoom";
-import ExperienceIKEA from "../../Components/Home/Header/Experience IKEA/ExperienceIKEA";
-import IKEAFood from "../../Components/Home/Header/IKEA Food/IKEAFood";
-import Tipsandideas from "../../Components/Home/Header/Tips and ideas/Tipsandideas";
-import CategoriesKitchen from "../../Components/Home/Header/Categories Kitchen/CategoriesKitchen";
+import Createspace from "../../Components/Home/Header/Createspace/Createspace";
+import ShopbyRoom from "../../Components/Home/Header/ShopbyRoom/ShopbyRoom";
+import ExperienceIKEA from "../../Components/Home/Header/ExperienceIKEA/ExperienceIKEA";
+import IKEAFood from "../../Components/Home/Header/IKEAFood/IKEAFood";
+import Tipsandideas from "../../Components/Home/Header/Tipsandideas/Tipsandideas";
+import CategoriesKitchen from "../../Components/Home/Header/CategoriesKitchen/CategoriesKitchen";
 
 function Home() {
   const IkeaDeals = {
