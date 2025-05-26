@@ -12,7 +12,7 @@ import useProductViews from "../../../hooks/useProductViews";
 import { forwardRef, useRef, useState, useEffect } from "react";
 import MeasurementsContent from "./MeasurementsContent/MeasurmentContent";
 import ProductRating from "../../ProductRating/ProductRating";
-import styles from "./prdInfoSection.module.css";
+import styles from "./PrdInfoSection.module.css";
 import FavouriteManager from "../../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
 import { useTranslation } from "react-i18next";
 const { VITE_API_URL } = import.meta.env;
