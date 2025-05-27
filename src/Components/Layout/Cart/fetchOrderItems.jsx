@@ -21,7 +21,7 @@ const FetchOrderItems = ({det,fun}) => {
     const [open, setOpen] = useState(false);
     let [items,setItems] = useState(JSON.parse(localStorage.getItem('cart')) || [])
     if(localStorage.getItem('token')){
-        items = useSelector((state) => state.cart.items.orderItems)
+        items = useSelector((state) => state.cart.items.cartItems)
     }
     let [isLoading, setIsLoading] = useState()
     let [itemId, setItemId] = useState()

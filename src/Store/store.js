@@ -22,7 +22,6 @@ const store = configureStore({
         home: homeReducer,
 
         // settingLanguage: languageSlice.reducer,
-        cart:orderSlice.reducer,
     }
 })
 

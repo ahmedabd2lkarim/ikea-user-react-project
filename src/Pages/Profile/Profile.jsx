@@ -8,7 +8,7 @@ import PenSVG from "./penSVG";
 import Garbish from "./Garbish";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchProfile } from "../../Store/Slices/userSlice";
 import { useTranslation } from "react-i18next";
@@ -20,15 +20,15 @@ const Profile = () => {
 
   const userProfile = useSelector((state) => state.user.items).user;
   console.log(userProfile);
-  const userName= userProfile?.name.split(" ")[0] 
-  
-  console.log(userName)
+  const [userName, setUserName] = useState('');
+  // console.log(userName)
   const dispatch = useDispatch();
   
 
   
     useEffect(() => {
         dispatch(fetchProfile());
+       setUserName(userProfile?.name.split(" ")[0])
     }, [dispatch, userProfile]);
 
 

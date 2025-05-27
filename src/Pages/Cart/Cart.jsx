@@ -7,19 +7,21 @@ import CloseIcon from '@mui/icons-material/Close';
 import FetchOrderItems from '../../Components/Layout/Cart/fetchOrderItems';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function calculateTotal(items) {
   return items.reduce((acc, item) => acc + item.price.currentPrice * item.quantity, 0) + 20;
 }
 
 const Cart = () => {
+  const token = localStorage.getItem('token')
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [openDrawer1, setOpenDrawer1] = useState(false)
   const [openDrawer2, setOpenDrawer2] = useState(false)
   let [order, setOrder] = useState([])
   const dispatch = useDispatch();
-  (localStorage.getItem('token'))
+  (token)
     ? order = useSelector((state) => state.cart.items)
     : (localStorage.getItem('cart').length != 2
       ? order = {
@@ -28,11 +30,13 @@ const Cart = () => {
       }
       : order = []);
   useEffect(() => {
-    if (localStorage.getItem('token')) {      
+    if (token) {      
       dispatch(fetchOrder())
+      
     }
-
+    
   }, [])
+  console.log(order);
 
   const toggleDrawer1 = (newOpen) => {
     setOpenDrawer1(newOpen);
@@ -42,6 +46,13 @@ const Cart = () => {
     setOpenDrawer2(newOpen);
   };
 
+  const goTOCheck = () => {
+    if (token) {
+      navigate('/billing-shipping-form')
+    } else {
+      toast.error("Please login to continue")   
+    }
+  }
   const DrawerList1 = (
 
     <Box sx={{ width: 450 }} onClick={() => toggleDrawer1(false)}>
@@ -119,7 +130,7 @@ const Cart = () => {
               <Grid position={'sticky'} top={130} >
                 <Typography variant='subtitle1' fontWeight={600} pb={2}>{t("cart.ordersummary")}</Typography>
                 <Grid container display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{t("cart.products")} ({order?.orderItems?.length})</Typography>
+                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{t("cart.products")} ({order?.cartItems?.length})</Typography>
                   <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGB")}</Typography>
                 </Grid>
                 <Box border='1.5px solid black' my={2} />
@@ -128,7 +139,7 @@ const Cart = () => {
                   <Typography variant='h4' fontWeight={'bold'}><sup style={{ fontSize: '16px', verticalAlign: '3px' }}></sup>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGB")}</Typography>
                 </Grid>
                 <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{t("cart.byClicking")}</Typography>
-                <Button variant='contained' sx={{ backgroundColor: 'rgb(0, 88, 163)', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 3, py: 2, fontSize: '15px', borderRadius: '27px', width: '100%', mt: 1 }} onClick={() => navigate('/billing-shipping-form')}>{t("cart.checkout")}</Button>
+                <Button variant='contained' sx={{ backgroundColor: 'rgb(0, 88, 163)', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 3, py: 2, fontSize: '15px', borderRadius: '27px', width: '100%', mt: 1 }} onClick={goTOCheck}>{t("cart.checkout")}</Button>
                 {commonSection}
               </Grid>
             </Grid>
