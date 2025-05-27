@@ -20,9 +20,6 @@ const store = configureStore({
         category: categoryReducer,
         products: productReducer,
         home: homeReducer,
-
-        // settingLanguage: languageSlice.reducer,
-        cart:orderSlice.reducer,
     }
 })
 

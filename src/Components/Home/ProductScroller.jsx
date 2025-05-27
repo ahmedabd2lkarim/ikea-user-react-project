@@ -18,7 +18,6 @@ import FavouriteManager from "../../Pages/Favourite/TopSellerProductCarousel/Fav
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const { VITE_API_URL } = import.meta.env;
-
 const ProductScroller = ({
   deals,
   title,
@@ -155,42 +154,42 @@ const HoverCard = ({ product, cardWidth, deals, cardHight }) => {
 
     if (token) {
       try {
-        const getOrderResponse = await fetch(
-          `${VITE_API_URL}/api/cart/showAllMyOrders`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        // const getOrderResponse = await fetch(
+        //   `${VITE_API_URL}/api/cart/showMyCart`,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
 
-        let currentOrderItems = [];
-        if (getOrderResponse.ok) {
-          const currentOrder = await getOrderResponse.json();
-          if (currentOrder.length > 0) {
-            currentOrderItems = currentOrder[0].orderItems || [];
-          }
-        }
+        // let currentOrderItems = [];
+        // if (getOrderResponse.ok) {
+        //   const currentOrder = await getOrderResponse.json();
+        //   if (currentOrder.length > 0) {
+        //     currentOrderItems = currentOrder[0].cartItems || [];
+        //   }
+        // }
 
-        const productIndex = currentOrderItems.findIndex(
-          (item) => item.prdID === cartItem.prdID
-        );
+        // const productIndex = currentOrderItems.findIndex(
+        //   (item) => item.prdID === cartItem.prdID
+        // );
 
-        if (productIndex !== -1) {
-          currentOrderItems[productIndex].quantity += cartItem.quantity;
-        } else {
-          currentOrderItems.push(cartItem);
-        }
+        // if (productIndex !== -1) {
+        //   currentOrderItems[productIndex].quantity += cartItem.quantity;
+        // } else {
+        //   currentOrderItems.push(cartItem);
+        // }
 
-        const response = await fetch(`${VITE_API_URL}/api/cart/newOrder`, {
-          method: "POST",
+        const response = await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            orderItems: currentOrderItems,
-            shippingFee: 20,
+            prdID:product._id,
+            quantity:1
           }),
         });
 

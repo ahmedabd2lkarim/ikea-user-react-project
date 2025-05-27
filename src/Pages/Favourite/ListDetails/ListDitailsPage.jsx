@@ -23,12 +23,13 @@ import {
 } from "../../../Store/Slices/createUpdateListSlice";
 import BackToListButton from "../Buttons/BackToListButton";
 import ListOptionsButton from "../Buttons/ListOptions/ListOptionsButton";
+import { toast } from "react-toastify";
 
 function ListDetailsPage() {
   const dispatch = useDispatch();
   const { listId } = useParams();
   const [open, setOpen] = useState(false);
-  const [itemIdToDelete, setItemIdToDelete] = useState(null); 
+  const [itemIdToDelete, setItemIdToDelete] = useState(null);
 
   const list = useSelector((state) => selectListById(state, listId));
   const loading = useSelector(
@@ -36,13 +37,32 @@ function ListDetailsPage() {
   );
 
   const handleClickOpen = (itemId) => {
-    setItemIdToDelete(itemId); 
+    setItemIdToDelete(itemId);
     setOpen(true);
   };
 
+  const handleAddToCard = async (productId) => {
+    try {
+      fetch("http://localhost:5000/api/cart/cartOP", {
+        method: "PATCH",
+        body: JSON.stringify({
+          prdID: productId,
+          quantity: 1,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      })
+      toast.success("Item added to cart");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Error adding item to cart.");
+    }
+  }
   const handleClose = () => {
     setOpen(false);
-    setItemIdToDelete(null); 
+    setItemIdToDelete(null);
   };
 
   const confirmDelete = () => {
@@ -264,6 +284,7 @@ function ListDetailsPage() {
                           transform: "translateY(-1px)",
                         },
                       }}
+                      onClick={() => handleAddToCard(item.id)}
                     >
                       <ShoppingCartIcon style={{ fontSize: 22 }} />
                     </IconButton>
@@ -279,7 +300,7 @@ function ListDetailsPage() {
                     >
                       <Box sx={{ display: "flex", alignItems: "center" }} />
                       <IconButton
-                        onClick={() => handleClickOpen(item.id)} 
+                        onClick={() => handleClickOpen(item.id)}
                         sx={{
                           backgroundColor: "white",
                           padding: "10px",
