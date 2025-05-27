@@ -3,52 +3,97 @@ import {
   HiOutlineBuildingStorefront,
   GrDeliver,
 } from "../../../common/react-icons/index";
-import {
-  FavoriteBorderIcon,
-  NavigateNextIcon,
-  RemoveIcon,
-  AddIcon,
-} from "../../../common/mui-icons/index";
+import { RemoveIcon, AddIcon } from "../../../common/mui-icons/index";
 import { IconButton, Button } from "../../../common/mui/index";
 import OffCanvas from "../../OffCanvas/OffCanvas";
 import VariantSelector from "../VariantSelector/VariantSelector";
 import useViewport from "../../../hooks/useViewport";
 import useProductViews from "../../../hooks/useProductViews";
 import { forwardRef, useRef, useState, useEffect } from "react";
-import CollapsibleSection from "./../../CollapsibleSection/CollapsibleSection";
+import MeasurementsContent from "./MeasurementsContent/MeasurmentContent";
 import ProductRating from "../../ProductRating/ProductRating";
-import styles from "./prdInfoSection.module.css";
+import styles from "./PrdInfoSection.module.css";
 import FavouriteManager from "../../../Pages/Favourite/TopSellerProductCarousel/FavouriteOffcanvaceCarousal/FavouriteManager";
-const {VITE_API_URL} = import.meta.env;
-const formatMeasurement = (measurement) => {
-  if (!measurement) return "";
+import { useTranslation } from "react-i18next";
+const { VITE_API_URL } = import.meta.env;
+const cmAr = "سم";
 
-  const { width, length, depth, height, unit = "cm" } = measurement;
-
-  if (length && !width && !height && !depth) return `${length} ${unit}`;
-
-  if (width && height && !length && !depth) return `${width}x${height} ${unit}`;
-
-  if (width && length && height) return `${width}x${length}x${height} ${unit}`;
-
-  if (width && depth && height) return `${width}x${depth}x${height} ${unit}`;
-
-  return `${width || ""}${width ? "x" : ""}${depth || length || ""}${
-    depth || length ? "x" : ""
-  }${height || ""} ${unit}`;
-};
-
-function addDotEvery3Chars(str) {
-  const num = str.replace(/\D/g, "");
-  return num.match(/.{1,3}/g).join(".");
-}
-
-const formatPrice = (price) => {
-  return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const ChangeStore = ({ currentProduct, t }) => {
+  return (
+    <>
+      <strong style={{ padding: "8px", fontSize: "18px" }}>
+        {t("selectStore")}
+      </strong>
+      <div style={{ height: "100%", padding: "20px", fontSize: "14px" }}>
+        <div
+          style={{
+            borderRadius: "4px",
+            marginTop: "20px",
+            border: "1px solid #ccc",
+            padding: "20px",
+            cursor: "pointer",
+          }}
+        >
+          <strong>{t("CairoFestivalCity")}</strong>
+          <p style={{ margin: 0, fontSize: "14px" }}>{t("RingRoad")}</p>
+          <div className="d-flex align-items-baseline">
+            <div
+              style={{
+                height: "10px",
+                width: "10px",
+                alignSelf: "center",
+                backgroundColor:
+                  currentProduct.inStock && currentProduct.stockQuantity > 0
+                    ? "#0A8A00"
+                    : "red",
+                borderRadius: "5px",
+                marginRight: "6px",
+              }}
+            ></div>
+            <span>
+              {t("product.store")} - {t("product.orderInStore")}
+            </span>
+          </div>
+        </div>
+        <div
+          style={{
+            borderRadius: "4px",
+            marginTop: "20px",
+            border: "1px solid #ccc",
+            padding: "20px",
+            cursor: "pointer",
+          }}
+        >
+          <strong>{t("MallOfArabia")}</strong>
+          <p style={{ margin: 0 }}>{t("mallOfArabiaAddress")}</p>
+          <div className="d-flex align-items-baseline">
+            <div
+              style={{
+                height: "10px",
+                width: "10px",
+                backgroundColor:
+                  currentProduct.inStock && currentProduct.stockQuantity > 0
+                    ? "#0A8A00"
+                    : "red",
+                borderRadius: "5px",
+                marginRight: "6px",
+              }}
+            ></div>
+            <span>
+              {t("product.store")} - {t("product.orderInStore")}
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 const PrdInfoSection = forwardRef((props, ref) => {
-    const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
+
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
 
   const {
     mainProduct,
@@ -56,6 +101,9 @@ const PrdInfoSection = forwardRef((props, ref) => {
     onVariantSelect,
     onImageHover,
     addToBagRef,
+    addDotEvery3Chars,
+    formatPrice,
+    addToBagCounter: { addToBagCounter, setAddToBagCounter },
   } = props;
 
   const measureRef = useRef();
@@ -71,6 +119,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
       };
     }
   }, [ref]);
+
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart")) || []
   );
@@ -111,6 +160,22 @@ const PrdInfoSection = forwardRef((props, ref) => {
       console.error("Error adding to cart:", error);
     }
   };
+  const formatMeasurement = (measurement) => {
+    if (!measurement) return "";
+
+    const { unit = "cm" } = measurement;
+    const unitLabel = language === "ar" ? cmAr : unit;
+
+    const fieldsOrder = ["width", "length", "depth", "height"];
+
+    const values = fieldsOrder
+      .map((key) => measurement[key])
+      .filter((val) => val !== undefined && val !== null && val !== "");
+
+    if (values.length === 0) return "";
+
+    return `${values.join("x")} ${unitLabel}`;
+  };
 
   const openOffCanvas = (ref) => {
     ref.current?.handleShow();
@@ -122,107 +187,6 @@ const PrdInfoSection = forwardRef((props, ref) => {
     const str2 = str.indexOf(" ");
     return str2 === -1 ? str : str.substring(0, str2);
   };
-  const [addToBag, setAddToBag] = useState(1);
-
-  const MeasurementsContent = ({ product }) => {
-    const {
-      width,
-      depth,
-      height,
-      length,
-      unit = "cm",
-    } = { ...product?.measurement };
-    console.log(product);
-    return (
-      <div className="pb-5">
-        <p className="fs-3 px-4 fw-bold">Measurements</p>
-        <div
-          className="px-4 d-flex flex-column pb-3"
-          style={{ fontSize: "14px", color: "rgb(74,74,74)" }}
-        >
-          {width && (
-            <span>
-              <b>Width: </b>
-              {`${width} ${unit}`}
-            </span>
-          )}
-          {depth && (
-            <span>
-              <b>Depth: </b>
-              {`${depth} ${unit}`}
-            </span>
-          )}
-          {height && (
-            <span>
-              <b>Height: </b>
-              {`${height} ${unit}`}
-            </span>
-          )}
-          {length && (
-            <span>
-              <b>Length: </b>
-              {`${length} ${unit}`}
-            </span>
-          )}
-          <div>
-            <br />
-          </div>
-          <img
-            className="mb-5"
-            src={product.images[product.images.length - 1]}
-            alt=""
-          />
-          <hr className="mt-5" />
-
-          <CollapsibleSection
-            title={"Packaging"}
-            children={
-              <>
-                <div className="mt-4">
-                  <b>{product.name}</b>
-                  <p>{handleType(product.typeName.en)}</p>
-                </div>
-                <p
-                  style={{ fontSize: "14px", opacity: "0.9" }}
-                  className="m-0  mb-2"
-                >
-                  Article number
-                </p>
-                <span
-                  style={{ fontSize: "14px" }}
-                  className=" text-light p-1 px-3 me-4  fw-bold bg-black"
-                >
-                  {addDotEvery3Chars(product.id)}
-                </span>
-                <div className="d-flex flex-column my-4 mb-5">
-                  {" "}
-                  {width && (
-                    <span>
-                      <b>Width: </b>
-                      {`${width} ${unit}`}
-                    </span>
-                  )}
-                  {depth && (
-                    <span>
-                      <b>Depth: </b>
-                      {`${depth} ${unit}`}
-                    </span>
-                  )}
-                  {height && (
-                    <span>
-                      <b>Height: </b>
-                      {`${height} ${unit}`}
-                    </span>
-                  )}
-                </div>
-              </>
-            }
-          />
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="prd-description mb-5">
       <div className="d-flex justify-content-between  flex-column">
@@ -247,8 +211,8 @@ const PrdInfoSection = forwardRef((props, ref) => {
           <div className="w-100">
             <b className="d-block">{currentProduct.name}</b>
             <p className="text-secondary">
-              {currentProduct.typeName.en + ", "}
-              {currentProduct.color.en + ", "}
+              {currentProduct.typeName[language] + ", "}
+              {currentProduct.color[language]}{" "}
               <Link
                 className="hoverLink"
                 onClick={() => openOffCanvas(measureRef)}
@@ -257,7 +221,12 @@ const PrdInfoSection = forwardRef((props, ref) => {
               </Link>
               <OffCanvas
                 ref={measureRef}
-                content={<MeasurementsContent product={currentProduct} />}
+                content={
+                  <MeasurementsContent
+                    addDotEvery3Chars={addDotEvery3Chars}
+                    product={currentProduct}
+                  />
+                }
               />
             </p>
 
@@ -267,108 +236,137 @@ const PrdInfoSection = forwardRef((props, ref) => {
                 {formatPrice(currentProduct.price.currentPrice * 0.6)}
               </p>
             )}
-            <b className=" fs-2">
-              <sup>{currentProduct.price.currency}</sup>
-              {formatPrice(currentProduct.price.currentPrice)}
-            </b>
+            <div style={{ display: "flex" }}>
+              <p
+                className={language === "ar" ? "order-3" : ""}
+                style={{ fontWeight: "bold" }}
+              >
+                {" "}
+                {language === "ar"
+                  ? t("cart.EGP")
+                  : currentProduct.price.currency}
+              </p>
+              <b className="order-1 fs-2">
+                {formatPrice(currentProduct.price.currentPrice)}
+              </b>
+            </div>
             <div className={"my-2"}>
               <ProductRating productPrice={currentProduct.price} />
             </div>
           </div>
 
-          <div>
+          <div className={styles.hideBtn}>
             <FavouriteManager
-            product={currentProduct}
-            onOffcanvasToggle={setIsOffcanvasOpen}
-          />
+              product={currentProduct}
+              onOffcanvasToggle={setIsOffcanvasOpen}
+            />
           </div>
         </div>
       </div>
       <div className="d-flex justify-content-between my-2">
-        <b>How to get it</b>
+        <b>{t("product.howToGetIt")}</b>
         <Link className="hoverLink" onClick={() => openOffCanvas(storeRef)}>
-          Change store
+          {t("product.changeStore")}
         </Link>
-        <OffCanvas ref={storeRef} content={"hello every body"} />
+        <OffCanvas
+          ref={storeRef}
+          content={<ChangeStore currentProduct={currentProduct} t={t} />}
+        />
       </div>
       <div className="card px-3 py-3">
         <div className="d-flex flex-column mb-1">
-          <div className="d-flex align-items-center  ">
-            <GrDeliver fontSize={"22px"} className="me-3" />
-            <p style={{ fontSize: "14px" }} className="m-0 fw-bold">
-              Delivery
-            </p>
-          </div>
-          <div
-            style={{
-              fontSize: "14px",
-              paddingLeft: "40px",
-              marginBottom: "10px",
-            }}
-          >
-            <div
-              className="d-inline-block  me-1"
-              style={{
-                width: "12px",
-                height: "12px",
-                background: "#0A8A00",
-                borderRadius: "50%",
-              }}
-            ></div>
-            Available
+          <div className="d-flex  gap-3 ">
+            <GrDeliver fontSize={"22px"} className="me-1" />
+            <div>
+              <p style={{ fontSize: "14px" }} className="m-0 fw-bold">
+                {t("product.delivery")}
+              </p>
+              <div
+                style={{
+                  fontSize: "14px",
+                  marginBottom: "px",
+                }}
+              >
+                <div
+                  className="d-inline-block  ms-1"
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    background: "#0A8A00",
+                    borderRadius: "50%",
+                    verticalAlign: "middle",
+                    marginInlineEnd: "6px",
+                  }}
+                ></div>
+                {t("product.inStock")}
+              </div>
+            </div>
           </div>
         </div>
         <hr className="m-1" />
         <div
-          className="d-flex justify-content-between align-items-center pointer"
-          onClick={() => openOffCanvas(storeInfoRef)}
+          className="d-flex justify-content-between align-items-center 
+          dpointer
+          "
+          // onClick={() => openOffCanvas(storeInfoRef)}
         >
           <div className="d-flex flex-column mt-1 mb-1">
             <div className="d-flex align-items-center">
-              <HiOutlineBuildingStorefront fontSize={"24px"} className="me-3" />
+              <HiOutlineBuildingStorefront
+                fontSize={"24px"}
+                className=""
+                style={{ marginInlineEnd: "20px" }}
+              />
               <p style={{ fontSize: "14px" }} className="m-0 fw-bold">
-                IKEA Cairo Festival City
+                {t("PD.IKEA_Cairo")}
               </p>
             </div>
             <div
               style={{
                 fontSize: "14px",
-                paddingLeft: "40px",
+                paddingInlineStart: "40px",
               }}
             >
               <div
-                className="d-inline-block  me-1"
+                className="d-inline-block  ms-1"
                 style={{
                   width: "12px",
                   height: "12px",
-                  background: "#0A8A00",
+                  verticalAlign: "baseline",
+                  marginInlineEnd: "6px",
+                  background: `${
+                    currentProduct.inStock || !currentProduct.stockQuentity <= 0
+                      ? "#0A8A00"
+                      : "red"
+                  }`,
                   borderRadius: "50%",
                 }}
               ></div>
-              Store - In stock
+              {t("product.store")} -{" "}
+              {currentProduct.inStock || !currentProduct.stockQuentity <= 0
+                ? t("product.inStock")
+                : t("product.outOfStock")}
             </div>
           </div>
-          <NavigateNextIcon />
+          {/* <NavigateNextIcon /> */}
         </div>
-        <OffCanvas ref={storeInfoRef} content={"hello store info"} />
+        {/* <OffCanvas ref={storeInfoRef} content={"hello store info"} /> */}
       </div>
 
       <div className={styles.addToBagContainer}>
         <div className={`rounded-pill ${styles.counter}`}>
           <IconButton
             style={{ color: "black" }}
-            className="btn "
-            disabled={addToBag <= 1 ? true : false}
-            onClick={() => setAddToBag(addToBag - 1)}
+            className="btn"
+            disabled={addToBagCounter <= 1 ? true : false}
+            onClick={() => setAddToBagCounter(addToBagCounter - 1)}
           >
             <RemoveIcon />
           </IconButton>
-
-          <span>{addToBag}</span>
-
+          <span>{addToBagCounter}</span>
           <IconButton
             style={{ color: "black" }}
-            onClick={() => setAddToBag(addToBag + 1)}
+            onClick={() => setAddToBagCounter(addToBagCounter + 1)}
           >
             <AddIcon />
           </IconButton>
@@ -376,18 +374,25 @@ const PrdInfoSection = forwardRef((props, ref) => {
         <Button
           onClick={() => {
             openOffCanvas(addToBagRef);
-            addToCart(currentProduct, addToBag);
+            addToCart(currentProduct, addToBagCounter);
           }}
           className={styles.addButton + " rounded-pill  py-3 my-4"}
-          style={{ backgroundColor: "#0058A3", color: "white" }}
+          style={{
+            backgroundColor: "#0058A3",
+            color: "white",
+            textTransform: "none",
+            fontWeight: "bold",
+          }}
         >
-          {addToBag === 1 ? "Add to bag" : `Add ${addToBag} items to cart`}
+          {addToBagCounter === 1
+            ? t("product.addToBag", { addToBag: "" })
+            : t("product.addToCart", { items: addToBagCounter })}
         </Button>
       </div>
       <div className="border mb-3 ">
         <p className="py-2 text-center mb-0">
-          <span className="text-primary fw-bold">{viewCount}</span> people have
-          viewed this product today
+          <span className="text-primary fw-bold ms-1">{viewCount} </span>
+          {t("product.productViews")}
         </p>
       </div>
     </div>

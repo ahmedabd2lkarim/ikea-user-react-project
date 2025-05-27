@@ -31,7 +31,41 @@
 .compeleteOrderProduct {
     height: 180px;
     display: flex;
-    /* align-items: center; */
     column-gap: 20px;
     padding-inline: 20px;
+}
+
+.continueShoppingBtn,
+.goShoppingBagBtn {
+    border: 1px black solid;
+    background-color: white;
+    color: "black";
+    /* padding: 18px 34px; */
+    width: 50%;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.goShoppingBagBtn {
+    background: black;
+    color: white;
+
+}
+
+.continueShoppingBtn:hover {
+    border-width: 2px;
+}
+
+.goShoppingBagBtn:hover {
+    opacity: 0.8
+}
+
+
+@media(max-width:900px) {
+
+    .continueShoppingBtn,
+    .goShoppingBagBtn {
+        font-size: 12px;
+        height: 40px;
+    }
 }
