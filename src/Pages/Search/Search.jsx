@@ -7,6 +7,7 @@ import SearchProductCard from '../../Components/SearchProductCard/SearchProductC
 import './Search.css';
 import { Pagination } from '@mui/material';
 import Loading from '../../Components/Loading/Loading';
+const { VITE_API_URL } = import.meta.env;
 
 
 // Remove the static filters array since we're using dynamic filters now
@@ -122,7 +123,7 @@ const Search = () => {
                 page
             };
 
-            const response = await axios.get('http://localhost:5000/api/products', { params });
+            const response = await axios.get(`${VITE_API_URL}/api/products`, { params });
             setProducts(response.data);
 
             // Update dynamic filters if available in response
