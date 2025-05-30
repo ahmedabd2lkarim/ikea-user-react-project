@@ -24,7 +24,7 @@ const RecentlyViewedProducts = () => {
   return (
     <Box sx={{ p: 4 }}>
       <p style={{ marginBottom: "20px", fontWeight: "bold", fontSize: "18px" }}>
-        {t("product.recentlyViewedProducts")}{" "}
+        {t("product.recentlyViewedProducts")}
       </p>
       <Grid container spacing={2}>
         {recentProducts.map((product) => (

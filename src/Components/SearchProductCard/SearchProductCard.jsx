@@ -8,6 +8,25 @@ import { FavoriteBorderIcon } from '../../common/mui-icons';
 import ProductRating from '../ProductRating/ProductRating';
 import './SearchProductCard.css';
 
+const formatMeasurement = (measurement, language) => {
+    const cmAr = "سم";
+
+    if (!measurement) return "";
+
+    const { unit = "cm" } = measurement;
+    const unitLabel = language === "ar" ? cmAr : unit;
+
+    const fieldsOrder = ["width", "length", "depth", "height"];
+
+    const values = fieldsOrder
+      .map((key) => measurement[key])
+      .filter((val) => val !== undefined && val !== null && val !== "");
+
+    if (values.length === 0) return "";
+
+    return `${values.join("x")} ${unitLabel}`;
+  };
+
 const SearchProductCard = ({ product }) => {
     const navigate = useNavigate();
     const { i18n } = useTranslation();
@@ -30,47 +49,45 @@ const SearchProductCard = ({ product }) => {
     };
 
     return (
-        <Card
-            onClick={handleCardClick}
-            className="product-card"
-        >
-            <div className="product-image-container">
-                <img
-                    className="product-image"
-                    src={product.images[0]}
-                    alt={product.imageAlt?.[currentLang] || product.name}
-                />
-                <IconButton className="favorite-button">
-                    <FavoriteBorderIcon />
-                </IconButton>
-            </div>
-            <Card.Body>
-                <Card.Title className="product-title">{product.name}</Card.Title>
-                <Card.Text className="product-type">
-                    {product.typeName?.[currentLang] || product.typeName?.en}
-                </Card.Text>
-                <Card.Text className="product-measurements">
-                    {`${product.measurement?.width}x${
-                        product.measurement?.depth
-                            ? product.measurement?.depth + 'x'
-                            : product.measurement?.length
-                            ? product.measurement?.length + 'x'
-                            : ''
-                    }${product.measurement?.height} ${
-                        product.measurement?.unit || 'cm'
-                    }`}
-                </Card.Text>
-                <Card.Text className="product-price">
-                    <strong>{formatPrice(product.price.currentPrice)}</strong>
-                </Card.Text>
-                <ProductRating productPrice={product.price} />
-                <div className="product-actions">
-                    <IconButton className="add-to-cart-button">
-                        <TbBasketPlus fontSize={20} />
-                    </IconButton>
-                </div>
-            </Card.Body>
-        </Card>
+      <Card onClick={handleCardClick} className="product-card">
+        <div className="product-image-container">
+          <img
+            className="product-image"
+            src={product.images[0]}
+            alt={product.imageAlt?.[currentLang] || product.name}
+          />
+          <IconButton className="favorite-button">
+            <FavoriteBorderIcon />
+          </IconButton>
+        </div>
+        <Card.Body>
+          <Card.Title className="product-title">{product.name}</Card.Title>
+          <Card.Text className="product-type">
+            {product.typeName?.[currentLang] || product.typeName?.en}
+          </Card.Text>
+          <Card.Text className="product-measurements">
+            {/* {`${product.measurement?.width}x${
+              product.measurement?.depth
+                ? product.measurement?.depth + "x"
+                : product.measurement?.length
+                ? product.measurement?.length + "x"
+                : ""
+            }${product.measurement?.height} ${
+              product.measurement?.unit || "cm"
+            }`} */}
+            {formatMeasurement(product.measurement, currentLang)}
+          </Card.Text>
+          <Card.Text className="product-price">
+            <strong>{formatPrice(product.price.currentPrice)}</strong>
+          </Card.Text>
+          <ProductRating productPrice={product.price} />
+          <div className="product-actions">
+            <IconButton className="add-to-cart-button">
+              <TbBasketPlus fontSize={20} />
+            </IconButton>
+          </div>
+        </Card.Body>
+      </Card>
     );
 };
 

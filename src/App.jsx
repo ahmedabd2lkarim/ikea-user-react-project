@@ -20,6 +20,8 @@ import "react-toastify/dist/ReactToastify.css";
 import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
 import ChangePassword from "./Components/ProfilePages/ChangePassword";
 import BillingShippingForm from "./Pages/Cart/Billing Form";
+import Loading from "./Components/Loading/Loading";
+import NotFound from './Components/NotFound/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -95,6 +97,10 @@ const router = createBrowserRouter([
   {
     path: "/billing-shipping-form",
     element: <BillingShippingForm />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 function App() {

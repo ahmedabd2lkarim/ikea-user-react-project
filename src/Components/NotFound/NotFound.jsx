@@ -8,7 +8,7 @@ const NotFound = () => {
 
   return (
     <div className="not-found-container">
-      <img width="200px" src={"/404.jpg"} alt="page 404"/>
+      <img width="200px" src={"/404.jpg"} alt="page 404" />
       <h1>{t("notFound.title")}</h1>
       <p>{t("notFound.message")}</p>
       <Link to="/" className="back-home-btn">
