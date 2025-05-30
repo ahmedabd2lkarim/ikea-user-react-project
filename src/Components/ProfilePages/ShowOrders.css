@@ -1,0 +1,24 @@
+.status-delivered {
+    color: darkgreen;
+    background-color: rgb(198, 247, 198);
+}
+
+.status-cancelled {
+    color: red;
+    background-color: rgb(251, 225, 225);
+}
+
+.status-pending {
+    color: orange;
+    background-color: rgb(246, 233, 209);
+}
+
+.status-processing {
+    color: blue;
+    background-color: rgb(220, 220, 255);
+}
+
+.status-shipped {
+    color: rgb(105, 220, 175);
+    background-color: rgb(233, 250, 243);
+}

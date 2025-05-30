@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import './cartHeader.css'
-import { deleteAllOrder } from '../../../Store/Slices/orderSlice';
+import { deleteAllOrder } from '../../../Store/Slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 const CartHeader = ({det,fun}) => {

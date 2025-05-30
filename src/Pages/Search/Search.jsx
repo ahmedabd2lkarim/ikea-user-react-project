@@ -123,7 +123,7 @@ const Search = () => {
                 page
             };
 
-            const response = await axios.get('http://localhost:5000/api/products', { params });
+            const response = await axios.get(`${VITE_API_URL}/api/products`, { params });
             setProducts(response.data);
 
             // Update dynamic filters if available in response

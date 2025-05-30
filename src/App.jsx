@@ -22,6 +22,7 @@ import ChangePassword from "./Components/ProfilePages/ChangePassword";
 import BillingShippingForm from "./Pages/Cart/Billing Form";
 import Loading from "./Components/Loading/Loading";
 import NotFound from './Components/NotFound/NotFound';
+import ShowOrders from "./Components/ProfilePages/ShowOrders";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/details",
         element: <ProfileDetails />,
+      },
+      {
+        path: "/profile/MyOrders",
+        element:<ShowOrders />,
       },
       {
         path: "/profile/delete-account",
