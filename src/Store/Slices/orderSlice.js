@@ -2,51 +2,36 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 const { VITE_API_URL } = import.meta.env;
 
 
-export const fetchOrder = createAsyncThunk('fetchOrder', async () => {
-    const res = await fetch(`${VITE_API_URL}/api/cart/showMyCart`, {
+export const fetchOrders = createAsyncThunk('fetchOrders', async () => {
+    const res = await fetch(`${VITE_API_URL}/api/orders/showAllMyOrders`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
     })
-    const data = await res.json();
-    
-    const productsRequests = data[0].cartItems.map((item) =>
-      fetch(`${VITE_API_URL}/api/products/${item.prdID}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }).then((res) => res.json())
-    );
+    let data = await res.json();
 
-    const products = await Promise.all(productsRequests)
-    
-    data[0].cartItems.forEach(item => {
-      const product = products.find(product => product._id === item.prdID)
-      product.quantity = item.quantity
-    })
-    
-    return { ...data[0], cartItems: products }
-});
-
-function calculateTotal(cartItems) {
-    const total = cartItems.reduce((acc, item) => acc + (item.price.currentPrice * item.quantity), 0);
-    return total;
-}
-
-function authFetch(url, options = {}) {
-    return fetch(url, {
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            ...(options.headers || {})
+    data = data.map(async order => {
+        return {
+            ...order,
+            orderItems: await Promise.all(order.orderItems.map(async (item) => {
+                let product = await fetch(`${VITE_API_URL}/api/products/${item.prdID}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    }
+                })
+                product = await product.json();
+                product.quantity = item.quantity;
+                return product;
+            }))
         }
-    });
-}
+    })
+    data = await Promise.all(data);
+    return data;
+});
 
 const orderSlice = createSlice({
     name: 'orderSlice',
@@ -55,64 +40,23 @@ const orderSlice = createSlice({
         isLoading: true
     },
     reducers: {
-        decreaseQ(state, action) {
-            const item = state.items.cartItems.find(item => item._id === action.payload)
-            item.quantity -= 1
-            authFetch(`${VITE_API_URL}/api/cart/cartOP`, {
-              method: "PATCH",
-              body: JSON.stringify({
-                prdID: item._id,
-                quantity: -1,
-              }),
-            });
-            state.items.total = calculateTotal(state.items.cartItems);
-        },
-        increaseQ(state, action) {
-            const item = state.items.cartItems.find(item => item._id === action.payload)
-            item.quantity += 1
-            authFetch(`${VITE_API_URL}/api/cart/cartOP`, {
-              method: "PATCH",
-              body: JSON.stringify({
-                prdID: item._id,
-                quantity: 1,
-              }),
-            });
-            state.items.total = calculateTotal(state.items.cartItems);
-        },
-        deleteItem(state, action) {
-            if (state.items.cartItems.length > 1) {
-                const item = state.items.cartItems.find(item => item._id === action.payload)
-                authFetch(
-                  `${VITE_API_URL}/api/cart/cartOP`,
-                  {
-                    method: "PATCH",
-                    body: JSON.stringify({ prdID: item._id, quantity: 0 }),
-                  }
-                );
-                state.items.cartItems = state.items.cartItems.filter(item => item._id !== action.payload)
-                state.items.total = calculateTotal(state.items.cartItems);
-            }
-            else {
-                authFetch(`${VITE_API_URL}/api/cart/${state.items._id}`, {
-                  method: "DELETE",
-                });
-                state.items = [];
-            }
-        },
-        deleteAllOrder(state, action) {
-            authFetch(`${VITE_API_URL}/api/cart/${state.items._id}`, {
-              method: "DELETE",
-            });
-            state.items = [];
-        },
+        cancelOrder(state, action) {
+            fetch(`${VITE_API_URL}/api/orders/cancel/${action.payload}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                }
+            })
+        }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchOrder.fulfilled, (state, action) => {
-            state.items = action.payload  
+        builder.addCase(fetchOrders.fulfilled, (state, action) => {
+            state.items = action.payload
             state.isLoading = false
         })
     }
 })
 
-export const { decreaseQ, increaseQ, deleteItem,deleteAllOrder } = orderSlice.actions
+export const { cancelOrder } = orderSlice.actions
 export default orderSlice

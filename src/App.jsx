@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import DeleteProfile from "./Components/ProfilePages/DeleteProfile";
 import ChangePassword from "./Components/ProfilePages/ChangePassword";
 import BillingShippingForm from "./Pages/Cart/Billing Form";
+import ShowOrders from "./Components/ProfilePages/ShowOrders";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/details",
         element: <ProfileDetails />,
+      },
+      {
+        path: "/profile/MyOrders",
+        element:<ShowOrders />,
       },
       {
         path: "/profile/delete-account",

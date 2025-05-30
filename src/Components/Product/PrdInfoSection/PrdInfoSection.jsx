@@ -145,11 +145,11 @@ const PrdInfoSection = forwardRef((props, ref) => {
       console.log(localStorage.getItem("token"));
 
       if (localStorage.getItem("token")) {
+        console.log("Adding to cart:", prd, quantity);
         
-
         await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
           method: "PATCH",
-          body: JSON.stringify({ prdID:prd.id,quantity }),
+          body: JSON.stringify({ prdID:prd._id,quantity }),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

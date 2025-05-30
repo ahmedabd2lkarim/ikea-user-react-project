@@ -2,7 +2,7 @@ import { Box, Button, Container, Divider, Drawer, Grid, IconButton, List, ListIt
 import CartHeader from '../../Components/Layout/Cart/cartHeader'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { fetchOrder } from '../../Store/Slices/orderSlice';
+import { fetchCart } from '../../Store/Slices/cartSlice';
 import CloseIcon from '@mui/icons-material/Close';
 import FetchOrderItems from '../../Components/Layout/Cart/fetchOrderItems';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const Cart = () => {
       : order = []);
   useEffect(() => {
     if (token) {      
-      dispatch(fetchOrder())
+      dispatch(fetchCart())
       
     }
     

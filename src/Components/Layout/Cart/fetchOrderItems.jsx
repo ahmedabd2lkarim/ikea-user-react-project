@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { decreaseQ, deleteItem, fetchOrder, increaseQ } from '../../../Store/Slices/orderSlice';
+import { decreaseQ, deleteItem, fetchCart, increaseQ } from '../../../Store/Slices/cartSlice';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,7 @@ const FetchOrderItems = ({det,fun}) => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            dispatch(fetchOrder())
+            dispatch(fetchCart())
         }
     }, [])
     function decreaseQuantity(prdID) {
