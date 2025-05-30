@@ -15,6 +15,7 @@ import {
   Paper,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+const { VITE_API_URL } = import.meta.env;
 
 const governorates = ['Cairo', 'Giza', 'Alexandria'];
 
@@ -68,7 +69,7 @@ const BillingShippingForm = () => {
     }
     const address = form.governorate+', '+form.area+', '+ form.address + ', ' + form.building;
 
-    const response = await fetch('http://localhost:5000/api/checkout', {
+    const response = await fetch(`${VITE_API_URL}/api/checkout`, {
       method: 'POST',
       body: JSON.stringify({address, email: form.email, mobile: form.mobile}),
       headers: {

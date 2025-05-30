@@ -63,7 +63,8 @@
     "complementYourOrder": "Complement your order",
     "goToShoppingBag": "Go to Shopping Bag",
     "IKEA_Cairo": "IKEA Cairo Festival City",
-    "continueShopping": "Continue shopping"
+    "continueShopping": "Continue shopping",
+    "recentlyViewedProducts": "Your recently viewed products"
   },
   "PD": {
     "profile_Details": "Profile details",
@@ -343,7 +344,6 @@
   "notFound": {
     "title": "Page Not Found",
     "message": "Sorry, the product you're looking for doesn't exist or has been removed.",
-    "backHome": "Back to Homepage",
-    "recentlyViewedProducts": "Your recently viewed products"
+    "backHome": "Back to Homepage"
   }
 }
