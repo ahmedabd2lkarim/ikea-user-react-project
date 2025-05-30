@@ -105,7 +105,7 @@ const router = createBrowserRouter([
     element: <BillingShippingForm />,
   },
   {
-    path: "/payment",
+    path: "/cancel",
     element: <PaymentFailed />,
   },
 

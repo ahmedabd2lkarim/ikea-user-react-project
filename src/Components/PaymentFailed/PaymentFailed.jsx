@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+const { VITE_API_URL } = import.meta.env;
 
 export default function PaymentFailed() {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -55,7 +58,7 @@ export default function PaymentFailed() {
             margin: "0 0 8px 0",
           }}
         >
-          Payment Failed
+          Payment Cancelled
         </h2>
 
         <p
@@ -66,7 +69,7 @@ export default function PaymentFailed() {
             lineHeight: "1.5",
           }}
         >
-          We couldn't process your payment. Please try again.
+          Your payment was cancelled
         </p>
 
         <button
@@ -84,8 +87,9 @@ export default function PaymentFailed() {
           }}
           onMouseEnter={(e) => (e.target.style.backgroundColor = "#b91c1c")}
           onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc2626")}
+          onClick={() => navigate("/")}
         >
-          Try Again
+          Return to Home
         </button>
       </div>
     </div>
