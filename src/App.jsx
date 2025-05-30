@@ -23,6 +23,7 @@ import BillingShippingForm from "./Pages/Cart/Billing Form";
 import Loading from "./Components/Loading/Loading";
 import NotFound from './Components/NotFound/NotFound';
 import ShowOrders from "./Components/ProfilePages/ShowOrders";
+import PaymentFailed from "./Components/PaymentFailed/PaymentFailed";
 
 const router = createBrowserRouter([
   {
@@ -103,6 +104,11 @@ const router = createBrowserRouter([
     path: "/billing-shipping-form",
     element: <BillingShippingForm />,
   },
+  {
+    path: "/payment",
+    element: <PaymentFailed />,
+  },
+
   {
     path: "*",
     element: <NotFound />,
