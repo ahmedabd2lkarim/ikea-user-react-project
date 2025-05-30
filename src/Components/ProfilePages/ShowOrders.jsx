@@ -1,10 +1,10 @@
 import { Button, Collapse, Grid, IconButton, Paper, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux";
-import { fetchOrders } from "../../Store/Slices/orderSlice";
+import { cancelOrder, fetchOrders } from "../../Store/Slices/orderSlice";
 import { useEffect, useState } from "react";
 import './ShowOrders.css';
 import { t } from "i18next";
-import { Image } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
@@ -20,7 +20,7 @@ const ExpandMore = styled((props) => {
   variants: [
     {
       props: ({ expand }) => !expand,
-      
+
       style: {
         transform: 'rotate(0deg)',
       },
@@ -85,10 +85,10 @@ const ShowOrders = () => {
               : <>
                 <Typography variant="body1" borderRadius={10} px={2} py={1} className={getStatusClass(order.status)}>{order.status}</Typography>
                 <Typography>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGB")}</Typography>
-                <Button variant='contained' color='error'>Cancel</Button>
+                <Button variant='contained' color='error' onClick={() => dispatch(cancelOrder(order._id))}>Cancel</Button>
                 <ExpandMore
                   expand={expanded}
-                  onClick={()=>handleExpandClick(order._id)}
+                  onClick={() => handleExpandClick(order._id)}
                   aria-expanded={expanded}
                   aria-label="show more"
                 >
@@ -98,23 +98,25 @@ const ShowOrders = () => {
           </Grid>
           <Grid container spacing={2} p={2} direction={'column'} >
             {order.orderItems.map((item) => (
-              <Collapse in={order.status != 'cancelled' ? order._id === orderId ? expanded : false : true } timeout="auto" unmountOnExit>
-                <Grid item key={item._id} container py={3}>
-                  <Grid size={2} sx={{ cursor: 'pointer' }} onClick={() => { navigate("/productDetails/" + item._id) }}>
-                    <Image src={item.images[0]} alt={item.imageAlt} width={'70%'} />
+              <Container key={item._id}>
+                <Collapse in={order.status != 'cancelled' ? order._id === orderId ? expanded : false : true} timeout="auto" unmountOnExit>
+                  <Grid container py={3}>
+                    <Grid size={2} sx={{ cursor: 'pointer' }} onClick={() => { navigate("/productDetails/" + item._id) }}>
+                      <Image src={item.images[0]} alt={item.imageAlt} width={'70%'} />
+                    </Grid>
+                    <Grid size={5} lineHeight={1.5} display={'flex'} flexDirection={'column'} justifyContent={'center'} gap={1}>
+                      <Typography variant='subtitle2' fontWeight={'bold'} sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }} onClick={() => { navigate("/productDetails/" + item._id) }}>{item.name}</Typography>
+                      <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName[lng()]}{item.imageAlt[lng()].substring(item.imageAlt[lng()].indexOf(','), item.imageAlt[lng()].lastIndexOf(','))} </Typography>
+                    </Grid>
+                    <Grid size={5} px={5} lineHeight={1.5} display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={1}>
+                      <Typography variant='subtitle2'>x{item.quantity}</Typography>
+                      <Typography variant='subtitle2' fontWeight={'bold'}>{item.price.currentPrice * item.quantity}{t("cart.EGB")}</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid size={5} lineHeight={1.5} display={'flex'} flexDirection={'column'} justifyContent={'center'} gap={1}>
-                    <Typography variant='subtitle2' fontWeight={'bold'} sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }} onClick={() => { navigate("/productDetails/" + item._id) }}>{item.name}</Typography>
-                    <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item.typeName[lng()]}{item.imageAlt[lng()].substring(item.imageAlt[lng()].indexOf(','), item.imageAlt[lng()].lastIndexOf(','))} </Typography>
-                  </Grid>
-                  <Grid size={5} px={5} lineHeight={1.5} display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={1}>
-                    <Typography variant='subtitle2'>x{item.quantity}</Typography>
-                    <Typography variant='subtitle2' fontWeight={'bold'}>{item.price.currentPrice * item.quantity}{t("cart.EGB")}</Typography>
-                  </Grid>
-                </Grid>
-              </Collapse>
-              ))}
-              </Grid>
+                </Collapse>
+              </Container>
+            ))}
+          </Grid>
         </Paper>
       ))}
     </Grid>

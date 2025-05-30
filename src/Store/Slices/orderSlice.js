@@ -40,7 +40,7 @@ const orderSlice = createSlice({
         isLoading: true
     },
     reducers: {
-        cancelOrder(state, action) {
+        cancelOrder(state, action) {            
             fetch(`${VITE_API_URL}/api/orders/cancel/${action.payload}`, {
                 method: "PATCH",
                 headers: {
@@ -48,6 +48,7 @@ const orderSlice = createSlice({
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
             })
+            state.items[state.items.findIndex(item => item._id === action.payload)].status = "cancelled"
         }
     },
     extraReducers: (builder) => {
