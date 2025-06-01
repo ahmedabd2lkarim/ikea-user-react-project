@@ -64,6 +64,7 @@ const BillingShippingForm = () => {
   };
 
   const handlePayment = async() => {
+    localStorage.setItem("cart", JSON.stringify([]));
     if (!validateForm()) {
       return;
     }

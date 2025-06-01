@@ -37,6 +37,7 @@ const Profile = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('cart');
     navigate('/login');
   };
   // console.log(t("greetingProfileUserName", { name: "Test" }));

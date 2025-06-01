@@ -53,6 +53,7 @@ function Home() {
   }
 
   useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify([]));
     async function fetchAllCategories() {
       setLoading(true);
       const results = {};
