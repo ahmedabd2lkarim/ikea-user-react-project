@@ -127,34 +127,66 @@ const PrdInfoSection = forwardRef((props, ref) => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+ 
   const addToCart = async (prd, quantity) => {
     try {
-      const existingItem = cart.find((item) => item.id === prd.id);
+      console.log("Adding to cart:", prd);
+      const existingItem = cart.find((item) =>
+        prd.isVariant
+          ? item.variantId === prd._id && item.mainPrdId === prd.mainPrdId
+          : item._id === prd._id && !item.isVariant
+      );
+
       let updatedCart;
       if (existingItem) {
         updatedCart = cart.map((item) => {
-          if (item.id === prd.id) {
+          if (
+            prd.isVariant
+              ? item.variantId === prd._id && item.mainPrdId === prd.mainPrdId
+              : item._id === prd._id && !item.isVariant
+          ) {
             return { ...item, quantity: item.quantity + quantity };
           }
           return item;
         });
       } else {
-        updatedCart = [...cart, { ...prd, quantity: quantity }];
+        updatedCart = [
+          ...cart,
+          {
+            ...prd,
+            quantity: quantity,
+            mainPrdId: prd.isVariant ? prd.mainPrdId : prd._id,
+            variantId: prd.isVariant ? prd._id : null,
+          },
+        ];
       }
       setCart(updatedCart);
-      console.log(localStorage.getItem("token"));
 
       if (localStorage.getItem("token")) {
-        console.log("Adding to cart:", prd, quantity);
-        
-        await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
+        const payload = {
+          prdID: {
+            prdID: prd.isVariant ? prd.mainPrdId : prd._id,
+            variantId: prd.isVariant ? prd.variantId : null,
+          },
+          quantity,
+        };
+        console.log("API Payload:", payload);
+
+        const response = await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
           method: "PATCH",
-          body: JSON.stringify({ prdID:prd._id,quantity }),
+          body: JSON.stringify(payload),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Cart updated:", result);
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -308,7 +340,6 @@ const PrdInfoSection = forwardRef((props, ref) => {
           className="d-flex justify-content-between align-items-center 
           dpointer
           "
-          // onClick={() => openOffCanvas(storeInfoRef)}
         >
           <div className="d-flex flex-column mt-1 mb-1">
             <div className="d-flex align-items-center">
@@ -353,42 +384,49 @@ const PrdInfoSection = forwardRef((props, ref) => {
         {/* <OffCanvas ref={storeInfoRef} content={"hello store info"} /> */}
       </div>
 
-      <div className={styles.addToBagContainer}>
-        <div className={`rounded-pill ${styles.counter}`}>
-          <IconButton
-            style={{ color: "black" }}
-            className="btn"
-            disabled={addToBagCounter <= 1 ? true : false}
-            onClick={() => setAddToBagCounter(addToBagCounter - 1)}
+      {currentProduct.stockQuantity >= 1 ? (
+        <div className={styles.addToBagContainer}>
+          <div className={`rounded-pill ${styles.counter}`}>
+            <IconButton
+              style={{ color: "black" }}
+              className="btn"
+              disabled={addToBagCounter <= 1 ? true : false}
+              onClick={() => setAddToBagCounter(addToBagCounter - 1)}
+            >
+              <RemoveIcon />
+            </IconButton>
+            <span>{addToBagCounter}</span>
+            <IconButton
+              style={{ color: "black" }}
+              disabled={
+                addToBagCounter >= currentProduct.stockQuantity ? true : false
+              }
+              onClick={() => setAddToBagCounter(addToBagCounter + 1)}
+            >
+              <AddIcon />
+            </IconButton>
+          </div>
+          <Button
+            onClick={() => {
+              openOffCanvas(addToBagRef);
+              addToCart(currentProduct, addToBagCounter);
+            }}
+            className={styles.addButton + " rounded-pill  py-3 my-4"}
+            style={{
+              backgroundColor: "#0058A3",
+              color: "white",
+              textTransform: "none",
+              fontWeight: "bold",
+            }}
           >
-            <RemoveIcon />
-          </IconButton>
-          <span>{addToBagCounter}</span>
-          <IconButton
-            style={{ color: "black" }}
-            onClick={() => setAddToBagCounter(addToBagCounter + 1)}
-          >
-            <AddIcon />
-          </IconButton>
+            {addToBagCounter === 1
+              ? t("product.addToBag", { addToBag: "" })
+              : t("product.addToCart", { items: addToBagCounter })}
+          </Button>
         </div>
-        <Button
-          onClick={() => {
-            openOffCanvas(addToBagRef);
-            addToCart(currentProduct, addToBagCounter);
-          }}
-          className={styles.addButton + " rounded-pill  py-3 my-4"}
-          style={{
-            backgroundColor: "#0058A3",
-            color: "white",
-            textTransform: "none",
-            fontWeight: "bold",
-          }}
-        >
-          {addToBagCounter === 1
-            ? t("product.addToBag", { addToBag: "" })
-            : t("product.addToCart", { items: addToBagCounter })}
-        </Button>
-      </div>
+      ) : (
+        <p className="text-danger">Out of stock</p>
+      )}
       <div className="border mb-3 ">
         <p className="py-2 text-center mb-0">
           <span className="text-primary fw-bold ms-1">{viewCount} </span>
