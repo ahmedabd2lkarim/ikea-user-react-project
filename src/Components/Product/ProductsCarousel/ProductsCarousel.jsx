@@ -33,86 +33,61 @@ const formatMeasurement = (measurement, language) => {
   return `${values.join("x")} ${unitLabel}`;
 };
 
-const handleAddToCart = async (product) => {
-  const token = localStorage.getItem("token");
+ const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
 
-  let cartItem = {
-    prdID: product._id,
-    quantity: 1,
-  };
+    let cartItem = {
+      prdID: product._id,
+      quantity: 1,
+    };
 
-  if (token) {
-    try {
-      const getOrderResponse = await fetch(
-        `${VITE_API_URL}/api/cart/showAllMyOrders`,
-        {
+    if (token) {
+      try {
+
+        const response = await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
+          method: "PATCH",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+          body: JSON.stringify({
+            prdID:product._id,
+            quantity:1
+          }),
+        });
 
-      let currentOrderItems = [];
-      if (getOrderResponse.ok) {
-        const currentOrder = await getOrderResponse.json();
-        if (currentOrder.length > 0) {
-          currentOrderItems = currentOrder[0].orderItems || [];
+        if (!response.ok) {
+          const error = await response.json();
+          toast.error("Failed to add to cart");
+
+          return;
         }
+
+        const data = await response.json();
+        console.log("Order created:", data);
+        toast.success("Item added to cart");
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        toast.error("Error adding item to cart.");
       }
-
-      const productIndex = currentOrderItems.findIndex(
-        (item) => item.prdID === cartItem.prdID
+    } else {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cartItem = {...product, quantity: 1 };
+      const productIndex = cart.findIndex(
+        (item) => item.id === cartItem.id
       );
 
       if (productIndex !== -1) {
-        currentOrderItems[productIndex].quantity += cartItem.quantity;
+        cart[productIndex].quantity += cartItem.quantity;
       } else {
-        currentOrderItems.push(cartItem);
+        cart.push(cartItem);
       }
 
-      const response = await fetch(`${VITE_API_URL}/api/cart/newOrder`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          orderItems: currentOrderItems,
-          shippingFee: 20,
-        }),
-      });
+      localStorage.setItem("cart", JSON.stringify(cart));
 
-      if (!response.ok) {
-        const error = await response.json();
-        toast.error("Failed to add to cart");
-
-        return;
-      }
-
-      const data = await response.json();
-      // console.log("Order created:", data);
-      toast.success("Item added to cart");
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      toast.error("Error adding item to cart.");
+      toast.success("Item added to guest cart");
     }
-  } else {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cartItem = { ...product, quantity: 1 };
-    const productIndex = cart.findIndex((item) => item.id === cartItem.id);
-
-    if (productIndex !== -1) {
-      cart[productIndex].quantity += cartItem.quantity;
-    } else {
-      cart.push(cartItem);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    toast.success("Item added to guest cart");
-  }
-};
-
+  };
 const ProductsCarousel = ({ products, formatPrice }) => {
   const { t, i18n } = useTranslation();
   const language = i18n.language;
@@ -190,7 +165,6 @@ const ProductsCarousel = ({ products, formatPrice }) => {
         ref={scrollRef}
       >
         {products.map((product) => (
-          // console.log(product),
           <Card
             key={product._id}
             style={{

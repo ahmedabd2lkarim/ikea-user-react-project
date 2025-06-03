@@ -103,8 +103,7 @@ const ProductDetails = () => {
         );
         const relatedCategoryprdsData = await relatedCategoryRes.json();
 
-        // const { data: categorysProductsData } = relatedCategoryprdsData; //i need to know why we did not desturcture data
-        // setRelatedCategoryProducts(relatedCategoryprdsData);
+      
 
         const filteredRelatedCatProd = relatedCategoryprdsData
           .filter((p) => p._id !== id)
@@ -148,22 +147,7 @@ const ProductDetails = () => {
     setImageUrl(currentProduct?.images[prevIndex]);
   };
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (
-  //       window.scrollY >= 1400 &&
-  //       window.screenX <= 900
-  //     ) {
-  //       setShowBtn(true);
-  //     } else {
-  //       setShowBtn(false);
-  //     }
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
+  
   const productDetailsRef = useRef();
   const allImgsRef = useRef();
   const openModel = (ref) => {
@@ -187,24 +171,26 @@ const ProductDetails = () => {
       </div>
     </>
   );
+ 
   const handleVariantSelect = (variant) => {
     if (!variant) {
-      setCurrentProduct(product);
-      setImageUrl(product.images[0]);
-      setCurrentIndex(0);
-    } else {
       setCurrentProduct({
         ...product,
-        id: variant.id,
-        name: variant.name || product.name,
-        images: variant.images,
-        imageAlt: variant.imageAlt,
-        price: variant.price || product.price,
-        measurement: variant.measurement || product.measurement,
+        isVariant: false,
+        variantId: null,
       });
-      setImageUrl(variant.images[0]);
-      setCurrentIndex(0);
+    } else {
+      setCurrentProduct({
+        ...variant,
+        _id: variant._id, 
+        mainPrdId: product._id, 
+        isVariant: true,
+        variantId: variant._id,
+      });
+  
     }
+    setImageUrl(variant ? variant.images[0] : product.images[0]);
+    setCurrentIndex(0);
   };
 
   const handleImageHover = (previewImageUrl) => {

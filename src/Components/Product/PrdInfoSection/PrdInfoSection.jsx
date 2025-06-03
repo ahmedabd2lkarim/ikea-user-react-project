@@ -127,34 +127,66 @@ const PrdInfoSection = forwardRef((props, ref) => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+ 
   const addToCart = async (prd, quantity) => {
     try {
-      const existingItem = cart.find((item) => item.id === prd.id);
+      console.log("Adding to cart:", prd);
+      const existingItem = cart.find((item) =>
+        prd.isVariant
+          ? item.variantId === prd._id && item.mainPrdId === prd.mainPrdId
+          : item._id === prd._id && !item.isVariant
+      );
+
       let updatedCart;
       if (existingItem) {
         updatedCart = cart.map((item) => {
-          if (item.id === prd.id) {
+          if (
+            prd.isVariant
+              ? item.variantId === prd._id && item.mainPrdId === prd.mainPrdId
+              : item._id === prd._id && !item.isVariant
+          ) {
             return { ...item, quantity: item.quantity + quantity };
           }
           return item;
         });
       } else {
-        updatedCart = [...cart, { ...prd, quantity: quantity }];
+        updatedCart = [
+          ...cart,
+          {
+            ...prd,
+            quantity: quantity,
+            mainPrdId: prd.isVariant ? prd.mainPrdId : prd._id,
+            variantId: prd.isVariant ? prd._id : null,
+          },
+        ];
       }
       setCart(updatedCart);
-      console.log(localStorage.getItem("token"));
 
       if (localStorage.getItem("token")) {
-        console.log("Adding to cart:", prd, quantity);
+        const payload = {
+          prdID: {
+            prdID: prd.isVariant ? prd.mainPrdId : prd._id,
+            variantId: prd.isVariant ? prd.variantId : null,
+          },
+          quantity,
+        };
+        console.log("API Payload:", payload);
 
-        await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
+        const response = await fetch(`${VITE_API_URL}/api/cart/cartOP`, {
           method: "PATCH",
-          body: JSON.stringify({ prdID: prd._id, quantity }),
+          body: JSON.stringify(payload),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Cart updated:", result);
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -308,7 +340,6 @@ const PrdInfoSection = forwardRef((props, ref) => {
           className="d-flex justify-content-between align-items-center 
           dpointer
           "
-          // onClick={() => openOffCanvas(storeInfoRef)}
         >
           <div className="d-flex flex-column mt-1 mb-1">
             <div className="d-flex align-items-center">
@@ -353,7 +384,7 @@ const PrdInfoSection = forwardRef((props, ref) => {
         {/* <OffCanvas ref={storeInfoRef} content={"hello store info"} /> */}
       </div>
 
-      { currentProduct.stockQuantity >= 1 ? (
+      {currentProduct.stockQuantity >= 1 ? (
         <div className={styles.addToBagContainer}>
           <div className={`rounded-pill ${styles.counter}`}>
             <IconButton
