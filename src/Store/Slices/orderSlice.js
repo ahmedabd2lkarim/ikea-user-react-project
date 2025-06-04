@@ -27,6 +27,12 @@ export const fetchOrders = createAsyncThunk("fetchOrders", async () => {
                 },
               }
             );
+
+            if (!product.ok) {
+              console.warn(`Product with ID ${item.prdID} not found.`);
+              return null;
+            }
+
             product = await product.json();
 
             if (item.variantId) {
@@ -54,7 +60,7 @@ export const fetchOrders = createAsyncThunk("fetchOrders", async () => {
                   isVariant: false,
                   variantId: null,
                   quantity: item.quantity,
-                  variantNotFound: true, 
+                  variantNotFound: true,
                 };
               }
             } else {

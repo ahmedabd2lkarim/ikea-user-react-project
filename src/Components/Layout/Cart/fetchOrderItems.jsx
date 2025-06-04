@@ -22,6 +22,9 @@ import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+const { VITE_API_URL } = import.meta.env;
 
 function calculateTotal(items) {
   return (
@@ -41,19 +44,10 @@ function getItemDisplayName(item, lng) {
     const type =
       item.typeName?.[lng()] || item.typeName?.en || item.typeName?.ar || "";
 
-    return `${mainName} - ${variantName}${color ? ` (${color})` : ""}${
-      type ? ` - ${type}` : ""
-    }`;
+    return `${mainName} - ${variantName}${color ? ` (${color})` : ""}${type ? ` - ${type}` : ""
+      }`;
   } else {
     return item.name || "Product";
-  }
-}
-
-function getCartItemKey(item) {
-  if (item.isVariant) {
-    return `variant-${item.variantId}-${item.mainPrdId}`;
-  } else {
-    return `product-${item._id}`;
   }
 }
 
@@ -75,7 +69,8 @@ const FetchOrderItems = ({ det, fun }) => {
   if (localStorage.getItem("token")) {
     items = useSelector((state) => state.cart.items.cartItems);
   }
-
+  const [favOpen, setFavOpen] = useState(false);
+  const [favMessage, setFavMessage] = useState("");
   let [isLoading, setIsLoading] = useState(false);
   let [itemId, setItemId] = useState("");
   let [itemName, setItemName] = useState("");
@@ -105,8 +100,8 @@ const FetchOrderItems = ({ det, fun }) => {
         const updatedItems = items.map((cartItem) => {
           const isMatch = item.isVariant
             ? cartItem.isVariant &&
-              cartItem.variantId === item.variantId &&
-              cartItem.mainPrdId === item.mainPrdId
+            cartItem.variantId === item.variantId &&
+            cartItem.mainPrdId === item.mainPrdId
             : cartItem._id === item._id && !cartItem.isVariant;
 
           if (isMatch && cartItem.quantity > 1) {
@@ -141,8 +136,8 @@ const FetchOrderItems = ({ det, fun }) => {
         const updatedItems = items.map((cartItem) => {
           const isMatch = item.isVariant
             ? cartItem.isVariant &&
-              cartItem.variantId === item.variantId &&
-              cartItem.mainPrdId === item.mainPrdId
+            cartItem.variantId === item.variantId &&
+            cartItem.mainPrdId === item.mainPrdId
             : cartItem._id === item._id && !cartItem.isVariant;
 
           if (isMatch) {
@@ -198,6 +193,13 @@ const FetchOrderItems = ({ det, fun }) => {
     setOpen(false);
   };
 
+  const handleFavClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFavOpen(false);
+  };
+
   function SlideTransition(props) {
     return <Slide {...props} direction="left" />;
   }
@@ -213,230 +215,86 @@ const FetchOrderItems = ({ det, fun }) => {
     </IconButton>
   );
 
-  const getNavigationUrl = (item) => {
-    if (item.isVariant) {
-      return `/productDetails/${item.mainPrdId}`;
-    } else {
-      return `/productDetails/${item._id}`;
-    }
-  };
-
-  const getItemDescription = (item) => {
-    const language = lng();
-    let description = "";
-
-    if (item.isVariant) {
-      if (item.color && item.color[language]) {
-        description += item.color[language];
+  const handleAddToFav = async (item) => {
+    setFavMessage(`${item.name} ${t("cart.addedToFav")}`);
+    setFavOpen(true);
+    const response = await axios.get(`${VITE_API_URL}/api/favourites`, {
+      headers: { Authorization: localStorage.getItem("token") },
+    });
+    const list = response.data.lists[0]._id
+    await axios.put(
+      `${VITE_API_URL}/api/favourites/add-product`,
+      { listId: list, productId: item._id },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
       }
-      if (item.typeName && item.typeName[language]) {
-        description += description
-          ? `, ${item.typeName[language]}`
-          : item.typeName[language];
-      }
-    } else {
-      if (item.typeName && item.typeName[language]) {
-        description += item.typeName[language];
-      }
-      if (item.imageAlt && item.imageAlt[language]) {
-        const altText = item.imageAlt[language];
-        const commaIndex = altText.indexOf(",");
-        const lastCommaIndex = altText.lastIndexOf(",");
-        if (
-          commaIndex !== -1 &&
-          lastCommaIndex !== -1 &&
-          commaIndex !== lastCommaIndex
-        ) {
-          description += altText.substring(commaIndex, lastCommaIndex);
-        }
-      }
-    }
-
-    return description;
-  };
-
-  const getMeasurementDisplay = (item) => {
-    if (!item.measurement) return "";
-
-    if (item.measurement.length) {
-      return `${item.measurement.length} ${item.measurement.unit || "cm"}`;
-    } else if (item.measurement.width && item.measurement.height) {
-      return `${item.measurement.width}x${item.measurement.height} ${
-        item.measurement.unit || "cm"
-      }`;
-    }
-
-    return "";
-  };
-
-  const getProductIdDisplay = (item) => {
-    const id = item.isVariant ? item.variantId : item._id;
-    if (!id) return "";
-
-    return (
-      id
-        .substring(0, 8)
-        .match(/.{1,3}/g)
-        ?.join(".") || ""
     );
-  };
+  }
+
+
 
   return (
     <Grid>
-      <Typography variant="subtitle1" color="rgb(72, 72, 72)">
-        {items?.length} {t("cart.TotalProducts")}
-      </Typography>
-
-      {items?.map((item) => {
-        const itemKey = getCartItemKey(item);
-        const navigationUrl = getNavigationUrl(item);
-        const displayName = getItemDisplayName(item, lng);
-        const description = getItemDescription(item);
-        const measurementDisplay = getMeasurementDisplay(item);
-        const productIdDisplay = getProductIdDisplay(item);
-        const currentItemId = getItemIdentifier(item);
-
-        return (
-          <Container disableGutters key={itemKey}>
-            <hr />
-            <Grid container py={3}>
-              <Grid
-                size={3}
-                sx={{ cursor: "pointer" }}
-                onClick={() => navigate(navigationUrl)}
-              >
-                <img
-                  src={item.images?.[0] || item.image}
-                  alt={displayName}
-                  width={"70%"}
-                />
-              </Grid>
-
-              <Grid size={7} lineHeight={1.5}>
-                <Typography
-                  variant="subtitle2"
-                  fontWeight={"bold"}
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": { textDecoration: "underline" },
-                  }}
-                  onClick={() => navigate(navigationUrl)}
-                >
-                  {displayName}
-                </Typography>
-
-                {description && (
-                  <Typography variant="subtitle2" color="rgb(72, 72, 72)">
-                    {description}
-                  </Typography>
-                )}
-
-                {measurementDisplay && (
-                  <Typography variant="subtitle2" color="rgb(72, 72, 72)">
-                    {measurementDisplay}
-                  </Typography>
-                )}
-
-                {productIdDisplay && (
-                  <Typography variant="subtitle2" color="rgb(72, 72, 72)">
-                    {productIdDisplay}
-                  </Typography>
-                )}
-
-                <Grid container pt={4}>
-                  <Grid
-                    sx={{ borderRadius: "20px", border: "grey solid 1px" }}
-                    size={{ xs: 6, sm: 3 }}
-                    display={"flex"}
-                    justifyContent={"space-between"}
-                    alignItems={"center"}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => decreaseQuantity(item)}
-                      disabled={
-                        item.quantity <= 1 ||
-                        (isLoading && itemId === currentItemId)
-                      }
-                    >
-                      <RemoveIcon sx={{ color: "black" }} fontSize="small" />
-                    </IconButton>
-
-                    <Typography variant="subtitle2" fontWeight={"bold"}>
-                      {item.quantity}
-                    </Typography>
-
-                    <IconButton
-                      size="small"
-                      onClick={() => increaseQuantity(item)}
-                      disabled={
-                        item.quantity >= (item.stockQuantity || 99) ||
-                        (isLoading && itemId === currentItemId)
-                      }
-                    >
-                      <AddIcon sx={{ color: "black" }} fontSize="small" />
-                    </IconButton>
+      {items ?
+        <>
+          <Typography variant='subtitle1' color='rgb(72, 72, 72)'>{items?.length} {t("cart.TotalProducts")}</Typography>
+          {items?.map((item) =>
+            <Container disableGutters key={item?._id}>
+              <hr />
+              <Grid container py={3}>
+                <Grid size={3} sx={{ cursor: 'pointer' }} onClick={() => { navigate("/productDetails/" + item?._id) }}>
+                  <img src={item?.images[0]} alt="" width={'70%'} />
+                </Grid>
+                <Grid size={7} lineHeight={1.5}>
+                  <Typography variant='subtitle2' fontWeight={'bold'} sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }} onClick={() => { navigate("/productDetails/" + item?._id) }}>{item?.name}</Typography>
+                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item?.typeName[lng()]}{item?.imageAlt[lng()].substring(item?.imageAlt[lng()].indexOf(','), item?.imageAlt[lng()].lastIndexOf(','))} </Typography>
+                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item?.measurement?.length ? `${item?.measurement?.length} ${item?.measurement?.unit || 'cm'}` : item?.measurement?.width ? `${item?.measurement?.width}x${item?.measurement?.height} ${item?.measurement?.unit || 'cm'}` : ''}</Typography>
+                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{item?.id.substring(0, 8).match(/.{1,3}/g).join('.')}</Typography>
+                  <Grid container pt={4}>
+                    <Grid sx={{ borderRadius: '20px', border: 'grey solid 1px' }} size={{ xs: 6, sm: 3 }} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                      <IconButton size='small' onClick={() => { decreaseQuantity(item) }} disabled={item?.quantity == 1} >
+                        <RemoveIcon sx={{ color: 'black' }} fontSize='1px' />
+                      </IconButton>
+                      <Typography variant='subtitle2' fontWeight={'bold'}>{item?.quantity}</Typography>
+                      <IconButton size='small' onClick={() => { increaseQuantity(item) }} disabled={item?.quantity == item?.stockQuantity}>
+                        <AddIcon sx={{ color: 'black' }} fontSize='1px' />
+                      </IconButton>
+                    </Grid>
+                    <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} onClick={() => { deleteOrderItem(item) }}>{t("cart.remove")}</Button>
+                    <Button color='inherit' sx={{ borderRadius: '20px', color: 'black', textTransform: 'none', fontWeight: 'bold', px: 2, py: 1, fontSize: '12px' }} onClick={() => handleAddToFav(item)} >
+                      {t("cart.addtoFav")}
+                    </Button>
                   </Grid>
-
-                  <Button
-                    color="inherit"
-                    sx={{
-                      borderRadius: "20px",
-                      color: "black",
-                      textTransform: "none",
-                      fontWeight: "bold",
-                      px: 2,
-                      py: 1,
-                      fontSize: "12px",
-                    }}
-                    onClick={() => deleteOrderItem(item)}
-                  >
-                    {t("cart.remove")}
-                  </Button>
-
-                  <Button
-                    color="inherit"
-                    sx={{
-                      borderRadius: "20px",
-                      color: "black",
-                      textTransform: "none",
-                      fontWeight: "bold",
-                      px: 2,
-                      py: 1,
-                      fontSize: "12px",
-                    }}
-                  >
-                    {t("cart.addtoFav")}
-                  </Button>
+                </Grid>
+                <Grid size={2} textAlign={'end'}>
+                  {isLoading && itemId == item?._id ? <Skeleton variant='rectangular' /> : <Typography variant='subtitle2' fontWeight={'bold'}>{item?.price?.currentPrice * item?.quantity}{t("cart.EGP")}</Typography>}
                 </Grid>
               </Grid>
-
-              <Grid size={2} textAlign={"end"}>
-                {isLoading && itemId === currentItemId ? (
-                  <Skeleton variant="rectangular" width={60} height={20} />
-                ) : (
-                  <Typography variant="subtitle2" fontWeight={"bold"}>
-                    {((item.price?.currentPrice || 0) * item.quantity).toFixed(
-                      2
-                    )}
-                    {t("cart.EGB")}
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-          </Container>
-        );
-      })}
-
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message={`${itemName} ${t("cart.removed")}`}
-        action={action}
-        TransitionComponent={SlideTransition}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message={itemName + " " + t("cart.removed")}
+                action={action}
+                TransitionComponent={SlideTransition}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              />
+              <Snackbar
+                open={favOpen}
+                autoHideDuration={4000}
+                onClose={handleFavClose}
+                message={favMessage}
+                action={action}
+                TransitionComponent={SlideTransition}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              />
+            </Container>
+          )}
+        </>
+        : []}
     </Grid>
   );
 };

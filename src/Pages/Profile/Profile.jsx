@@ -82,8 +82,8 @@ const Profile = () => {
                       <PenSVG />
                     </Grid>
                     <Grid size={{ xs: 8, md: 8 }} style={{ display: 'flex', flexDirection: 'column' }}>
-                      <p className="li-title" height="10px" style={{ fontWeight: "bold", marginBottom: "2px", fontSize: ".9rem" }}>My Orders</p>
-                      <p className="li-details" style={{ fontSize: ".8rem" }} >view and cancel your orders</p>
+                      <p className="li-title" height="10px" style={{ fontWeight: "bold", marginBottom: "2px", fontSize: ".9rem" }}>{t('profile.myorders')}</p>
+                      <p className="li-details" style={{ fontSize: ".8rem" }} >{t('profile.view')}</p>
                     </Grid>
                     <Grid size={{ xs: 2, md: 2 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}> <KeyboardArrowRightIcon /> </Grid>
                   </Grid>

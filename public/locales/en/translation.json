@@ -26,7 +26,9 @@
     "p_Password_details": "Requires current password",
     "p_Delete": "Delete account",
     "p_Delete_details": "Leave whenever you want",
-    "Logout": "Log out"
+    "Logout": "Log out",
+    "myorders": "My Orders",
+    "view": "view and cancel your orders"
   },
   "product": {
     "freeDelivery": "Free delivery",
@@ -320,7 +322,7 @@
     "TotalProducts": "products in total",
     "remove": "Remove",
     "addtoFav": "Move to favourites",
-    "EGB": "EGP",
+    "EGP": "EGP",
     "ordersummary": "Order Summary",
     "products": "Products",
     "subtotal": "Subtotal incl. VAT",
@@ -339,11 +341,18 @@
     "cancel": "CANCEL",
     "confirm": "CONFIRM",
     "addbyarticle": "Add by article number",
-    "removed": "was removed from your bag"
+    "removed": "was removed from your bag",
+    "addedToFav": "is added to fevourites"
   },
   "notFound": {
     "title": "Page Not Found",
     "message": "Sorry, the product you're looking for doesn't exist or has been removed.",
     "backHome": "Back to Homepage"
+  },
+  "Orders": {
+    "noorders":"You haven't made any orders yet",
+    "numOrder":"Order ID",
+    "cancelled":"cancelled"
+
   }
 }

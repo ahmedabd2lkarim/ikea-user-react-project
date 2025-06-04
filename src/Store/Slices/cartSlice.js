@@ -25,7 +25,15 @@ export const fetchCart = createAsyncThunk("fetchCart", async () => {
         }
       );
 
+      if (!productRes.ok) {
+        console.warn(`Product with ID ${item.prdID} not found.`);
+        return null;
+      }
       const product = await productRes.json();
+       if (!product || Object.keys(product).length === 0) {
+        console.warn(`Product data for ID ${item.prdID} is empty.`);
+        return null;
+      }
 
       if (item.variantId) {
         const variant = product.variants.find((v) => v._id === item.variantId);
@@ -40,6 +48,10 @@ export const fetchCart = createAsyncThunk("fetchCart", async () => {
             mainProductName: product.name,
             categoryName: product.categoryName,
           };
+        }
+        else {
+          console.warn(`Variant with ID ${item.variantId} not found for product ${item.prdID}.`);
+          return null;
         }
       } else {
         return {
@@ -57,7 +69,7 @@ export const fetchCart = createAsyncThunk("fetchCart", async () => {
 
   const products = await Promise.all(productsRequests);
   const validProducts = products.filter((p) => p !== null);
-console.log(data[0])
+  console.log(data[0])
   return {
     ...data[0],
     cartItems: validProducts,
@@ -86,7 +98,7 @@ function authFetch(url, options = {}) {
 const cartSlice = createSlice({
   name: "cartSlice",
   initialState: {
-    items:[],
+    items: [],
     isLoading: true,
   },
   reducers: {

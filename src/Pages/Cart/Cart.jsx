@@ -30,11 +30,11 @@ const Cart = () => {
       }
       : order = []);
   useEffect(() => {
-    if (token) {      
+    if (token) {
       dispatch(fetchCart())
-      
+
     }
-    
+
   }, [])
   console.log(order);
 
@@ -50,7 +50,7 @@ const Cart = () => {
     if (token) {
       navigate('/billing-shipping-form')
     } else {
-      toast.error("Please login to continue")   
+      toast.error("Please login to continue")
     }
   }
   const DrawerList1 = (
@@ -115,13 +115,13 @@ const Cart = () => {
       <Drawer ModalProps={{ disableScrollLock: true }} PaperProps={{ sx: { borderRadius: '10px 0 0 10px' } }} open={openDrawer2} anchor='right' onClose={() => toggleDrawer2(false)}>
         {DrawerList2}
       </Drawer>
-      {order.length == 0 ?
+      {order.length == 0 || order.cartItems.length == 0 ?
         <Grid container display={'flex'} flexDirection={'column'}>
           <Typography variant='h4' fontWeight={'bold'} py={5} >{t("cart.emptyBag.title")}</Typography>
           <Typography variant='subtitle1' color='rgb(72, 72, 72)'>{t("cart.emptyBag.description")}</Typography>
           {commonSection}
         </Grid>
-        : <><CartHeader fun={setOrder}/>
+        : <><CartHeader fun={setOrder} />
           <Grid container display={'flex'} justifyContent={'space-between'} position={'relative'}>
             <Grid size={{ xs: 12, md: 7, lg: 7 }} order={{ xs: '1', md: '0' }}>
               <FetchOrderItems det={order} fun={setOrder} />
@@ -131,12 +131,12 @@ const Cart = () => {
                 <Typography variant='subtitle1' fontWeight={600} pb={2}>{t("cart.ordersummary")}</Typography>
                 <Grid container display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                   <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{t("cart.products")} ({order?.cartItems?.length})</Typography>
-                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGB")}</Typography>
+                  <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGP")}</Typography>
                 </Grid>
                 <Box border='1.5px solid black' my={2} />
                 <Grid container display={'flex'} justifyContent={'space-between'} alignItems={'center'} pb={3}>
                   <Typography variant='subtitle1' fontWeight={600}>{t("cart.subtotal")}</Typography>
-                  <Typography variant='h4' fontWeight={'bold'}><sup style={{ fontSize: '16px', verticalAlign: '3px' }}></sup>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGB")}</Typography>
+                  <Typography variant='h4' fontWeight={'bold'}><sup style={{ fontSize: '16px', verticalAlign: '3px' }}></sup>{order?.total?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{t("cart.EGP")}</Typography>
                 </Grid>
                 <Typography variant='subtitle2' color='rgb(72, 72, 72)'>{t("cart.byClicking")}</Typography>
                 <Button variant='contained' sx={{ backgroundColor: 'rgb(0, 88, 163)', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 3, py: 2, fontSize: '15px', borderRadius: '27px', width: '100%', mt: 1 }} onClick={goTOCheck}>{t("cart.checkout")}</Button>
