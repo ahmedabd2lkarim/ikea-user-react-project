@@ -115,7 +115,7 @@ const Cart = () => {
       <Drawer ModalProps={{ disableScrollLock: true }} PaperProps={{ sx: { borderRadius: '10px 0 0 10px' } }} open={openDrawer2} anchor='right' onClose={() => toggleDrawer2(false)}>
         {DrawerList2}
       </Drawer>
-      {order.length == 0 || order.cartItems.length == 0 ?
+      {order?.length == 0 || order?.cartItems?.length == 0 ?
         <Grid container display={'flex'} flexDirection={'column'}>
           <Typography variant='h4' fontWeight={'bold'} py={5} >{t("cart.emptyBag.title")}</Typography>
           <Typography variant='subtitle1' color='rgb(72, 72, 72)'>{t("cart.emptyBag.description")}</Typography>
